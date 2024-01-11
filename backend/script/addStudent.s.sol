@@ -6,12 +6,13 @@ import "../src/Contracts/organizations/organisationFactory.sol";
 import "../src/Contracts/certificates/certificateFactory.sol";
 import "../src/Interfaces/Ichild.sol";
 
-contract DeployContracts is Script {
+contract addStudent is Script {
     organisationFactory _organisationFactory;
     certificateFactory _certificateFactory;
-
+    address child = address(0xE67D3ceb8e2B07A0524E02c25F725CF85c94Cd82);
     individual student1;
     individual[] students;
+
     function setUp() public {}
 
     function run() public {
@@ -21,19 +22,9 @@ contract DeployContracts is Script {
         student1._address = address(0x7379ec8392c7684cecd0550A688D729717EBBB01);
         student1._name = "SAMUEL";
         students.push(student1);
-        _certificateFactory = new certificateFactory();
-        _organisationFactory = new organisationFactory(address(_certificateFactory));
-        (address Organisation, address OrganisationNft, address OrganizationCertNft) = _organisationFactory
-            .createorganisation("WEB3BRIDGE", "COHORT 9", "http://test.org", 'CHINONSO');
-        ICHILD(Organisation).registerStudents(students);
-        
+        ICHILD(child).registerStudents(students);
+       
         vm.stopBroadcast();
-        writeAddressesToFile(
-            address(_organisationFactory),
-            "Organisation Factory"
-        );
-        writeAddressesToFile(Organisation, "Organisation Address");
-        writeAddressesToFile(OrganisationNft, "Organisation NFTAddress");
     }
 
     function writeAddressesToFile(address addr, string memory text) public {
