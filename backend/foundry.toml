@@ -6,9 +6,9 @@ verbosity = 5
 fs_permissions = [{ access = "read-write", path = "./"}]
 
 [rpc_endpoints]
-sepolia = "${SEPOLIA_RPC}"
+mumbai = "${MUMBAI_RPC_URL}"
 
 [etherscan]
-sepolia = { key = "${ETHER_SCAN}" }
+mumbai = { key = "${ETHERSCAN_API_KEY}" }
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
