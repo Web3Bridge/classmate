@@ -2,18 +2,22 @@ import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, polygonMumbai } from "wagmi/chains";
+import { mainnet, polygonMumbai, baseGoerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygonMumbai, mainnet],
+  [polygonMumbai, mainnet, baseGoerli],
   [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY }),
-    publicProvider(),
+    jsonRpcProvider({
+      rpc:(chain) => ({
+        http: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
+        wss: process.env.NEXT_PUBLIC_ALCHEMY_WSS,
+      })
+    })
   ]
 );
 const { connectors } = getDefaultWallets({
@@ -21,6 +25,7 @@ const { connectors } = getDefaultWallets({
   projectId: "1207efae1596f9a53ff3a7c1b1e0d62c",
   chains,
 });
+
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
