@@ -14,8 +14,8 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     jsonRpcProvider({
       rpc:(chain) => ({
-        http: "https://polygon-mumbai.infura.io/v3/59cc6c028f8040389cc06a78618805f1",
-        wss: "wss://polygon-mumbai.infura.io/ws/v3/59cc6c028f8040389cc06a78618805f1",
+        http: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
+        wss: process.env.NEXT_PUBLIC_ALCHEMY_WSS,
       })
     })
   ]
