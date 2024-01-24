@@ -159,7 +159,7 @@ const CardDetailsId = ({ classId }) => {
             <div className=" rounded-lg ">
               <img
                 src={imageUrl}
-                className="rounded-lg object-cover w-screen h-60"
+                className="rounded-lg object-contain w-full h-60"
               />
             </div>
           </div>
@@ -176,25 +176,27 @@ const CardDetailsId = ({ classId }) => {
         onSubmit={handleSubmit}
       >
         <div className=" bg-inherit p-4 rounded-lg w-full h-full flex flex-col items-center justify-center">
-          <div className=" rounded-lg ">
+          <div className=" rounded-lg w-[80%] ">
             <img
               src={imageUrl}
               width={500}
               height={500}
-              className="rounded-lg object-cover w-screen h-60"
+              className="rounded-lg object-contain w-full h-96"
             />
           </div>
           <div className="flex items-center justify-between w-full h-full text-black font-semibold text-center">
             <div className="flex flex-col text-start justify-center">
-              <div className="flex items-center -ml-24 justify-center my-1 py-1 text-lg ">
-                <SlCalender />
-                <p className="ml-3">
-                  {Number(cardDate) === 0 ? (
-                    <p>00-00-00</p>
-                  ) : (
-                    <DateMint cardDate={cardDate} />
-                  )}
-                </p>
+              <div className="flex justify-start items-start">
+                <div className="flex items-center justify-center my-1 py-1 text-lg ">
+                  <SlCalender />
+                  <p className="ml-3">
+                    {Number(cardDate) === 0 ? (
+                      <p>00-00-00</p>
+                    ) : (
+                      <DateMint cardDate={cardDate} />
+                    )}
+                  </p>
+                </div>
               </div>
               <p className=" my-1 py-1 text-lg ">Topic: {heading}</p>
               <p className="my-1 py-1 text-lg ">
