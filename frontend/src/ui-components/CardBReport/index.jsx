@@ -41,7 +41,7 @@ const CardBReport = ({ classsIdd }) => {
           classsIdd?.slice(0, visible).map((class_taught, i) => {
             return (
               <div key={i}>
-                <CardDetailsId classId={class_taught} />;
+                <CardDetailsId classId={class_taught} />
               </div>
             );
           })}

@@ -103,7 +103,7 @@ const StudCard = ({ classId }) => {
               <img
                 src={imageUrl}
                 alt="class nft"
-                className="rounded-lg object-cover w-screen h-60"
+                className="rounded-lg object-contain w-screen h-60"
               />
             </div>
           </div>

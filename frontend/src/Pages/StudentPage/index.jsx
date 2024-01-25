@@ -21,6 +21,9 @@ import { JsonRpcProvider, ethers } from "ethers";
 import Link from "next/link";
 import useScore from "./useScore";
 
+import { Tab } from "@headlessui/react";
+import { Fragment } from "react";
+
 const StudentPage = () => {
   const [id, setId] = useState();
   const [programAddress, setProgramAddress] = useState();
@@ -29,6 +32,7 @@ const StudentPage = () => {
   const [classesMarked, setClassesMarked] = useState([]);
   const [studentClass, setStudentClass] = useState();
   const [name, setName] = useState("");
+  const [active, setActive] = useState("1");
 
   const { address } = useAccount();
   const studentScore = useScore(address);
@@ -140,6 +144,15 @@ const StudentPage = () => {
 
   //const reversedClasses = classesMarked?.reverse();
 
+  const tabHead = [
+    { id: 1, head: "Attendance" },
+    { id: 2, head: "Assessment" },
+  ];
+
+  function handleClick(heading) {
+    setActive(heading);
+  }
+
   return (
     <div className=" px-5">
       <HeaderSection
@@ -220,32 +233,51 @@ const StudentPage = () => {
         </Section>
       </div>
 
-      {classesMarked?.length > 0 && (
-        <Section>
-          <div className=" grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-8 ml-12">
-            {classesMarked.slice(0, visible).map((class_attended, i) => {
-              return (
-                <div key={i}>
-                  <StudCard classId={class_attended} />
-                </div>
-              );
-            })}
+      <Tab.Group>
+        <Tab.List>
+          <div className="flex flex-row items-center justify-center">
+            {tabHead.map((thead) => (
+              <Tab
+                id={thead.id}
+                key={thead.id}
+                onClick={() => handleClick(thead.id)}
+                className={` ${
+                  active == thead.id ? "text-[#000] bg-white rounded-2xl" : ""
+                } py-1 px-3`}
+              >
+                <div className=" text-lg font-bold">{thead.head}</div>
+              </Tab>
+            ))}
           </div>
-        </Section>
-      )}
+        </Tab.List>
+        <Tab.Panels>
+          <Tab.Panel>
+            {classesMarked?.length > 0 && (
+              <Section>
+                <div className=" grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-8 ml-12 ">
+                  {classesMarked.slice(0, visible).map((class_attended, i) => {
+                    return (
+                      <div key={i}>
+                        <StudCard classId={class_attended} />
+                      </div>
+                    );
+                  })}
+                </div>
+              </Section>
+            )}
 
-      {classIds?.length > 6 && (
-        <div className=" flex flex-row items-center justify-center pt-4 mt-4	">
-          <button
-            className=" bg-[#080E26] text-white rounded-full p-4 text-dimWhite w-36 font-semibold"
-            onClick={showMoreItems}
-          >
-            Load More
-          </button>
-        </div>
-      )}
-
-      {/* {studentScore && (
+            {classIds?.length > 6 && (
+              <div className=" flex flex-row items-center justify-center pt-4 mt-4	">
+                <button
+                  className=" bg-[#080E26] text-white rounded-full p-4 text-dimWhite w-36 font-semibold"
+                  onClick={showMoreItems}
+                >
+                  Load More
+                </button>
+              </div>
+            )}
+          </Tab.Panel>
+          {/* {studentScore && (
         <Section>
           <div className="">
             <h1 className=" text-[20px] font-semibold mb-4">Your Scores</h1>
@@ -278,40 +310,43 @@ const StudentPage = () => {
           </div>
         </Section>
       )} */}
-
-      {studentScore && (
-        <Section>
-          <div className=" w-[95%] mx-auto">
-            <div class="relative overflow-x-auto shadow-md rounded-xl">
-              <table class="w-full text-base font-medium text-left rtl:text-right text-gray-500">
-                <thead class=" text-lg font-bold text-gray-700 uppercase bg-gray-100 border-b">
-                  <tr>
-                    <th scope="col" class="px-6 py-3">
-                      Weekly Assessment
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                      Score
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {studentScore?.map(({ name, score, id }) => (
-                    <tr key={id} class="bg-white border-b ">
-                      <th
-                        scope="row"
-                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                      >
-                        {name}
-                      </th>
-                      <td class="px-6 py-4 font-medium">{score}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </Section>
-      )}
+          <Tab.Panel>
+            {studentScore && (
+              <Section>
+                <div className=" w-[95%] mx-auto">
+                  <div class="relative overflow-x-auto shadow-md rounded-xl">
+                    <table class="w-full text-base font-medium text-left rtl:text-right text-gray-500">
+                      <thead class=" text-lg font-bold text-gray-700 uppercase bg-gray-100 border-b">
+                        <tr>
+                          <th scope="col" class="px-6 py-3">
+                            Weekly Assessment
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Score
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {studentScore?.map(({ name, score, id }) => (
+                          <tr key={id} class="bg-white border-b ">
+                            <th
+                              scope="row"
+                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              {name}
+                            </th>
+                            <td class="px-6 py-4 font-medium">{score}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </Section>
+            )}
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
 
       <Modal
         isOpen={modal}

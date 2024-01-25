@@ -159,6 +159,7 @@ const CardDetailsId = ({ classId }) => {
             <div className=" rounded-lg ">
               <img
                 src={imageUrl}
+                alt="class nft"
                 className="rounded-lg object-contain w-full h-60"
               />
             </div>
