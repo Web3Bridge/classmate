@@ -9,12 +9,14 @@ import Card from "@/src/ui-components/Card";
 import BarChartExample from "@/src/components/BarCharExample";
 import DoughnutChartExample from "@/src/components/DoughnutChartExample";
 import Modal from "@/src/ui-components/Modal";
+const { ethers } = require("ethers");
 
 export default function Dashboard() {
   const [modal, setModal] = useState(false);
   const [classes, setClasses] = useState();
   const [mentors, setMentors] = useState();
   const [students, setStudents] = useState();
+  const [totalAttendance, setTotalAttendance] = useState();
   const [programAddress, setProgramAddress] = useState();
 
   useContractRead({
@@ -25,6 +27,7 @@ export default function Dashboard() {
     args: [],
     onSuccess(data) {
       setClasses(data);
+      // console.log(data);
     },
   });
   useContractRead({
@@ -63,11 +66,30 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      let res = localStorage.getItem("programAddress");
-      setProgramAddress(res);
-    }
+    const fetchData = async () => {
+      if (typeof window !== "undefined") {
+        let res = localStorage.getItem("programAddress");
+        setProgramAddress(res);
+        // console.log("Program Address: " + res);
+        let allSigners = await get_allAttendance(classes, res, ChildABI);
+        setTotalAttendance(allSigners);
+        // console.log("Total Attendance: " + allSigners);
+      }
+    };
+  
+    fetchData();
   }, [programAddress]);
+
+
+  setTimeout(() => {
+    totalSignatures();
+  }, 10000);
+  
+  const totalSignatures = async () => {
+    // let res = localStorage.getItem("programAddress");
+    let allSigners = await get_allAttendance(classes, programAddress, ChildABI);
+    setTotalAttendance(allSigners);
+  }
 
   return (
     <>
@@ -89,6 +111,10 @@ export default function Dashboard() {
         <DataCard
           label={"Total Mentors"}
           value={mentors ? mentors.length : `00`}
+        />
+        <DataCard
+          label={"Total Attendance Singned"}
+          value={totalAttendance ? totalAttendance : `00`}
         />
       </Section>
 
@@ -123,3 +149,32 @@ export default function Dashboard() {
     </>
   );
 }
+
+async function get_allAttendance(classes, programAddress, ChildABI) {
+  let allAttendance = 0;
+
+  if (classes) {
+    for (const element of classes) {
+      let data = await readdata(element, programAddress, ChildABI); 
+      allAttendance += data;
+    }
+  }
+
+  return allAttendance;
+}
+
+
+async function readdata(element, programAddress, ChildABI) {
+  const rpcUrl = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
+  const readProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  const attendanceContract = new ethers.Contract(
+    programAddress,
+    ChildABI,
+    readProvider
+  );
+  let data = await attendanceContract.getLectureData(element);
+  let AttendanceData = parseInt(data.studentsPresent);
+  // console.log("AttendanceData", AttendanceData);
+  return AttendanceData;
+}
+
