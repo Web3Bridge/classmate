@@ -108,6 +108,11 @@ export default function Dashboard() {
           value={totalAttendance ? totalAttendance : `00`}
           inverse={true}
         />
+        <DataCard
+          label={"Average daily Attendance"}
+          value={totalAttendance ? Math.floor(totalAttendance / classes.length) : `00`}
+          inverse={true}
+        />
       </Section>
 
       <Section>
