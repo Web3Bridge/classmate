@@ -9,7 +9,8 @@ import Card from "@/src/ui-components/Card";
 import BarChartExample from "@/src/components/BarCharExample";
 import DoughnutChartExample from "@/src/components/DoughnutChartExample";
 import Modal from "@/src/ui-components/Modal";
-const { ethers } = require("ethers");
+import { JsonRpcProvider, ethers } from "ethers";
+
 
 export default function Dashboard() {
   const [modal, setModal] = useState(false);
@@ -70,26 +71,16 @@ export default function Dashboard() {
       if (typeof window !== "undefined") {
         let res = localStorage.getItem("programAddress");
         setProgramAddress(res);
-        // console.log("Program Address: " + res);
+        // console.log("Program Address...........................");
         let allSigners = await get_allAttendance(classes, res, ChildABI);
         setTotalAttendance(allSigners);
-        // console.log("Total Attendance: " + allSigners);
+        // console.log("Total Attendance:.......................... ");
       }
     };
   
     fetchData();
-  }, [programAddress]);
+  }, [programAddress, classes], [totalAttendance], [classes]);
 
-
-  setTimeout(() => {
-    totalSignatures();
-  }, 10000);
-  
-  const totalSignatures = async () => {
-    // let res = localStorage.getItem("programAddress");
-    let allSigners = await get_allAttendance(classes, programAddress, ChildABI);
-    setTotalAttendance(allSigners);
-  }
 
   return (
     <>
@@ -166,15 +157,21 @@ async function get_allAttendance(classes, programAddress, ChildABI) {
 
 async function readdata(element, programAddress, ChildABI) {
   const rpcUrl = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
-  const readProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
-  const attendanceContract = new ethers.Contract(
-    programAddress,
-    ChildABI,
-    readProvider
-  );
-  let data = await attendanceContract.getLectureData(element);
-  let AttendanceData = parseInt(data.studentsPresent);
-  // console.log("AttendanceData", AttendanceData);
-  return AttendanceData;
+  const readProvider = new JsonRpcProvider(rpcUrl);
+  
+  try {
+    const attendanceContract = new ethers.Contract(
+      programAddress,
+      ChildABI,
+      readProvider
+    );
+    let data = await attendanceContract.getLectureData(element);
+    let AttendanceData = parseInt(data.studentsPresent);
+    // console.log("AttendanceData:", AttendanceData);
+    return AttendanceData;
+
+  } catch (error) {
+    console.log(error);
+  }
 }
 

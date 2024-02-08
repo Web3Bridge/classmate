@@ -49,6 +49,7 @@ const Programmes = () => {
       //console.log("list", listOfPrograms);
       //console.log("classes", attendedClasses);
       setprogramAddress(listOfPrograms);
+      // console.log("listOfPrograms:", listOfPrograms);
     } catch (error) {
       console.log(error);
     }
