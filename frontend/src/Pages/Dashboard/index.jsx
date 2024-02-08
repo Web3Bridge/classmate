@@ -104,8 +104,9 @@ export default function Dashboard() {
           value={mentors ? mentors.length : `00`}
         />
         <DataCard
-          label={"Total Attendance Singned"}
+          label={"Total Attendance Signed"}
           value={totalAttendance ? totalAttendance : `00`}
+          inverse={true}
         />
       </Section>
 
