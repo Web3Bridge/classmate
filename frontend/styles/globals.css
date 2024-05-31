@@ -77,11 +77,15 @@
 }
 
 .patternbg {
-  background-image: url('../public/guest/patternpad.png');
+  background-image: url("../public/guest/patternpad.png");
   background-size: 40%;
 }
 
 .patteredSub {
-  background-image: url('../public/guest/patternpad2.png');
+  background-image: url("../public/guest/patternpad2.png");
   background-size: 50%;
+}
+
+.user_dashboard {
+  @apply bg-[#F2F4F6];
 }

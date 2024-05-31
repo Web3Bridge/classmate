@@ -1,4 +1,6 @@
+import MainDash from "./MainDash";
+
 // app/user/dashboard/page.tsx
 export default function UserDashboard() {
-  return <div>User Dashboard Content</div>;
+  return <MainDash />;
 }

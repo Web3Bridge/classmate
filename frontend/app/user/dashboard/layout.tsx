@@ -22,8 +22,6 @@ export default function UserDashboardLayout({
           fontSans.variable
         )}
       >
-        {" "}
-        <div>Hi user</div>
         <main>{children}</main>
       </body>
     </html>
