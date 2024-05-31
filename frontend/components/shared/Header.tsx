@@ -21,8 +21,8 @@ const Header = () => {
   });
 
   return (
-    <>
-      <div className="sticky top-0 inset-x-0 z-40 w-full bg-white h-20 lg:px-8 md:px-4 shadow-sm">
+    <header className="w-full">
+      <div className="sticky top-0 inset-x-0 z-50 w-full bg-white h-20 lg:px-8 md:px-4 shadow-sm">
         <MaxWrapper className="h-full w-full flex items-center justify-between">
           <Logo />
 
@@ -63,7 +63,7 @@ const Header = () => {
         className="fixed top-20 left-0 right-0 bg-color1 origin-[0%] h-[5px] z-[42]"
         style={{ scaleX }}
       />
-    </>
+    </header>
   );
 };
 
