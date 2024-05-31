@@ -1,4 +1,7 @@
+import Approach from "@/components/home/Approach";
+import Features from "@/components/home/Features";
 import HeroSection from "@/components/home/HeroSection";
+import NewsLetter from "@/components/home/NewsLetter";
 import Partnership from "@/components/home/Partnership";
 
 
@@ -7,6 +10,9 @@ export default function Home() {
     <main className="w-full flex min-h-screen flex-col overflow-x-hidden">
       <HeroSection />
       <Partnership />
+      <Approach />
+      <Features />
+      <NewsLetter />
     </main>
   );
 }

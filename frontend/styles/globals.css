@@ -80,3 +80,8 @@
   background-image: url('../public/guest/patternpad.png');
   background-size: 40%;
 }
+
+.patteredSub {
+  background-image: url('../public/guest/patternpad2.png');
+  background-size: 50%;
+}
