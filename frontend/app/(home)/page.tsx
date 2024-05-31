@@ -1,6 +1,7 @@
 import Approach from "@/components/home/Approach";
 import Features from "@/components/home/Features";
 import HeroSection from "@/components/home/HeroSection";
+import NewsLetter from "@/components/home/NewsLetter";
 import Partnership from "@/components/home/Partnership";
 
 
@@ -11,6 +12,7 @@ export default function Home() {
       <Partnership />
       <Approach />
       <Features />
+      <NewsLetter />
     </main>
   );
 }

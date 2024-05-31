@@ -3,6 +3,7 @@ import "@/styles/globals.css"
 import { cn } from "@/lib/utils";
 import { Raleway as FontSans } from "next/font/google"
 import Header from "@/components/shared/Header";
+import Footer from '@/components/shared/Footer';
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       >
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
