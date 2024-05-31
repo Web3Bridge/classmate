@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "./shared/Navbar";
-import Sidebar from "./shared/Sidebar";
 import Contents from "./Contents";
+import Navbar from "../shared/user/Navbar";
+import Sidebar from "../shared/user/Sidebar";
 
 export default function MainDash() {
   return (

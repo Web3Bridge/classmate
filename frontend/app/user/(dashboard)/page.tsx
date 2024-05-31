@@ -1,4 +1,4 @@
-import MainDash from "./MainDash";
+import MainDash from "../../../components/user/MainDash";
 
 // app/user/dashboard/page.tsx
 export default function UserDashboard() {
