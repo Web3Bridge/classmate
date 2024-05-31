@@ -1,4 +1,5 @@
 import Approach from "@/components/home/Approach";
+import Features from "@/components/home/Features";
 import HeroSection from "@/components/home/HeroSection";
 import Partnership from "@/components/home/Partnership";
 
@@ -9,6 +10,7 @@ export default function Home() {
       <HeroSection />
       <Partnership />
       <Approach />
+      <Features />
     </main>
   );
 }
