@@ -22,7 +22,7 @@ const Header = () => {
 
   return (
     <header className="w-full">
-      <div className="sticky top-0 inset-x-0 z-50 w-full bg-white h-20 lg:px-8 md:px-4 shadow-sm">
+      <div className="fixed top-0 inset-x-0 z-50 w-full bg-white h-20 lg:px-8 md:px-4 shadow-sm">
         <MaxWrapper className="h-full w-full flex items-center justify-between">
           <Logo />
 

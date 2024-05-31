@@ -5,7 +5,7 @@ import { MdRocketLaunch } from "react-icons/md"
 
 const HeroSection = () => {
     return (
-        <section className="w-full lg:h-[550px] md:h-[450px] grid md:grid-cols-2 gap-6 md:gap-0 lg:px-16 px-4 lg:py-12 md:py-0 py-10">
+        <section className="w-full mt-20 lg:h-[550px] md:h-[450px] grid md:grid-cols-2 gap-6 md:gap-0 lg:px-16 px-4 lg:py-12 md:py-0 py-10">
             <main className='md:h-full flex flex-col order-2 md:order-1 justify-center items-start md:gap-8 gap-4 md:pr-8'>
                 <h1 className="lg:text-5xl md:text-3xl text-2xl text-color2 font-bold">Efficient Student Management and Attendance Made
                     Easy</h1>
