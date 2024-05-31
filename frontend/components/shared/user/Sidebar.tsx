@@ -21,11 +21,11 @@ export default function Sidebar() {
       <div className="flex flex-col items-center justify-center">
         {iconsData.map((item, index) => (
           <div key={index} className="flex flex-col justify-end mb-8">
-            <div className="flex gap-2 justify-center">
+            <div className="flex gap-2 justify-center hover:text-color1 cursor-pointer">
               <div>
-                <item.icon className="h-[22.21px] w-[22.51px]" />
+                <item.icon className="h-[22.21px] w-[22.51px] " />
               </div>
-              <div className="h-[24px] w-[93px] whitespace-nowrap  text-ellipsis">
+              <div className="h-[24px] w-[93px] whitespace-nowrap  text-ellipsis ">
                 {item.label}
               </div>
             </div>
@@ -33,7 +33,7 @@ export default function Sidebar() {
         ))}
       </div>
       <div className="border border-gray-400 w-full mb-5"></div>
-      <div className="flex gap-2 justify-center mt-12">
+      <div className="flex gap-2 justify-center mt-12 hover:text-color1 cursor-pointer">
         <div>
           <BiLogOut className="h-[22.21px] w-[22.51px]" />
         </div>
