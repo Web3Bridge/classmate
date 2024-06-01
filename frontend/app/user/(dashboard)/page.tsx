@@ -1,6 +1,10 @@
-import MainDash from "../../../components/user/MainDash";
+import Statistics from "@/components/user/Statistics";
 
-// app/user/dashboard/page.tsx
 export default function UserDashboard() {
-  return <MainDash />;
+  return (
+    <main className="w-full flex min-h-screen flex-col overflow-x-hidden">
+      <Statistics />
+
+    </main>
+  );
 }

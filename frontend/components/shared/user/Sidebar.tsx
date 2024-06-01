@@ -1,46 +1,127 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { iconsData } from "@/utils/Sidebar";
-import { BiLogOut } from "react-icons/bi";
+'use client'
+import { useCallback, useEffect, useRef } from "react";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { SiStreamrunners } from "react-icons/si";
+import { RiFundsLine } from "react-icons/ri";
+import { RxDashboard } from "react-icons/rx";
+import { GrServices } from "react-icons/gr";
+import { BiMoneyWithdraw } from "react-icons/bi";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from 'next/navigation'
+import { sideLinks } from "@/utils/Sidebar";
 
-export default function Sidebar() {
-  return (
-    <Card className="w-[238px] h-[630px] bg-color2 border rounded-2xl text-gray-100">
-      <div className="flex flex-col items-center justify-start pt-4">
-        <div className="flex mb-8 w-full justify-center items-center">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="ml-4">
-            <h1 className="text-xl">Emmanuel</h1>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        {iconsData.map((item, index) => (
-          <div key={index} className="flex flex-col justify-end mb-8">
-            <div className="flex gap-2 justify-center hover:text-color1 cursor-pointer">
-              <div>
-                <item.icon className="h-[22.21px] w-[22.51px] " />
-              </div>
-              <div className="h-[24px] w-[93px] whitespace-nowrap  text-ellipsis ">
-                {item.label}
-              </div>
+
+
+const SideBar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+
+    const trigger = useRef(null);
+    const sidebar = useRef(null);
+
+    const pathname = usePathname();
+
+    const handleCloseSideBar = () => {
+        setSidebarOpen(!sidebarOpen)
+    }
+
+    useEffect(() => {
+        const toggleScroll = () => {
+            document.body.style.overflow = sidebarOpen ? 'hidden' : 'auto';
+        };
+        toggleScroll();
+
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [sidebarOpen]);
+
+    const renderIcons = useCallback((element: number) => {
+        switch (element) {
+            case 0:
+                return <RxDashboard />;
+            case 1:
+                return <GrServices />;
+            case 2:
+                return <RiFundsLine />;
+            case 3:
+                return <BiMoneyWithdraw />
+            default:
+                return "";
+        }
+    }, [])
+
+
+
+    return (
+        <aside
+            ref={sidebar}
+            className={`absolute font-barlow left-0 top-0 z-[9999] flex h-screen w-72 flex-col overflow-y-hidden bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0 lg:rounded-lg ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}
+        >
+            {/* <!-- SIDEBAR HEADER --> */}
+            <div className='flex flex-col gap-2 font-barlow px-6 py-8 lg:py-6.5'>
+                <div className="flex items-center justify-between gap-2  ">
+                    <Link href='/user' className="flex items-center bg-gradient-to-r from-sky-400 to-emerald-400 text-transparent bg-clip-text gap-1">
+                        <SiStreamrunners className="md:text-4xl text-3xl text-sky-400" />
+                        <span className=" font-belanosima md:text-xl text-lg">TRiver</span>
+                    </Link>
+
+                    <button
+                        ref={trigger}
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        aria-controls="sidebar"
+                        aria-expanded={sidebarOpen}
+                        className="block lg:hidden text-white"
+                    >
+                        <IoIosArrowRoundBack className="text-2xl" />
+                    </button>
+                </div>
+                <h1 className='text-sm md:text-sm text-gray-200 uppercase'>
+                    Welcome Back
+                </h1>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className="border border-gray-400 w-full mb-5"></div>
-      <div className="flex gap-2 justify-center mt-12 hover:text-color1 cursor-pointer">
-        <div>
-          <BiLogOut className="h-[22.21px] w-[22.51px]" />
-        </div>
-        <div className="h-[24px] w-[93px] whitespace-nowrap text-ellipsis">
-          <h1>Log out</h1>
-        </div>
-      </div>
-    </Card>
-  );
+
+            {/* <!-- SIDEBAR HEADER --> */}
+
+
+            <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+                {/* <!-- Sidebar Menu --> */}
+                <nav className="mt-3 pb-4 px-4 lg:mt-3 lg:px-6">
+                    {/* <!-- Menu Group --> */}
+                    <div>
+                        <ul className="font-barlow flex flex-col gap-1.5">
+                            {/* <!-- Menu Item Calendar --> */}
+                            {
+                                sideLinks.map((link, index) => (
+                                    <li key={index}>
+                                        <Link
+                                            href={link.href}
+                                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-emerald-400 hover:before:h-full ${pathname === link.href ?
+                                                'before:h-full' : 'before:h-0'
+                                                }`} onClick={handleCloseSideBar}
+                                        >
+                                            {renderIcons(index)}
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    {/* <!-- Sidebar Footer --> */}
+                    <div className="w-full flex flex-col justify-center items-start ml-8 gap-1.5 mt-8">
+                        <div className="w-[30%] rounded-lg overflow-hidden border-2 border-gray-400">
+                            <Image src={`https://github.com/shadcn.png`} alt="avatar" className="w-full h-full object-cover" width={400} height={400} />
+                        </div>
+                        <h3 className="text-gray-400 text-base ml-2 font-barlow">Linda</h3>
+                    </div>
+
+                </nav>
+                {/* <!-- Sidebar Menu --> */}
+            </div>
+
+        </aside>
+    )
 }
+
+export default SideBar

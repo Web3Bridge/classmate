@@ -1,29 +1,48 @@
-// app/user/dashboard/layout.tsximport type { Metadata } from "next";
-import "@/styles/globals.css";
-import { cn } from "@/lib/utils";
-import { Raleway as FontSans } from "next/font/google";
-import { ReactNode } from "react";
+'use client'
+import DashboardFooter from "@/components/shared/user/DashboardFooter";
+import Header from "@/components/shared/user/Header";
+import SideBar from "@/components/shared/user/SideBar";
+import { useState } from "react";
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
-export default function UserDashboardLayout({
+export default function UserLayout({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen font-sans antialiased bg-white",
-          fontSans.variable
-        )}
-      >
-        <main>{children}</main>
-      </body>
-    </html>
+    <div className=" bg-white lg:p-1.5" >
+      {/* Page Wrapper Start  */}
+      <div className="flex h-screen gap-1.5 overflow-hidden">
+        {/* Sidebar Start */}
+        <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        {/* Sidebar End  */}
+
+        {/* Content Area Start  */}
+        <div className="relative flex min-h-screen flex-1 flex-col justify-between overflow-y-auto overflow-x-hidden no-scrollbar">
+
+          <section>
+            {/*  Header Start */}
+            <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            {/*  Header End */}
+
+            {/*  Main Content Start */}
+            <main>
+              <div className="mx-auto max-w-screen-2xl pt-4 pb-6 md:pt-4 md:pb-10 2xl:p-10">
+                <section className="w-full px-1.5">
+                  {children}
+                </section>
+              </div>
+            </main>
+          </section>
+          {/*  Main Content End  */}
+          <DashboardFooter />
+        </div>
+        {/*  Content Area End  */}
+      </div>
+      {/*  Page Wrapper End  */}
+    </div>
   );
 }
