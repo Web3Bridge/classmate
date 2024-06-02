@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -30,7 +29,6 @@ export default function Certificate() {
               <button className="ml-2 bg-color1 hover:bg-color1/50 text-white font-bold py-2 px-4 rounded">
                 Submit
               </button>
-              {/* Example Button */}
             </div>
           </CardContent>
           <CardFooter className="flex items-center justify-center">
