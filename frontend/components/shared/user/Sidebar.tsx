@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { sideLinks } from "@/utils/Sidebar";
 import { MdAssignment, MdEventSeat } from "react-icons/md";
 import { FiSettings } from "react-icons/fi";
+import { LuLogOut } from "react-icons/lu";
 
 const SideBar = ({
   sidebarOpen,
@@ -70,8 +71,8 @@ const SideBar = ({
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex flex-col gap-2 font-barlow px-6 py-8 lg:py-6.5">
         <div className="flex items-center justify-between gap-2  ">
-          <div className="w-full flex justify-center gap-1.5 mt-8">
-            <div className="w-[30%] overflow-hidden rounded-full">
+          <div className="w-full gap-1.5 mt-8">
+            <div className="w-[30%] overflow-hidden rounded-lg mx-auto mb-2">
               <Image
                 src={`https://github.com/shadcn.png`}
                 alt="avatar"
@@ -80,7 +81,7 @@ const SideBar = ({
                 height={400}
               />
             </div>
-            <h3 className="text-gray-400 text-base ml-2 font-barlow my-auto">
+            <h3 className="text-gray-400 text-base ml-2 font-barlow my-auto text-center">
               Linda
             </h3>
           </div>
@@ -126,17 +127,11 @@ const SideBar = ({
             </ul>
           </div>
           {/* <!-- Sidebar Footer --> */}
-          <div className="w-full flex flex-col justify-center items-start ml-8 gap-1.5 mt-8">
-            <div className="w-[30%] rounded-lg overflow-hidden border-2 border-gray-400">
-              <Image
-                src={`https://github.com/shadcn.png`}
-                alt="avatar"
-                className="w-full h-full object-cover"
-                width={400}
-                height={400}
-              />
+          <div className="w-full  text-white flex justify-center gap-1.5 mt-8">
+            <div className="flex items-center space-x-2">
+              <LuLogOut />
+              <h1 className="">Log out</h1>
             </div>
-            <h3 className="text-gray-400 text-base ml-2 font-barlow">Linda</h3>
           </div>
         </nav>
         {/* <!-- Sidebar Menu --> */}
