@@ -113,7 +113,7 @@ const SideBar = ({
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-emerald-400 hover:before:h-full ${
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-color1 hover:before:h-full ${
                       pathname === link.href ? "before:h-full" : "before:h-0"
                     }`}
                     onClick={handleCloseSideBar}
