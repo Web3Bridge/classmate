@@ -22,7 +22,7 @@ const Header = ({
               e.stopPropagation();
               setSidebarOpen(!sidebarOpen);
             }}
-            className="z-[9999] block rounded-sm border border-emerald-400 bg-transparent p-1.5 shadow-sm lg:hidden"
+            className="z-[9999] block rounded-sm border border-color1 bg-transparent p-1.5 shadow-sm lg:hidden"
           >
             <span className="relative block h-5 w-5 cursor-pointer">
               <span className="block absolute right-0 h-full w-full">
@@ -60,9 +60,9 @@ const Header = ({
 
           <Link
             href="/user"
-            className="flex flex-shrink-0 lg:hidden items-center bg-gradient-to-r from-sky-400 to-emerald-400 text-transparent bg-clip-text gap-1"
+            className="flex flex-shrink-0 lg:hidden items-center bg-gradient-to-r from-color1 to-color2 text-transparent bg-clip-text gap-1"
           >
-            <SiStreamrunners className="md:text-4xl text-3xl text-sky-400" />
+            {/* <SiStreamrunners className="md:text-4xl text-3xl text-color2" /> */}
             <span className=" font-belanosima md:text-xl text-lg">
               Classmate+
             </span>

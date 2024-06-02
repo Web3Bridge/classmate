@@ -12,7 +12,7 @@ export default function UserLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className=" bg-white lg:p-1.5">
+    <div className=" bg-[#86836D]/10 lg:p-1.5">
       {/* Page Wrapper Start  */}
       <div className="flex h-screen gap-1.5 overflow-hidden">
         {/* Sidebar Start */}

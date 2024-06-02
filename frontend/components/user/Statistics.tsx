@@ -2,6 +2,14 @@
 import { BellIcon, SearchCheckIcon, SearchIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface Statistic {
   title: string;
@@ -49,21 +57,39 @@ const Statistics = () => {
             ))}
           </div>
 
-          <section>
-            {/* <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia
-              ex veritatis dolore magni perspiciatis voluptate quam, reiciendis
-              porro velit! Possimus ipsa incidunt eveniet nostrum soluta saepe
-              distinctio blanditiis, temporibus laudantium.
-            </p> */}
+          <section className="mt-3 grid md:grid-cols-2 gap-2">
+            <Card className=" bg-color2 text-gray-100 border-none">
+              <CardHeader>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription>Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Card Content</p>
+              </CardContent>
+              <CardFooter>
+                <p>Card Footer</p>
+              </CardFooter>
+            </Card>
+            <Card className=" bg-color2 text-gray-100 border-none">
+              <CardHeader>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription>Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Card Content</p>
+              </CardContent>
+              <CardFooter>
+                <p>Card Footer</p>
+              </CardFooter>
+            </Card>
           </section>
         </main>
-        <aside className="w-full p-6 bg-gray-100/30">
+        <aside className="w-full p-6 bg-white rounded-md">
           <Calendar
             mode="single"
             selected={date}
             onSelect={setDate}
-            className="rounded-md border"
+            className="rounded-md border "
           />
         </aside>
       </section>

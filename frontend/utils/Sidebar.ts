@@ -5,7 +5,7 @@ export const sideLinks = [
   },
   {
     name: "Submit ID",
-    href: "/user/about",
+    href: "/user/submit_id",
   },
   {
     name: "View Certificate",
