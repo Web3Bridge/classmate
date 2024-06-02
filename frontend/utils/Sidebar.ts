@@ -9,7 +9,7 @@ export const sideLinks = [
   },
   {
     name: "View Certificate",
-    href: "/user/contact",
+    href: "/user/certificate",
   },
   {
     name: "Assignments",
