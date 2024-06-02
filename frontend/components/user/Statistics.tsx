@@ -20,12 +20,12 @@ const Statistics = () => {
     <>
       <section className="flex justify-between mb-6">
         <div>
-          <h1 className="text-xl">Welcome back, Linda</h1>
-          <p className="capitalize text-sm">welcome to classmate+ dashboard</p>
+          <h1 className="text-xl font-bold">Welcome back, Linda</h1>
+          <p className="capitalize text-xs">welcome to classmate+ dashboard</p>
         </div>
-        <div className="flex justify-center my-auto align-middle gap-1 cursor-pointer text-color1 hover:text-color2">
-          <SearchIcon />
-          <BellIcon />
+        <div className="flex justify-center my-auto align-middle gap-1 cursor-pointer text-color1">
+          <SearchIcon className=" hover:text-color2" />
+          <BellIcon className=" hover:text-color2" />
         </div>
       </section>
       <section>

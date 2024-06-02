@@ -127,7 +127,7 @@ const SideBar = ({
             </ul>
           </div>
           {/* <!-- Sidebar Footer --> */}
-          <div className="w-full  text-white flex justify-center gap-1.5 mt-8">
+          <div className="w-full  text-white cursor-pointer hover:text-color1 flex justify-center gap-1.5 mt-8">
             <div className="flex items-center space-x-2">
               <LuLogOut />
               <h1 className="">Log out</h1>
