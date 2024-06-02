@@ -20,7 +20,7 @@ export default function SubmitID() {
         <CardContent>
           <CardDescription className="text-white">Enter ID</CardDescription>
           <form action="">
-            <Input />
+            <Input className="text-color2 bg-white/80" />
           </form>
         </CardContent>
         <div className="flex justify-end ">
