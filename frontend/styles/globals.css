@@ -76,6 +76,11 @@
   }
 }
 
+.no-scrollbar::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .patternbg {
   background-image: url("../public/guest/patternpad.png");
   background-size: 40%;
