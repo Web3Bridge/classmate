@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 export default function SubmitID() {
   return (
     <div>
-      <Card className="w-[50%] mt-20 mx-auto bg-color2 text-white">
+      <Card className="w-[90%] md:w-[50%]  mt-20 mx-auto bg-color2 text-white">
         <CardHeader>
           <CardTitle className="capitalize">classmate + student form</CardTitle>
         </CardHeader>

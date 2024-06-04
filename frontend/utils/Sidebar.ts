@@ -13,18 +13,18 @@ export const sideLinks = [
   },
   {
     name: "Assignments",
-    href: "/user/contact",
+    href: "/user/assignments",
   },
   {
-    name: "Upcoming Events",
-    href: "/user/contact",
+    name: "Proof of Attendance",
+    href: "/user/attendance",
   },
   {
     name: "Assessments",
-    href: "/user/contact",
+    href: "/user/assessments",
   },
   {
     name: "Settings",
-    href: "/user/contact",
+    href: "/user/settings",
   },
 ];
