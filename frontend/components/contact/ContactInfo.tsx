@@ -14,8 +14,8 @@ const ContactInfo = () => {
     const [message, setMessage] = useState("")
 
     return (
-        <section className="w-full grid grid-cols-2 gap-8 px-12 mb-16">
-            <main className="w-full flex flex-col p-10 gap-4 bg-color2 rounded-md">
+        <section className="w-full grid md:grid-cols-2 gap-8 lg:px-12 md:px-8 px-3 mb-16">
+            <main className="w-full flex flex-col md:p-10 p-9 gap-4 bg-color2 rounded-md">
                 <div className="flex flex-col mb-7">
                     <h1 className="font-bold text-white text-2xl text-left">Contact Information</h1>
                     <h3 className=" text-white text-lg text-left">Feel free to inquire about anything and we would respond !</h3>
@@ -29,10 +29,10 @@ const ContactInfo = () => {
                         <IoMdMail className="text-lg " />
                         <span>support@classmate.com</span>
                     </Link>
-                    <p className="flex text-white gap-1 items-start">
-                        <IoLocation className="text-2xl" />
-                        <span>1/3 Adebola Gbadebo Drv. (Adebola House) Off Abadek Avenue, off Akin Ogunlewe Rd, Igbogbo, Ikorodu, Lagos</span>
-                    </p>
+                    <div className="flex text-white text-base gap-1 items-start">
+                        <IoLocation className="md:text-2xl text-4xl" />
+                        <p>1/3 Adebola Gbadebo Drv. (Adebola House) Off Abadek Avenue, off Akin Ogunlewe Rd, Igbogbo, Ikorodu, Lagos</p>
+                    </div>
                 </div>
             </main>
             <main className="w-full flex flex-col gap-4">
@@ -55,7 +55,7 @@ const ContactInfo = () => {
                     </div>
                     <div className="flex flex-col lg:col-span-2">
                         <label htmlFor="message" className="text-color3 font-medium ml-1">Message</label>
-                        <textarea name="message" id="message" placeholder="Type your message here..." className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3 resize-y"></textarea>
+                        <textarea name="message" id="message" placeholder="Type your message here..." className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3 resize-y" value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
                     </div>
                     <div className="flex flex-col items-start lg:col-span-2 mt-3">
                         <button type="submit" className="py-3 px-6 bg-color2 text-white flex items-center gap-1 rounded-lg">Send <FiSend className="text-lg" /></button>
