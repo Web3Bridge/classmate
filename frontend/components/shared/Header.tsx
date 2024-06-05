@@ -3,22 +3,29 @@ import Link from "next/link";
 import MaxWrapper from "./MaxWrapper";
 import { navLinks } from "@/utils/NavLinks";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useScroll, motion, useSpring } from "framer-motion";
 import { Button } from "../ui/button";
 import { MobileNavToggler } from "./MobileNavToggler";
 import { MdRocketLaunch } from "react-icons/md";
 import Logo from "./Logo";
 
+
 const Header = () => {
   const pathname = usePathname();
   const { scrollYProgress } = useScroll();
+
+  const router = useRouter()
 
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
   });
+
+  const handleAppLaunch = () => {
+    router.push('/programme')
+  }
 
   return (
     <header className="w-full">
@@ -49,6 +56,7 @@ const Header = () => {
             <Button
               type="button"
               className="text-white bg-color1 hover:bg-color2 flex items-center gap-1"
+              onClick={handleAppLaunch}
             >
               Launch App <MdRocketLaunch className="text-xl" />
             </Button>
