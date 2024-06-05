@@ -8,8 +8,8 @@ const HeroSection = () => {
         <>
             <section className="w-full mt-20 lg:h-[550px] md:h-[450px] grid md:grid-cols-2 gap-6 md:gap-0 lg:px-16 px-4 lg:py-12 md:py-0 py-10 relative z-10">
                 <main className='md:h-full flex flex-col justify-center items-center'>
-                    <div className="w-full lg:h-[500px] md:h-[400px]">
-                        <Image src={aboutUs} alt="HeroImage" width={948} height={912} quality={100} className="w-full h-full object-contain" priority />
+                    <div className="w-full lg:h-[500px] md:h-[400px] h-[300px]">
+                        <Image src={aboutUs} alt="HeroImage" width={368} height={622} quality={100} className="w-full h-full object-contain" priority />
                     </div>
 
                 </main>

@@ -10,7 +10,7 @@ const AboutClassMate = () => {
     return (
         <section className="flex flex-col md:gap-12 gap-8 lg:my-36 md:my-20 my-20">
             <h1 className="font-bold text-color2 lg:text-4xl md:text-3xl text-3xl text-center">About Classmate+</h1>
-            <main className="w-full grid md:grid-cols-3 lg:gap-8 md:gap-6 gap-8 lg:px-20 px-4">
+            <main className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-8 md:gap-6 gap-8 lg:px-20 px-4">
                 {
                     classmateContents.map((item) => (
                         <div className="flex flex-col cursor-pointer group items-start bg-color2 px-8 py-12 rounded-md" key={item.id}>
