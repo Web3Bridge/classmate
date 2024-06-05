@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import { IoMdMail } from "react-icons/io"
 import { IoLocation } from "react-icons/io5"
 import { MdCall } from "react-icons/md"
@@ -12,6 +12,10 @@ const ContactInfo = () => {
     const [email, setEmail] = useState("")
     const [subject, setSubject] = useState("")
     const [message, setMessage] = useState("")
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+    }
 
     return (
         <section className="w-full grid md:grid-cols-2 gap-8 lg:px-12 md:px-8 px-3 mb-16">
@@ -40,7 +44,7 @@ const ContactInfo = () => {
                     <h1 className="font-bold text-color3 text-2xl text-left">Contact Form</h1>
                     <p className=" text-color2 text-lg text-left">Need Assistance? Reach out to us</p>
                 </div>
-                <form className="w-full grid lg:grid-cols-2 gap-4">
+                <form className="w-full grid lg:grid-cols-2 gap-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col">
                         <label htmlFor="name" className="text-color3 font-medium ml-1">Name</label>
                         <input type="text" name="name" id="name" placeholder="Enter your name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={name} onChange={e => setName(e.target.value)} />
