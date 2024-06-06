@@ -14,7 +14,7 @@ const Assignment = () => {
     <section className="mx-auto flex flex-wrap justify-center items-center bg-gray-100 p-8">
       <div className="md:w-[80%]">
         <h1>Assignments</h1>
-        <div className="bg-gray-200 border-b border-black shadow-sm rounded-lg my-4 flex justify-between p-8">
+        <div className="bg-gray-200 border-b shadow-lg border-black rounded-lg my-4 flex justify-between p-8">
           <Table>
             <TableCaption>A list of assignments.</TableCaption>
             <TableHeader>
