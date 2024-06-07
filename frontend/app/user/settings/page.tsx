@@ -92,6 +92,9 @@ export default function Settings() {
       <div className="md:w-[60%]">
         <h1 className="font-bold">Assessments</h1>
         <div className="bg-gray-200 border-b border-black shadow-sm rounded-lg my-4 flex justify-center p-8">
+          <section>
+            <div className="h-40 w-40  rounded-full bg-black mr-6 my-auto mx-auto"></div>
+          </section>
           <FormProvider {...form}>
             <ProfileForm control={form.control} /> {/* Pass control prop */}
           </FormProvider>
