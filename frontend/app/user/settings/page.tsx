@@ -1,105 +1,128 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller, FormProvider } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Camera, Loader2 } from "lucide-react";
+import { useCallback, useState } from "react";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  lastname: z.string(), // Added lastname field with no minimum length requirement
-});
+export default function Form() {
+  const [selectedFile, setSelectedFile] = useState();
 
-function ProfileForm({ control }) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      lastname: "", // Ensure default value for lastname
-    },
-  });
+  const [username, setUsername] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectImage = ({ target }: { target: any }) => {
+    setSelectedFile(target.files[0]);
+  };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    if (Object.keys(errors).length > 0) {
-      console.error("Validation failed:", errors);
-      // Handle validation failure, e.g., show error messages
+  const getImage = useCallback(async () => {
+    if (selectedFile) {
+      try {
+        const formData = new FormData();
+        formData.append("file", selectedFile!);
+
+        const response = await axios.post(
+          "https://api.pinata.cloud/pinning/pinFileToIPFS",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              pinata_api_key: process.env.VITE_PINATA_API_KEY,
+              pinata_secret_api_key: process.env.VITE_PINATA_SECRET_API_KEY,
+            },
+          }
+        );
+
+        const fileUrl = response.data.IpfsHash;
+        setUrl(fileUrl);
+        console.log(fileUrl);
+        return fileUrl;
+      } catch (error) {
+        console.log("Pinata API Error:", error);
+      }
     }
-  }
+  }, [selectedFile]);
+
+  getImage();
+
+  const handleSubmit = () => {
+    console.log("hello world");
+  };
+
+  const handleClick = async () => {
+    setIsLoading(true);
+    await handleSubmit();
+    setIsLoading(false);
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormField
-        control={control}
-        name="firstname"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>First name</FormLabel>
-            <FormControl>
-              <Controller
-                control={control}
-                name="username"
-                render={({ field }) => (
-                  <Input placeholder="shadcn" {...field} />
-                )}
-              />
-            </FormControl>
+    <div className="flex items-center flex-1 justify-center w-full">
+      <div className="w-full max-w-sm  bg-color2/95 rounded-lg px-7 py-12 flex flex-col items-center">
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          className="hidden"
+          id="selectFile"
+          onChange={handleSelectImage}
+        />
+        <label
+          htmlFor="selectFile"
+          className="rounded-full w-32 h-32 bg-stone-700 flex items-center justify-center cursor-pointer"
+        >
+          {selectedFile ? (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            <span className="relative flex w-16 h-16">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gradient-to-tr from-white/40 via-color1 to-white/40 opacity-85"></span>
+              <Camera className="w-16 h-16 relative inline-flex rounded-full text-muted-foreground" />
+            </span>
+          )}
+        </label>
 
-            <FormLabel>Last name</FormLabel>
-            <FormControl>
-              <Controller
-                control={control}
-                name="lastname"
-                render={({ field }) => (
-                  <Input placeholder="shadcn" {...field} />
-                )}
-              />
-            </FormControl>
-            {errors.username && (
-              <FormMessage>{errors.username.message}</FormMessage>
+        <form className="flex flex-col my-4 w-full gap-4">
+          <div className="space-y-2">
+            <label className="text-sm text-white">Username</label>
+            <Input
+              className="border border-stone-100 py-2 placeholder:text-stone-500"
+              placeholder="Enter username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm text-white">IPFS url</label>
+            <Input
+              className="border border-stone-100 py-2 placeholder:text-stone-500"
+              value={url}
+              readOnly
+              placeholder="Select an image and await IPFS url..."
+            />
+          </div>
+
+          <Button
+            type="button"
+            disabled={url === ""}
+            onClick={handleClick}
+            className="bg-gradient-to-r cursor-pointer disabled:cursor-not-allowed from-color1 via-color1 to-white/20"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                Registering User...
+              </>
+            ) : (
+              "Register User"
             )}
-            <FormDescription></FormDescription>
-          </FormItem>
-        )}
-      />
-
-      <Button type="submit">Submit</Button>
-    </form>
-  );
-}
-
-export default function Settings() {
-  const form = useForm();
-
-  return (
-    <section className="mx-auto flex flex-wrap justify-center items-center bg-gray-100 p-8">
-      <div className="md:w-[60%]">
-        <h1 className="font-bold">Assessments</h1>
-        <div className="bg-gray-200 border-b border-black shadow-sm rounded-lg my-4 flex justify-center p-8">
-          <section>
-            <div className="h-40 w-40  rounded-full bg-black mr-6 my-auto mx-auto"></div>
-          </section>
-          <FormProvider {...form}>
-            <ProfileForm control={form.control} /> {/* Pass control prop */}
-          </FormProvider>
-        </div>
+          </Button>
+        </form>
       </div>
-    </section>
+    </div>
   );
 }
