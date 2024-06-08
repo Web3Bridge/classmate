@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
-import { GrCertificate, GrStatusCriticalSmall } from "react-icons/gr";
+import { GrCertificate } from "react-icons/gr";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -91,7 +91,7 @@ const SideBar = ({
               />
             </div>
             <h3 className="text-gray-400 text-base ml-2 font-barlow my-auto text-center">
-              Linda
+              Larry
             </h3>
           </div>
 
