@@ -5,7 +5,10 @@ import { GiPieChart } from 'react-icons/gi'
 import { PiStudentFill } from 'react-icons/pi'
 import { SiCodementor, SiGoogleclassroom } from 'react-icons/si'
 import { LiaCertificateSolid } from "react-icons/lia";
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar";
+import dynamic from "next/dynamic";
+const Barchart = dynamic(() => import('./chart/Barchart'), { ssr: false });
+const Piechart = dynamic(() => import('./chart/Piechart'), { ssr: false });
 
 
 const Dashboard = () => {
@@ -14,8 +17,8 @@ const Dashboard = () => {
 
     return (
         <section className='w-full py-6 flex flex-col'>
-            <div className="w-full grid lg:grid-cols-6 gap-4">
-                <main className='lg:col-span-4 flex flex-col gap-4'>
+            <div className="w-full grid lg:grid-cols-6 md:grid-cols-5 gap-4">
+                <main className='lg:col-span-4 md:col-span-3 flex flex-col gap-4'>
                     <div className='flex flex-col'>
                         <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>Admin Dashboard</h1>
                         <h4 className='text-lg tracking-wider text-color2'>Statistics</h4>
@@ -83,7 +86,7 @@ const Dashboard = () => {
                         </div>
                     </article>
                 </main>
-                <aside className='lg:col-span-2 flex flex-col gap-4 rounded-md bg-white p-4'>
+                <aside className='md:col-span-2 flex flex-col gap-4 rounded-md bg-white p-4 md:p-2 lg:p-4'>
                     <Calendar
                         mode="single"
                         selected={date}
@@ -94,12 +97,22 @@ const Dashboard = () => {
             </div>
 
             {/* Charts */}
-            <div className="w-full grid lg:grid-cols-5 md:grid-cols-2">
-                <main className='w-full lg:col-span-3 flex flex-col'>
+            <div className="w-full grid lg:grid-cols-5 md:grid-cols-2 md:gap-3 gap-5 lg:gap-5 mt-8">
+                <main className='w-full lg:col-span-3 flex flex-col p-3'>
+                    <div className='flex flex-col mb-4'>
+                        <h1 className='uppercase text-color2 md:text-lg font-bold text-xl'>Programme Analysis</h1>
+                        <h4 className='text-base tracking-wider text-color2'>Class Statistics</h4>
+                    </div>
                     {/* Bar */}
+                    <Barchart />
                 </main>
-                <aside className='w-full lg:col-span-2 flex flex-col'>
+                <aside className='w-full lg:col-span-2 flex flex-col p-3'>
+                    <div className='flex flex-col mb-4'>
+                        <h1 className='uppercase text-center text-color2 md:text-lg font-bold text-xl'>Attendence Analysis</h1>
+                        <h4 className='text-base text-center tracking-wider text-color2'>Signed Attendence Statistics</h4>
+                    </div>
                     {/* pie */}
+                    <Piechart />
                 </aside>
             </div>
         </section>
