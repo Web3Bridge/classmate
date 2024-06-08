@@ -29,7 +29,7 @@ export default function AdminLayout({
                         {/*  Main Content Start */}
                         <main>
                             <div className="mx-auto max-w-screen-2xl pt-4 pb-6 md:pt-4 md:pb-10 2xl:p-10">
-                                <section className="w-full px-1.5">{children}</section>
+                                <section className="w-full px-4 md:px-3">{children}</section>
                             </div>
                         </main>
                     </section>
