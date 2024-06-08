@@ -1,9 +1,5 @@
 export const sideLinksAd = [
   {
-    name: "Home",
-    href: "/",
-  },
-  {
     name: "Dashboard",
     href: "/admin",
   },
