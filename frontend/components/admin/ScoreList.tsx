@@ -1,5 +1,7 @@
 'use client'
-import React, { useEffect, useMemo, useState } from 'react'
+import { Button } from "../ui/button"
+import { AiOutlineCloudUpload } from "react-icons/ai";
+import scoreList from "../../utils/Score.json"
 import {
     ColumnDef,
     PaginationState,
@@ -18,18 +20,20 @@ import {
     TableHeader,
     TableRow,
 } from '../ui/table'
-import tableData from "../../utils/StudentList.json"
-import { Button } from '../ui/button'
+import { useEffect, useMemo, useState } from "react";
+
 
 type tableDataType = {
     id: number,
     name: string,
-    address: string
+    address: string,
+    totalScore: number,
+    averageScore: string
 }
 
-const MentorLists = () => {
+const ScoreList = () => {
 
-    const defaultData: tableDataType[] = useMemo(() => tableData, [])
+    const defaultData: tableDataType[] = useMemo(() => scoreList, [])
 
     const columns = useMemo<ColumnDef<tableDataType>[]>(
         () => [
@@ -49,15 +53,14 @@ const MentorLists = () => {
                 cell: info => info.getValue(),
             },
             {
-                accessorFn: row => row.id,
-                id: 'id',
-                cell: ({ row }) => (
-                    <div className="px-1">
-                        <input type='checkbox' className="accent-color1" value={row.id} checked={row.getIsSelected()} onChange={row.getToggleSelectedHandler()} disabled={!row.getCanSelect()}
-                        />
-                    </div>
-                ),
-                header: () => <span>Action</span>,
+                accessorKey: 'totalScore',
+                header: () => <span className="text-nowrap">Total Score</span>,
+                cell: info => info.getValue(),
+            },
+            {
+                accessorKey: 'averageScore',
+                header: () => <span className="text-nowrap">Average Score</span>,
+                cell: info => info.getValue(),
             },
         ],
         []
@@ -66,8 +69,6 @@ const MentorLists = () => {
     const [data, _setData] = useState(() => [...defaultData])
 
     const [globalFilter, setGlobalFilter] = useState('')
-
-    const [rowSelection, setRowSelection] = React.useState({})
 
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -85,20 +86,23 @@ const MentorLists = () => {
         onPaginationChange: setPagination,
         state: {
             pagination,
-            rowSelection,
             globalFilter
         },
-        enableRowSelection: true,
-        onRowSelectionChange: setRowSelection,
         onGlobalFilterChange: setGlobalFilter,
     })
 
     return (
         <section className='w-full py-6 flex flex-col'>
-            <main className='w-full flex flex-col gap-4'>
-                <div className='flex flex-col'>
-                    <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>Mentors List</h1>
-                    <h4 className='text-lg tracking-wider text-color2'> List of mentors in your programme</h4>
+            <main className='w-full flex flex-col gap-7'>
+                <div className="w-full flex md:flex-row flex-col gap-3 md:gap-0 justify-between md:items-end items-start">
+                    <div className='flex flex-col'>
+                        <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>Score List</h1>
+                        <h4 className='text-lg tracking-wider text-color2'> List of students score </h4>
+                    </div>
+                    <Button type="button" className="flex items-center gap-1 bg-color1 text-gray-100">
+                        <AiOutlineCloudUpload className="text-xl" />
+                        <span>Upload CSV file</span>
+                    </Button>
                 </div>
 
                 <div className='w-full overflow-x-auto'>
@@ -200,12 +204,13 @@ const MentorLists = () => {
                         ))}
                     </select>
                 </div>
+
             </main>
         </section>
     )
 }
 
-export default MentorLists
+export default ScoreList
 
 const DebouncedInput = ({
     value: initialValue,
