@@ -94,3 +94,13 @@ body::-webkit-scrollbar {
 .user_dashboard {
   @apply bg-[#F2F4F6];
 }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number].number-to-text {
+  -moz-appearance: textfield;
+}
