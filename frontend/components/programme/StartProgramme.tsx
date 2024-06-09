@@ -58,7 +58,7 @@ const StartProgramme = () => {
 
             <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
                 <Dialog>
-                    <DialogTrigger>
+                    <DialogTrigger asChild>
                         <Button type="button" className="text-white bg-color1 hover:bg-color2 flex items-center gap-1">Create new programmes <IoIosAddCircleOutline className="text-xl" /></Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">

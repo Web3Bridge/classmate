@@ -13,7 +13,7 @@ export const sideLinksAd = [
   },
   {
     name: "Attendance",
-    href: "/admin/attendance",
+    href: "/admin/attendence",
   },
   {
     name: "Scores",

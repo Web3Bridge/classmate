@@ -29,7 +29,7 @@ const Programmes = () => {
                     <p className="text-lg text-color3">Welcome to Classmate + Programmes</p>
                 </div>
                 <Dialog>
-                    <DialogTrigger>
+                    <DialogTrigger asChild>
                         <button type="button" className="text-color2 bg-white border border-color2 hover:bg-color2 hover:text-white rounded-lg flex items-center gap-1 text-sm py-2.5 px-6">Create new programmes <IoIosAddCircleOutline className="text-xl" /></button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
