@@ -2,6 +2,8 @@
 
 export default function Settings() {
     return (
-        <div>page</div>
+        <main className="w-full flex flex-col overflow-x-hidden">
+
+        </main>
     )
 }

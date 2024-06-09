@@ -162,7 +162,7 @@ const StudentLists = () => {
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             className="border rounded px-3 bg-color2 text-gray-200 py-1"
             onClick={() => table.firstPage()}

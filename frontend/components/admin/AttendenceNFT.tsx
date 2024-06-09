@@ -13,6 +13,7 @@ import {
     DialogFooter,
     DialogClose
 } from "../ui/dialog"
+import { IoCalendar } from "react-icons/io5"
 
 const AttendenceNFT = () => {
     const data = useMemo(() => listOfNfts, []);
@@ -33,9 +34,13 @@ const AttendenceNFT = () => {
                     {
                         data.map((list, index) => (
                             <div className="w-full p-3 rounded bg-color2" key={index}>
-                                <div className="w-full flex flex-col gap-3 justify-between bg-transparent relative">
-                                    <div className="w-full h-[250px] overflow-hidden rounded">
+                                <div className="w-full flex flex-col gap-3 justify-between bg-transparent">
+                                    <div className="w-full h-[250px] relative overflow-hidden rounded">
                                         <Image src={list.nftUrl} alt="NFtImage" width={400} height={400} quality={100} className="object-cover w-full h-full object-top" />
+                                        <div className=" absolute top-0 right-0 flex items-center gap-1 bg-color2 text-gray-100 font-medium p-2 rounded text-xs">
+                                            <IoCalendar />
+                                            {list.date}
+                                        </div>
                                     </div>
                                     <h2 className="text-gray-300 text-sm font-medium">Topic:{" "}{list.topic}</h2>
                                     <div className="bg-gray-100 p-3 rounded flex justify-between items-center">
