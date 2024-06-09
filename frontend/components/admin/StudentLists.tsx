@@ -1,10 +1,8 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
-    Column,
     ColumnDef,
     PaginationState,
-    Table as MyTable,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
