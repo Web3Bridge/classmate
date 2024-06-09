@@ -19,7 +19,7 @@ const Greeting = () => {
 
     return (
         <h2 className="text-color3 text-base ml-2 font-medium capitalize">
-            Good {timeOfDay},{" "} Admin
+            Good {timeOfDay},{" "} Larry
         </h2>
     );
 };

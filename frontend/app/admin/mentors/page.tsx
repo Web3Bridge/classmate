@@ -1,3 +1,9 @@
+import MentorLists from "@/components/admin/MentorLists";
+
 export default function Mentors() {
-    return <div>Mentors</div>;
+    return (
+        <main className="w-full flex flex-col overflow-x-hidden">
+            <MentorLists />
+        </main>
+    );
 }

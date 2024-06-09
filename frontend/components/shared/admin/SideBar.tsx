@@ -92,7 +92,7 @@ const SideBar = ({
                     </button>
                 </div>
                 <h1 className="text-sm ml-2 text-gray-200 uppercase">
-                    Welcome Back
+                    Welcome Back Admin
                 </h1>
             </div>
 
