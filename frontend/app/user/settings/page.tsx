@@ -59,7 +59,7 @@ export default function Form() {
 
   return (
     <div className="flex items-center flex-1 justify-center w-full">
-      <div className="w-full max-w-sm  bg-color2/95 rounded-lg px-7 py-12 flex flex-col items-center">
+      <div className="w-full lg:w-[50%] md:w-[70%] bg-color2/95 rounded-lg px-7 py-12 flex flex-col items-center">
         <input
           type="file"
           accept="image/*"
@@ -87,7 +87,7 @@ export default function Form() {
 
         <form className="flex flex-col my-4 w-full gap-4">
           <div className="space-y-2">
-            <label className="text-sm text-white">Username</label>
+            <label className="text-sm text-white capitalize">first name</label>
             <Input
               className="border border-stone-100 py-2 placeholder:text-stone-500"
               placeholder="Enter username"
@@ -97,7 +97,7 @@ export default function Form() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm text-white">IPFS url</label>
+            <label className="text-sm text-white capitalize">last name</label>
             <Input
               className="border border-stone-100 py-2 placeholder:text-stone-500"
               value={url}

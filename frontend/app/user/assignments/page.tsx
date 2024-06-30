@@ -39,8 +39,6 @@ const Assignment = () => {
             </TableBody>
           </Table>
         </div>
-
-        {/* Add more elements as needed, following the pattern above */}
       </div>
     </section>
   );
