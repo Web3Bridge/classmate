@@ -1,6 +1,42 @@
 // // SPDX-License-Identifier: UNLICENSED
 // pragma solidity ^0.8.13;
 
+import "forge-std/Test.sol";
+import "../src/Contracts/certificates/SchoolsNFT.sol";
+
+contract SchoolsNFTTest is Test {
+    //     SchoolsNFT schoolsNFT;
+    //     function setUp() public {
+    //         schoolsNFT = new SchoolsNFT(
+    //             "Test School",
+    //             "TS",
+    //             "ipfs://example.com/",
+    //             address(this)
+    //         );
+    //     }
+    //     function testMintAndMintSpokToMentor() public {
+    //         // Mint a token for a test address
+    //         address testAddress = address(0x123);
+    //         bytes memory dayId = "testDay";
+    //         uint256 amount = 1;
+    //         schoolsNFT.setDayUri(dayId, "https://example.com/test.png");
+    //         schoolsNFT.mint(testAddress, dayId, amount);
+    //         assertEq(
+    //             schoolsNFT.balanceOf(testAddress),
+    //             amount,
+    //             "Balance should match"
+    //         );
+    //         // Mint a SPOK token to another test address
+    //         address mentorAddress = address(0x456);
+    //         schoolsNFT.mintSpokToMentor(mentorAddress);
+    //         assertEq(
+    //             schoolsNFT.balanceOf(mentorAddress),
+    //             1,
+    //             "Balance should match"
+    //         );
+    //     }
+}
+
 // import "forge-std/Test.sol";
 // import "../src/Contracts/SchoolsNFT.sol";
 

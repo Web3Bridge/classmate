@@ -97,7 +97,15 @@ contract organisation {
         require(isStudent[msg.sender] == true, "NOT A VALID STUDENT");
         _;
     }
-
+    modifier nameChangeRequest() {
+        require(
+            isStudent[msg.sender] == true ||
+                msg.sender == moderator ||
+                isStaff[msg.sender] == true,
+            "NOT ALLOWED TO REQUEST A NAME CHANGE"
+        );
+        _;
+    }
     modifier onlyStaff() {
         require(
             msg.sender == moderator || isStaff[msg.sender] == true,
@@ -139,7 +147,10 @@ contract organisation {
         mentorsData[_moderator]._name = _adminName;
     }
 
-    function initialize(address _NftContract, address _certificateContract) external {
+    function initialize(
+        address _NftContract,
+        address _certificateContract
+    ) external {
         if (msg.sender != organisationFactory) revert not_Autorized_Caller();
         NftContract = _NftContract;
         certificateContract = _certificateContract;
@@ -152,7 +163,10 @@ contract organisation {
     ) external onlyModerator {
         uint staffLength = staffList.length;
         for (uint i; i < staffLength; i++) {
-            if (isStaff[staffList[i]._address] == false && isStudent[staffList[i]._address] == false) {
+            if (
+                isStaff[staffList[i]._address] == false &&
+                isStudent[staffList[i]._address] == false
+            ) {
                 mentorsData[staffList[i]._address] = staffList[i];
                 isStaff[staffList[i]._address] = true;
                 indexInMentorsArray[staffList[i]._address] = mentors.length;
@@ -164,12 +178,10 @@ contract organisation {
         emit staffsRegistered(staffList.length);
     }
 
-    
     function TransferOwnership(address newModerator) external onlyModerator {
         assert(newModerator != address(0));
         moderator = newModerator;
     }
-
 
     // @dev: Function to register students to be called only by the moderator
     // @params: _studentList: An array of structs(individuals) consisting of name and wallet address of students.
@@ -178,23 +190,40 @@ contract organisation {
     ) external onlyModerator {
         uint studentLength = _studentList.length;
         for (uint i; i < studentLength; i++) {
-            if (isStudent[_studentList[i]._address] == false && isStaff[_studentList[i]._address] == false ) {
+            if (
+                isStudent[_studentList[i]._address] == false &&
+                isStaff[_studentList[i]._address] == false
+            ) {
                 studentsData[_studentList[i]._address] = _studentList[i];
-                indexInStudentsArray[_studentList[i]._address] = students.length;
+                indexInStudentsArray[_studentList[i]._address] = students
+                    .length;
                 students.push(_studentList[i]._address);
                 isStudent[_studentList[i]._address] = true;
             }
-
         }
         // UCHE
         IFACTORY(organisationFactory).register(_studentList);
         emit studentsRegistered(_studentList.length);
     }
 
-    function StudentsRequestNameCorrection() external onlyStudents {
+    // function StudentsRequestNameCorrection() external onlyStudents {
+    //     if (requestNameCorrection[msg.sender] == true)
+    //         revert already_requested();
+    //     requestNameCorrection[msg.sender] = true;
+    //     emit nameChangeRequested(msg.sender);
+    // }
+
+    // function MentorsRequestNameCorrection() external onlyStaff {
+    //     if (requestNameCorrection[msg.sender] == true)
+    //         revert already_requested();
+    //     requestNameCorrection[msg.sender] = true;
+    //     emit nameChangeRequested(msg.sender);
+    // }
+
+    function RequestNameCorrection() external nameChangeRequest {
         if (requestNameCorrection[msg.sender] == true)
             revert already_requested();
-        requestNameCorrection[msg.sender] == true;
+        requestNameCorrection[msg.sender] = true;
         emit nameChangeRequested(msg.sender);
     }
 
@@ -209,6 +238,19 @@ contract organisation {
             }
         }
         emit studentNamesChanged(_studentList.length);
+    }
+
+    function editMentorsName(
+        individual[] memory _mentorsList
+    ) external onlyModerator {
+        uint MentorsLength = _mentorsList.length;
+        for (uint i; i < MentorsLength; i++) {
+            if (requestNameCorrection[_mentorsList[i]._address] == true) {
+                mentorsData[_mentorsList[i]._address] = _mentorsList[i];
+                requestNameCorrection[_mentorsList[i]._address] = false;
+            }
+        }
+        emit StaffNamesChanged(_mentorsList.length);
     }
 
     // @dev: Function to Create Id for a particular Lecture Day, this Id is to serve as Nft Id. Only callable by mentor on duty.
@@ -303,14 +345,17 @@ contract organisation {
         emit attendanceClosed(_lectureId, msg.sender);
     }
 
-    function RecordResults(uint256 testId, string calldata _resultCid) external onlyMentorOnDuty {
+    function RecordResults(
+        uint256 testId,
+        string calldata _resultCid
+    ) external onlyMentorOnDuty {
         require(testIdUsed[testId] == false, "TEST ID ALREADY USED");
         testIdUsed[testId] = true;
         resultCid.push(_resultCid);
         emit newResultUpdated(testId, msg.sender);
     }
 
-    function getResultCid() external view returns(string[] memory){
+    function getResultCid() external view returns (string[] memory) {
         return resultCid;
     }
 
@@ -333,11 +378,16 @@ contract organisation {
         emit studentsEvicted(studentsToRevoke.length);
     }
 
-    function getNameArray(address[] calldata _students) external view returns (string[] memory) {
+    function getNameArray(
+        address[] calldata _students
+    ) external view returns (string[] memory) {
         string[] memory Names = new string[](_students.length);
         string memory emptyName;
         for (uint i = 0; i < _students.length; i++) {
-            if (keccak256(abi.encodePacked(studentsData[_students[i]]._name)) == keccak256(abi.encodePacked(emptyName))) {
+            if (
+                keccak256(abi.encodePacked(studentsData[_students[i]]._name)) ==
+                keccak256(abi.encodePacked(emptyName))
+            ) {
                 Names[i] = "UNREGISTERED";
             } else {
                 Names[i] = studentsData[_students[i]]._name;

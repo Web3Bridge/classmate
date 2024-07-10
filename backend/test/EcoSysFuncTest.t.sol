@@ -6,6 +6,7 @@ import "../src/Interfaces/Ichild.sol";
 import "../src/Interfaces/IFactory.sol";
 import "../src/Contracts/organizations/organisationFactory.sol";
 import "../src/Contracts/certificates/certificateFactory.sol";
+
 // import "../src/Contracts/SchoolsNFT.sol";
 
 contract EcosystemTest is Test {
@@ -14,8 +15,11 @@ contract EcosystemTest is Test {
 
     individual student1;
     individual[] students;
+    individual[] editstudents;
+
     individual mentor;
     individual[] mentors;
+    individual[] editMentors;
     address[] studentsToEvict;
     address[] nameCheck;
     address mentorAdd = 0xfd182E53C17BD167ABa87592C5ef6414D25bb9B4;
@@ -25,7 +29,9 @@ contract EcosystemTest is Test {
     function setUp() public {
         vm.prank(director);
         _certificateFactory = new certificateFactory();
-        _organisationFactory = new organisationFactory(address(_certificateFactory));
+        _organisationFactory = new organisationFactory(
+            address(_certificateFactory)
+        );
         student1._address = address(studentAdd);
         student1._name = "JOHN DOE";
         students.push(student1);
@@ -37,8 +43,16 @@ contract EcosystemTest is Test {
 
     function testCohortCreation() public {
         vm.startPrank(director);
-        (address Organisation, address OrganisationNft, address OrganizationCert) = _organisationFactory
-            .createorganisation("WEB3BRIDGE", "COHORT 9", "http://test.org", "Abims");
+        (
+            address Organisation,
+            address OrganisationNft,
+            address OrganizationCert
+        ) = _organisationFactory.createorganisation(
+                "WEB3BRIDGE",
+                "COHORT 9",
+                "http://test.org",
+                "Abims"
+            );
 
         address[] memory creatorsOrganizations = _organisationFactory
             .getUserOrganisatons(director);
@@ -62,7 +76,7 @@ contract EcosystemTest is Test {
         vm.stopPrank();
     }
 
-    function testZGetStudentsNamesArray() public {
+    function testGetStudentsNamesArray() public {
         testStudentRegister();
         nameCheck.push(studentAdd);
         nameCheck.push(mentorAdd);
@@ -74,19 +88,32 @@ contract EcosystemTest is Test {
         console.log(studentsName[1]);
     }
 
-    function testCreatorsName() public {
+    function testZ_edit_students_Name() public {
         testStudentRegister();
+        vm.startPrank(studentAdd);
+        address child = _organisationFactory.getUserOrganisatons(studentAdd)[0];
+
+        ICHILD(child).RequestNameCorrection();
+
+        vm.stopPrank();
+
+        student1._name = "MUSAA";
+        student1._address = studentAdd;
+        editstudents.push(student1);
+
         vm.startPrank(director);
-        address child = _organisationFactory.getUserOrganisatons(director)[0];
-       string memory admin = ICHILD(child).getMentorsName(director);
-       console.log(admin);
-        assertEq("Abims", admin);
 
+        ICHILD(child).editStudentName(editstudents);
 
+        string memory newStudentName = ICHILD(child).getStudentName(studentAdd);
+
+        console.log(newStudentName);
+
+        assertEq("MUSAA", newStudentName);
     }
 
     function testMentorRegister() public {
-        testStudentRegister();
+        testCohortCreation();
         vm.startPrank(director);
 
         address child = _organisationFactory.getUserOrganisatons(director)[0];
@@ -100,6 +127,31 @@ contract EcosystemTest is Test {
         assertEq(2, studentsList.length);
         assertEq(true, mentorStatus);
         assertEq("MR. ABIMS", mentorName);
+    }
+
+    function testZ_edit_mentors_Name() public {
+        testMentorRegister();
+        vm.startPrank(mentorAdd);
+        address child = _organisationFactory.getUserOrganisatons(mentorAdd)[0];
+
+        ICHILD(child).RequestNameCorrection();
+
+        vm.stopPrank();
+
+        mentor._name = "Mr. Abimbola";
+        mentor._address = mentorAdd;
+
+        editMentors.push(mentor);
+
+        vm.startPrank(director);
+
+        ICHILD(child).editMentorsName(editMentors);
+
+        string memory newMentorsName = ICHILD(child).getMentorsName(mentorAdd);
+
+        console.log(newMentorsName);
+
+        assertEq("Mr. Abimbola", newMentorsName);
     }
 
     function testFail_MentorIsNotOnDuty() public {
@@ -143,6 +195,18 @@ contract EcosystemTest is Test {
 
         vm.stopPrank();
     }
+
+    // function testCreateMentorsSpok() public {
+    //     vm.startPrank(director);
+    //     address mentorsSpokAddress = _organisationFactory(
+    //         "Mentors SPOK",
+    //         "MSPOK",
+    //         "(link unavailable)",
+    //         director
+    //     );
+    //     assertEq(mentorsSpokAddress, _organisationFactory.getMentorsSpok());
+    //     vm.stopPrank();
+    // }
 
     function testFail_TakeAttendaceBeforeClass() public {
         testCreateAttendance();
@@ -206,7 +270,7 @@ contract EcosystemTest is Test {
         assertEq(lectureData.status, true);
     }
 
-    function testZEvictStudent() public {
+    function testEvictStudent() public {
         testSignAttendance();
         vm.startPrank(director);
         studentsToEvict.push(studentAdd);
@@ -223,7 +287,7 @@ contract EcosystemTest is Test {
     }
 
     function testFail_EvictedStudentSignAttendance() public {
-        testZEvictStudent();
+        testEvictStudent();
         vm.startPrank(mentorAdd);
         address child = _organisationFactory.getUserOrganisatons(director)[0];
 
@@ -240,7 +304,7 @@ contract EcosystemTest is Test {
         vm.stopPrank();
     }
 
-    function testzCertificateIssuance() public {
+    function testCertificateIssuance() public {
         testSignAttendance();
         vm.startPrank(director);
         address child = _organisationFactory.getUserOrganisatons(director)[0];
