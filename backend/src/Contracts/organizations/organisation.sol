@@ -97,7 +97,7 @@ contract organisation {
         require(isStudent[msg.sender] == true, "NOT A VALID STUDENT");
         _;
     }
-    modifier nameChangeRequest() {
+    modifier onlyStudentOrStaff() {
         require(
             isStudent[msg.sender] == true ||
                 msg.sender == moderator ||
@@ -210,17 +210,17 @@ contract organisation {
     //     if (requestNameCorrection[msg.sender] == true)
     //         revert already_requested();
     //     requestNameCorrection[msg.sender] = true;
-    //     emit nameChangeRequested(msg.sender);
+    //     emit onlyStudentOrStaffed(msg.sender);
     // }
 
     // function MentorsRequestNameCorrection() external onlyStaff {
     //     if (requestNameCorrection[msg.sender] == true)
     //         revert already_requested();
     //     requestNameCorrection[msg.sender] = true;
-    //     emit nameChangeRequested(msg.sender);
+    //     emit onlyStudentOrStaffed(msg.sender);
     // }
 
-    function RequestNameCorrection() external nameChangeRequest {
+    function RequestNameCorrection() external onlyStudentOrStaff {
         if (requestNameCorrection[msg.sender] == true)
             revert already_requested();
         requestNameCorrection[msg.sender] = true;
@@ -425,6 +425,12 @@ contract organisation {
         if (isStudent[_student] == false) revert not_valid_student();
         attendace = studentsTotalAttendance[_student];
         TotalClasses = LectureIdCollection.length;
+    }
+
+    function getStudentsPresent(
+        bytes memory _lectureId
+    ) external view returns (uint) {
+        return lectureInstance[_lectureId].studentsPresent;
     }
 
     function listClassesAttended(

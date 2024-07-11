@@ -53,7 +53,7 @@ contract SchoolsNFT is ERC1155 {
 
     function getTotalAttendnceSignedForDay(
         bytes memory _daysId
-    ) public view returns (uint256) {
+    ) external view returns (uint256) {
         uint256 tokenId = daysIdToTokenId[_daysId];
 
         // Initialize a variable to store the total supply of tokens for this day

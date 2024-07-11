@@ -40,6 +40,17 @@ interface ICHILD {
         string calldata _topic
     ) external;
 
+    function createMentorsSpok(
+        string memory _name,
+        string memory _symbol,
+        string memory _uri,
+        address _admin
+    ) external returns (address);
+
+    function getStudentsPresent(
+        bytes memory _lectureId
+    ) external view returns (uint);
+
     function editStudentName(individual[] memory _studentList) external;
 
     function editMentorsName(individual[] memory _mentorsList) external;

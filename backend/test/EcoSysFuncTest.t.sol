@@ -25,6 +25,7 @@ contract EcosystemTest is Test {
     address mentorAdd = 0xfd182E53C17BD167ABa87592C5ef6414D25bb9B4;
     address studentAdd = 0x13B109506Ab1b120C82D0d342c5E64401a5B6381;
     address director = 0xA771E1625DD4FAa2Ff0a41FA119Eb9644c9A46C8;
+    address public organisationAddress;
 
     function setUp() public {
         vm.prank(director);
@@ -50,15 +51,12 @@ contract EcosystemTest is Test {
         ) = _organisationFactory.createorganisation(
                 "WEB3BRIDGE",
                 "COHORT 9",
-                "http://test.org",
+                "(link unavailable)",
                 "Abims"
             );
-
-        address[] memory creatorsOrganizations = _organisationFactory
-            .getUserOrganisatons(director);
-        console.log(creatorsOrganizations[0]);
-        assertEq(Organisation, creatorsOrganizations[0]);
+        organisationAddress = Organisation;
         vm.stopPrank();
+        assertEq(Organisation, organisationAddress);
     }
 
     function testStudentRegister() public {
@@ -196,17 +194,15 @@ contract EcosystemTest is Test {
         vm.stopPrank();
     }
 
-    // function testCreateMentorsSpok() public {
-    //     vm.startPrank(director);
-    //     address mentorsSpokAddress = _organisationFactory(
-    //         "Mentors SPOK",
-    //         "MSPOK",
-    //         "(link unavailable)",
-    //         director
-    //     );
-    //     assertEq(mentorsSpokAddress, _organisationFactory.getMentorsSpok());
-    //     vm.stopPrank();
-    // }
+    function testGetStudentPresent() public {
+        testCohortCreation();
+        address child = organisationAddress;
+
+        bytes memory lectureId = "B0202";
+        testSignAttendance();
+        uint studentsPresent = ICHILD(child).getStudentsPresent(lectureId);
+        assertEq(studentsPresent, 1);
+    }
 
     function testFail_TakeAttendaceBeforeClass() public {
         testCreateAttendance();
