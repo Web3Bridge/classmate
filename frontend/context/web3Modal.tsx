@@ -13,14 +13,13 @@ const baseSepolia = {
     rpcUrl: `${process.env.NEXT_PUBLIC_HTTP_RPC}`
 }
 
-// 3. Create a metadata object
 const metadata = {
     name: 'Classmate',
     description: 'An onchain LMS system',
     url: 'https://localhost:3000', // origin must match your domain & subdomain
     icons: ['https://avatars.mywebsite.com/']
 }
-// 4. Create Ethers config
+
 const ethersConfig = defaultConfig({
     /*Required*/
     metadata,
