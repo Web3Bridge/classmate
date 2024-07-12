@@ -8,9 +8,15 @@ import { Button } from "../ui/button"
 import { MobileNavToggler } from "./MobileNavToggler"
 import { usePathname } from "next/navigation"
 import { useScroll, useSpring, motion } from "framer-motion"
+import { useWalletInfo, useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react"
+import { WalletConnected } from "./WalletConnected"
 
 
 const OnboardingHeader = () => {
+
+    const { open } = useWeb3Modal()
+    const { address, isConnected } = useWeb3ModalAccount()
+    const { walletInfo } = useWalletInfo()
 
     const pathname = usePathname();
     const { scrollYProgress } = useScroll();
@@ -48,10 +54,14 @@ const OnboardingHeader = () => {
 
                     <div className="flex items-center justify-end gap-3">
                         <Button
+                            onClick={() => open()}
                             type="button"
-                            className="text-white bg-color1 hover:bg-color2 flex items-center gap-1"
+                            className={`transitionall duration-200 border border-color1 hover:bg-color2 flex items-center gap-1 ${isConnected ? "bg-white text-color1 hover:bg-color1 hover:text-white" : "bg-color1 text-white"}`}
                         >
-                            Connect Wallet
+                            {
+                                isConnected ? <WalletConnected address={address} icon={walletInfo?.icon} />
+                                    : <span>Connect Wallet</span>
+                            }
                         </Button>
 
                         <div className="md:hidden">
