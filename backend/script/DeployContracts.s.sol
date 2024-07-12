@@ -33,7 +33,7 @@ contract DeployContracts is Script {
             address OrganizationCertNft
         ) = _organisationFactory.createorganisation(
                 "WEB3BRIDGE",
-                "COHORT TEST",
+                "COHORT XI",
                 "http://test.org",
                 "CHINONSO"
             );
@@ -49,7 +49,7 @@ contract DeployContracts is Script {
     }
 
     function writeAddressesToFile(address addr, string memory text) public {
-        string memory filename = "./deployed_contracts.txt";
+        string memory filename = "./deployed_contracts1.txt";
 
         vm.writeLine(
             filename,
