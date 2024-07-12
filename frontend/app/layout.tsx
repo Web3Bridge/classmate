@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { Raleway as FontSans } from "next/font/google";
+import { Web3Modal } from "@/context/web3Modal";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,7 +27,9 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {children}
+        <Web3Modal>
+          {children}
+        </Web3Modal>
       </body>
     </html>
   );
