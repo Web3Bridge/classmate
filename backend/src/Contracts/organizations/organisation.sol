@@ -17,6 +17,11 @@ contract organisation {
     address public NftContract;
     address public certificateContract;
     bool public certificateIssued;
+
+    address public spokContract;
+    string public spokURI;
+
+    bool public spokMinted;
     mapping(address => bool) requestNameCorrection;
 
     /**
@@ -149,11 +154,13 @@ contract organisation {
 
     function initialize(
         address _NftContract,
-        address _certificateContract
+        address _certificateContract,
+        address _spokContract
     ) external {
         if (msg.sender != organisationFactory) revert not_Autorized_Caller();
         NftContract = _NftContract;
         certificateContract = _certificateContract;
+        spokContract = _spokContract;
     }
 
     // @dev: Function to register staffs to be called only by the moderator
@@ -273,6 +280,13 @@ contract organisation {
         // NONSO GENESIS
         INFT(NftContract).setDayUri(_lectureId, _uri);
         emit attendanceCreated(_lectureId, _uri, _topic, msg.sender);
+    }
+
+    function mintMentorsSpok(string memory Uri) external onlyModerator {
+        require(spokMinted == false, "spok already minted");
+        INFT(spokContract).batchMintTokens(mentors, Uri);
+        spokURI = Uri;
+        spokMinted = true;
     }
 
     function editTopic(

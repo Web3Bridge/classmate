@@ -4,8 +4,6 @@ pragma solidity ^0.8.9;
 import "./SchoolCertificate.sol";
 import "./SchoolsNFT.sol";
 
-import "./schoolMentorsSpok.sol";
-
 contract certificateFactory {
     address Admin;
 
@@ -37,19 +35,16 @@ contract certificateFactory {
     }
 
     function createMentorsSpok(
-        string memory _name,
-        string memory _symbol,
-        string memory _uri,
-        address _admin
-    ) external returns (address) {
-        require(msg.sender == Admin, "Only admin can create Mentors SPOK");
-        mentorsSpok newMentorsSpok = new mentorsSpok(
-            _name,
-            _symbol,
-            _uri,
-            _admin
+        string memory Name,
+        string memory Symbol,
+        address institution
+    ) public returns (address) {
+        Certificate newCertificateAdd = new Certificate(
+            Name,
+            Symbol,
+            institution
         );
-        return address(newMentorsSpok);
+        return address(newCertificateAdd);
     }
 
     function completePackage(
@@ -57,9 +52,16 @@ contract certificateFactory {
         string memory Symbol,
         string memory Uri,
         address _Admin
-    ) external returns (address newCertificateAdd, address newSchoolsNFT) {
+    )
+        external
+        returns (
+            address newCertificateAdd,
+            address newSchoolsNFT,
+            address newMentorsSpok
+        )
+    {
         newCertificateAdd = createCertificateNft(Name, Symbol, _Admin);
         newSchoolsNFT = createAttendanceNft(Name, Symbol, Uri, _Admin);
-        // newMentorsSpok = createMentorsSpok(Name, Symbol, Uri, _Admin);
+        newMentorsSpok = createMentorsSpok(Name, Symbol, _Admin);
     }
 }

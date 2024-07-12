@@ -12,6 +12,7 @@ contract DeployContracts is Script {
 
     individual student1;
     individual[] students;
+
     function setUp() public {}
 
     function run() public {
@@ -22,11 +23,22 @@ contract DeployContracts is Script {
         student1._name = "SAMUEL";
         students.push(student1);
         _certificateFactory = new certificateFactory();
-        _organisationFactory = new organisationFactory(address(_certificateFactory));
-        (address Organisation, address OrganisationNft, address OrganizationCertNft) = _organisationFactory
-            .createorganisation("WEB3BRIDGE", "COHORT TEST", "http://test.org", 'CHINONSO');
+        _organisationFactory = new organisationFactory(
+            address(_certificateFactory)
+        );
+        (
+            address Organisation,
+            address OrganisationNft,
+            address OrganisationMentorsSpok,
+            address OrganizationCertNft
+        ) = _organisationFactory.createorganisation(
+                "WEB3BRIDGE",
+                "COHORT TEST",
+                "http://test.org",
+                "CHINONSO"
+            );
         // ICHILD(Organisation).registerStudents(students);
-        
+
         vm.stopBroadcast();
         writeAddressesToFile(
             address(_organisationFactory),

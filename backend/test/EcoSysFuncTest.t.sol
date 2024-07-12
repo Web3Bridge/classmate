@@ -47,11 +47,12 @@ contract EcosystemTest is Test {
         (
             address Organisation,
             address OrganisationNft,
+            address OrganisationMentorSpok,
             address OrganizationCert
         ) = _organisationFactory.createorganisation(
                 "WEB3BRIDGE",
                 "COHORT 9",
-                "(link unavailable)",
+                "http://test.org",
                 "Abims"
             );
         organisationAddress = Organisation;
@@ -305,5 +306,12 @@ contract EcosystemTest is Test {
         vm.startPrank(director);
         address child = _organisationFactory.getUserOrganisatons(director)[0];
         ICHILD(child).MintCertificate("http://test.org");
+    }
+
+    function testMentorsSpok() public {
+        testSignAttendance();
+        vm.startPrank(director);
+        address child = _organisationFactory.getUserOrganisatons(director)[0];
+        ICHILD(child).mintMentorsSpok("http://test.org");
     }
 }

@@ -40,13 +40,6 @@ interface ICHILD {
         string calldata _topic
     ) external;
 
-    function createMentorsSpok(
-        string memory _name,
-        string memory _symbol,
-        string memory _uri,
-        address _admin
-    ) external returns (address);
-
     function getStudentsPresent(
         bytes memory _lectureId
     ) external view returns (uint);
@@ -85,9 +78,7 @@ interface ICHILD {
 
     function MintCertificate(string memory Uri) external;
 
+    function mintMentorsSpok(string memory Uri) external;
+
     function RequestNameCorrection() external;
-
-    // function StudentsRequestNameCorrection() external;
-
-    // function MentorsRequestNameCorrection() external;
 }

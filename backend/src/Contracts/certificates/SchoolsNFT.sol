@@ -56,17 +56,13 @@ contract SchoolsNFT is ERC1155 {
     ) external view returns (uint256) {
         uint256 tokenId = daysIdToTokenId[_daysId];
 
-        // Initialize a variable to store the total supply of tokens for this day
         uint256 totalSupply = 0;
 
-        // Get the balances of all addresses for this token ID
-        uint256[] memory balances = new uint256[](1); // We're only interested in one token ID
+        uint256[] memory balances = new uint256[](1);
         balances[0] = tokenId;
 
-        // Call the balanceOfBatch function to get the balances of all addresses for this token ID
         uint256[] memory result = balanceOfBatch(new address[](1), balances);
 
-        // The total supply is the sum of the balances returned by balanceOfBatch
         totalSupply = result[0];
 
         return totalSupply;
@@ -104,11 +100,6 @@ contract SchoolsNFT is ERC1155 {
         revert("TOKEN IS SOUL BUND");
     }
 }
-
-// function mintSpokToMentor(address _mentorAddress) public onlyOwner {
-//     _mint(_mentorAddress, SPOK_TOKEN_ID, 1, "");
-// }
-
 // pragma solidity ^0.8.13;
 
 // import "openzeppelin/token/ERC1155/ERC1155.sol";
