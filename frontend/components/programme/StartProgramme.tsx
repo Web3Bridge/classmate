@@ -13,17 +13,37 @@ import {
     DialogFooter
 } from '../ui/dialog'
 import { useRouter } from 'next/navigation'
+import { useWeb3ModalAccount } from '@web3modal/ethers/react'
+import { toast } from 'sonner'
+import useCreateNewProgramme from '@/hooks/useCreateNewProgramme'
 
 
 const StartProgramme = () => {
     const router = useRouter()
+    const { isConnected } = useWeb3ModalAccount()
 
     const [instName, setInstName] = useState<string>("")
     const [adminName, setAdminName] = useState<string>("")
     const [programmeName, setProgrammeName] = useState<string>("")
+    const [imageURI, setImageURI] = useState<string>("")
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleCreateNewProgramme = useCreateNewProgramme(instName, programmeName, imageURI, adminName)
+
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
+
+        if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
+        if (!instName) return toast.error("Please enter institution name", { position: "top-right" });
+        if (!adminName) return toast.error("Please enter admin name", { position: "top-right" });
+        if (!programmeName) return toast.error("Please enter programme name", { position: "top-right" });
+        if (!imageURI) return toast.error("Please enter image URI", { position: "top-right" });
+
+        await handleCreateNewProgramme()
+
+        setInstName("")
+        setAdminName("")
+        setProgrammeName("")
+        setImageURI("")
     }
 
     const handleViewProgramme = () => {
@@ -80,6 +100,10 @@ const StartProgramme = () => {
                             <div className="flex flex-col">
                                 <label htmlFor="programmeName" className="text-color3 font-medium ml-1">Programme Name</label>
                                 <input type="text" name="programmeName" id="programmeName" placeholder="Enter programme name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={programmeName} onChange={e => setProgrammeName(e.target.value)} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="imageURI" className="text-color3 font-medium ml-1">Image URI</label>
+                                <input type="text" name="imageURI" id="imageURI" placeholder="Enter image URI" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageURI} onChange={e => setImageURI(e.target.value)} />
                             </div>
                             <DialogFooter>
                                 <Button type="submit">Submit</Button>

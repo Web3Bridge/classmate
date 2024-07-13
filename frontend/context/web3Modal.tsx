@@ -1,6 +1,7 @@
 'use client'
-
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
+
+export const SUPPORTED_CHAIN_ID = 84532;
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
 
