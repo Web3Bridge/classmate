@@ -10,12 +10,11 @@ import { MobileNavToggler } from "./MobileNavToggler";
 import { MdRocketLaunch } from "react-icons/md";
 import Logo from "./Logo";
 
-
 const Header = () => {
   const pathname = usePathname();
   const { scrollYProgress } = useScroll();
 
-  const router = useRouter()
+  const router = useRouter();
 
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -24,8 +23,8 @@ const Header = () => {
   });
 
   const handleAppLaunch = () => {
-    router.push('/programme')
-  }
+    router.push("/programme");
+  };
 
   return (
     <header className="w-full">
