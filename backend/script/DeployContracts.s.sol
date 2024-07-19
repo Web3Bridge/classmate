@@ -49,7 +49,7 @@ contract DeployContracts is Script {
     }
 
     function writeAddressesToFile(address addr, string memory text) public {
-        string memory filename = "./deployed_contracts1.txt";
+        string memory filename = "./deployed_contracts2.txt";
 
         vm.writeLine(
             filename,

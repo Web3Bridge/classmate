@@ -17,6 +17,7 @@ contract organisation {
     address public NftContract;
     address public certificateContract;
     bool public certificateIssued;
+    string public organisationImageUri;
 
     address public spokContract;
     string public spokURI;
@@ -138,7 +139,8 @@ contract organisation {
         string memory _organization,
         string memory _cohort,
         address _moderator,
-        string memory _adminName
+        string memory _adminName,
+        string memory _uri
     ) {
         moderator = _moderator;
         organization = _organization;
@@ -150,6 +152,7 @@ contract organisation {
         isStaff[_moderator] = true;
         mentorsData[_moderator]._address = _moderator;
         mentorsData[_moderator]._name = _adminName;
+        organisationImageUri = _uri;
     }
 
     function initialize(
@@ -501,5 +504,9 @@ contract organisation {
 
     function getCohortName() external view returns (string memory) {
         return cohort;
+    }
+
+    function getOrganisationImageUri() external view returns (string memory) {
+        return organisationImageUri;
     }
 }

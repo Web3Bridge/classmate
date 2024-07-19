@@ -41,7 +41,8 @@ contract organisationFactory {
             _organisation,
             _cohort,
             organisationAdmin,
-            _adminName
+            _adminName,
+            _uri
         );
         Organisations.push(address(OrganisationAddress));
         validOrganisation[address(OrganisationAddress)] = true;
