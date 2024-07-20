@@ -1,0 +1,142 @@
+"use client";
+import {
+  type BaseError,
+  useBlockNumber,
+  useReadContract,
+  useReadContracts,
+} from "wagmi";
+import { toast } from "sonner";
+import { useCallback, useEffect, useState } from "react";
+import { config } from "@/config/config";
+import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
+import { OrganisationFactoryABI } from "@/constants/ABIs/OrganisationFactoryABI";
+import { useQueryClient } from "@tanstack/react-query";
+
+const useGetUserOrganisations = (_userAddress: any) => {
+  const [list, setList] = useState<any[]>([]);
+
+  const queryClient = useQueryClient();
+
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const {
+    data: listOfOrganisations,
+    error: listOfOrganisationsError,
+    isPending: listOfOrganisationsIsPending,
+    queryKey,
+  } = useReadContract({
+    address: process.env.NEXT_PUBLIC_ORG_FACTORY_CONTRACT as `0x${string}`,
+    abi: OrganisationFactoryABI,
+    functionName: "getUserOrganisatons",
+    args: [_userAddress],
+  });
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey });
+  }, [blockNumber, queryClient]);
+
+  const {
+    data: OrganisationDetails,
+    error,
+    isPending,
+  } = useReadContracts({
+    contracts: [
+      {
+        address: organisationAddress as `0x${string}`,
+        abi: OrganisationABI,
+        functionName: "getOrganizationName",
+      },
+      {
+        address: organisationAddress as `0x${string}`,
+        abi: OrganisationABI,
+        functionName: "getCohortName",
+      },
+      {
+        address: organisationAddress as `0x${string}`,
+        abi: OrganisationABI,
+        functionName: "getModerator",
+      },
+      {
+        address: organisationAddress as `0x${string}`,
+        abi: OrganisationABI,
+        functionName: "getOrganisationImageUri",
+      },
+    ],
+  });
+  const [balance, ownerOf, totalSupply] = OrganisationDetails || [];
+
+  //   const fetchOrganisationDetails = useCallback(async (address: any) => {
+  //     const organContractAddr = address as `0x${string}`;
+  //     const { data: name } = useReadContract({
+  //       address: organContractAddr,
+  //       abi: OrganisationABI,
+  //       functionName: "getOrganizationName",
+  //     });
+
+  //     const { data: cohort } = useReadContract({
+  //       address: organContractAddr,
+  //       abi: OrganisationABI,
+  //       functionName: "getCohortName",
+  //     });
+
+  //     const { data: moderator } = useReadContract({
+  //       address: organContractAddr,
+  //       abi: OrganisationABI,
+  //       functionName: "getModerator",
+  //     });
+
+  //     const { data: imageURI } = useReadContract({
+  //       address: organContractAddr,
+  //       abi: OrganisationABI,
+  //       functionName: "getOrganisationImageUri",
+  //     });
+
+  //     return { address, name, cohort, moderator, imageURI };
+  //   }, []);
+
+  const fetchUserOrganisations = useCallback(async () => {
+    if (!listOfOrganisations)
+      return toast.error("Please connect wallet", { position: "top-right" });
+
+    try {
+      const formattedRes = listOfOrganisations.map((address: any) =>
+        address.toString()
+      );
+
+      //   const dataPromises = formattedRes.map(async (address: string) => {
+      //     return fetchOrganisationDetails(address);
+      //   });
+
+      //   const results = await Promise.all(dataPromises);
+
+      //   if (typeof window !== "undefined") {
+      //     localStorage.setItem("memberOrganisations", JSON.stringify(results));
+      //   }
+
+      //   setList(results);
+      console.log(formattedRes);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [listOfOrganisations]);
+
+  useEffect(() => {
+    fetchUserOrganisations();
+  }, [fetchUserOrganisations]);
+
+  useEffect(() => {
+    if (isPending) {
+      toast.loading("Fetching data...", {
+        position: "top-right",
+      });
+    }
+    if (error) {
+      toast.error(error.message, {
+        position: "top-right",
+      });
+    }
+  }, [error, isPending]);
+
+  return list;
+};
+
+export default useGetUserOrganisations;

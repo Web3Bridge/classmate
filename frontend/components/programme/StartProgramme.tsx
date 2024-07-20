@@ -1,5 +1,5 @@
 'use client'
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { HiOutlineViewfinderCircle } from 'react-icons/hi2'
@@ -9,25 +9,26 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogClose,
     DialogTrigger,
     DialogFooter
 } from '../ui/dialog'
 import { useRouter } from 'next/navigation'
-import { useWeb3ModalAccount } from '@web3modal/ethers/react'
 import { toast } from 'sonner'
-import useCreateNewProgramme from '@/hooks/useCreateNewProgramme'
+import { useAccount } from 'wagmi'
+import useCreateNewProgramme from '@/hooks/onboardingHooks/useCreateNewProgramme'
 
 
 const StartProgramme = () => {
     const router = useRouter()
-    const { isConnected } = useWeb3ModalAccount()
+    const { isConnected } = useAccount()
 
     const [instName, setInstName] = useState<string>("")
     const [adminName, setAdminName] = useState<string>("")
     const [programmeName, setProgrammeName] = useState<string>("")
     const [imageURI, setImageURI] = useState<string>("")
 
-    const handleCreateNewProgramme = useCreateNewProgramme(instName, programmeName, imageURI, adminName)
+    const { createProgramme, isWriting, isConfirming } = useCreateNewProgramme(instName, programmeName, imageURI, adminName);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
@@ -38,16 +39,12 @@ const StartProgramme = () => {
         if (!programmeName) return toast.error("Please enter programme name", { position: "top-right" });
         if (!imageURI) return toast.error("Please enter image URI", { position: "top-right" });
 
-        await handleCreateNewProgramme()
+        createProgramme()
 
         setInstName("")
         setAdminName("")
         setProgrammeName("")
         setImageURI("")
-    }
-
-    const handleViewProgramme = () => {
-        router.push('/viewprogramme')
     }
 
     return (
@@ -106,14 +103,16 @@ const StartProgramme = () => {
                                 <input type="text" name="imageURI" id="imageURI" placeholder="Enter image URI" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageURI} onChange={e => setImageURI(e.target.value)} />
                             </div>
                             <DialogFooter>
-                                <Button type="submit">Submit</Button>
+                                <DialogClose asChild>
+                                    <Button type="submit" disabled={isWriting || isConfirming}>Submit</Button>
+                                </DialogClose>
                             </DialogFooter>
                         </form>
                     </DialogContent>
                 </Dialog>
 
 
-                <Button type="button" variant={`outline`} onClick={handleViewProgramme} className="text-color3 flex items-center gap-1 border border-color3 hover:text-white hover:bg-color2">Go to your programmes <HiOutlineViewfinderCircle className="text-xl" /></Button>
+                <Button type="button" variant={`outline`} onClick={() => router.push('/viewprogramme')} className="text-color3 flex items-center gap-1 border border-color3 hover:text-white hover:bg-color2">Go to your programmes <HiOutlineViewfinderCircle className="text-xl" /></Button>
             </div>
         </section>
     )

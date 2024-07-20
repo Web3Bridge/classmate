@@ -5,6 +5,9 @@ import { SiStreamrunners } from "react-icons/si";
 import Greeting from "./Greeting";
 import { PiStudentFill } from "react-icons/pi";
 import { CiWallet } from "react-icons/ci";
+import { useWalletInfo, useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAccount } from "wagmi";
+import { WalletConnected } from "../WalletConnected";
 
 
 const Header = ({
@@ -14,6 +17,11 @@ const Header = ({
     sidebarOpen: boolean;
     setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+
+    const { open } = useWeb3Modal()
+    const { address, isConnected } = useAccount()
+    const { walletInfo } = useWalletInfo()
+
     return (
         <header className="sticky top-0 z-[999] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">
             <div className="flex flex-grow items-center justify-between py-4 px-4 shadow md:px-2 2xl:px-11 relative before:absolute before:bottom-0 before:left-0 before:w-full before:h-px before:bg-gradient-to-l before:from-color1 before:to-color2">
@@ -71,8 +79,15 @@ const Header = ({
 
                 <div className="flex items-center gap-3 2xsm:gap-7">
                     {/* <!-- User Area --> */}
-                    <Button className="text-gray-100 text-sm font-barlow px-4 py-2 flex justify-center items-center gap-1 bg-color1 hover:bg-color2">
-                        Connect <CiWallet className="text-xl" />
+                    <Button
+                        onClick={() => open()}
+                        type="button"
+                        className={`transitionall duration-200 border border-color1 hover:bg-color2 flex items-center gap-1 ${isConnected ? "bg-white text-color1 hover:bg-color1 hover:text-white" : "bg-color1 text-white"}`}
+                    >
+                        {
+                            isConnected ? <WalletConnected address={address} icon={walletInfo?.icon} />
+                                : <span>Connect <CiWallet className="text-xl" /></span>
+                        }
                     </Button>
                     {/* <!-- User Area --> */}
                 </div>

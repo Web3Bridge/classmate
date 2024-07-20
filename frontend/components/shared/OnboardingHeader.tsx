@@ -8,14 +8,15 @@ import { Button } from "../ui/button"
 import { MobileNavToggler } from "./MobileNavToggler"
 import { usePathname } from "next/navigation"
 import { useScroll, useSpring, motion } from "framer-motion"
-import { useWalletInfo, useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react"
+import { useWalletInfo, useWeb3Modal } from '@web3modal/wagmi/react'
 import { WalletConnected } from "./WalletConnected"
+import { useAccount } from "wagmi"
 
 
 const OnboardingHeader = () => {
 
     const { open } = useWeb3Modal()
-    const { address, isConnected } = useWeb3ModalAccount()
+    const { address, isConnected } = useAccount()
     const { walletInfo } = useWalletInfo()
 
     const pathname = usePathname();

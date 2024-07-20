@@ -5,31 +5,30 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogClose,
   DialogTitle,
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { Button } from "../ui/button";
-import { useWeb3ModalAccount } from "@web3modal/ethers/react";
-import useCreateNewProgramme from "@/hooks/useCreateNewProgramme";
 import { toast } from "sonner";
-import useGetUserOrganisations from "@/hooks/useGetUserOrganisation";
+import { useRouter } from "next/navigation";
+import useCreateNewProgramme from "@/hooks/onboardingHooks/useCreateNewProgramme";
+import { useAccount } from "wagmi";
+import useGetUserOrganisations from "@/hooks/onboardingHooks/useGetUserOrganisation";
 
 const Programmes = () => {
-  const { isConnected, address } = useWeb3ModalAccount();
+  const { isConnected, address } = useAccount()
+
+  const router = useRouter();
 
   const [instName, setInstName] = useState<string>("");
   const [adminName, setAdminName] = useState<string>("");
   const [programmeName, setProgrammeName] = useState<string>("");
   const [imageURI, setImageURI] = useState<string>("");
 
-  const handleCreateNewProgramme = useCreateNewProgramme(
-    instName,
-    programmeName,
-    imageURI,
-    adminName
-  );
+  const { createProgramme, isWriting, isConfirming } = useCreateNewProgramme(instName, programmeName, imageURI, adminName);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -49,7 +48,7 @@ const Programmes = () => {
     if (!imageURI)
       return toast.error("Please enter image URI", { position: "top-right" });
 
-    await handleCreateNewProgramme();
+    createProgramme();
 
     setInstName("");
     setAdminName("");
@@ -57,9 +56,19 @@ const Programmes = () => {
     setImageURI("");
   };
 
-  const listOfOrganisations: any = useGetUserOrganisations(address);
+  const listOfOrganisations: any[] = useGetUserOrganisations(address);
 
-  console.log(listOfOrganisations);
+  // route handling 
+  const handleRouting = (contract_address: string, admin: string) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("active_organisation", JSON.stringify(contract_address));
+      if (admin === address) {
+        router.push(`/admin`);
+      } else {
+        router.push(`/user`);
+      }
+    }
+  }
 
   return (
     <section className="flex flex-col w-full ">
@@ -157,57 +166,64 @@ const Programmes = () => {
                 />
               </div>
               <DialogFooter>
-                <Button type="submit">Submit</Button>
+                <DialogClose asChild>
+                  <Button type="submit" disabled={isWriting || isConfirming}>Submit</Button>
+                </DialogClose>
               </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <main className="w-full grid lg:grid-cols-3 gap-8 mt-16">
-        {[...Array(3)].map((_, index) => (
-          <div
-            key={index}
-            className="w-full flex flex-col gap-4 rounded-lg shadow-lg p-7 border border-color2/10 relative cursor-pointer hover:border-color1"
-          >
-            <div className="w-[120px] h-[120px] rounded-full bg-gray-200"></div>
-            <h3 className="text-xl text-color1 font-medium">
-              Web 3 Writer’s Guide
-            </h3>
-            <div className="w-[15%] h-1.5 rounded-lg bg-color1"></div>
+      {
+        listOfOrganisations.length === 0 ? <div className="w-full h-[250px] flex justify-center items-center">
+          <h1 className='text-center text-3xl text-color1 font-bold'>No programmes created yet</h1>
+        </div> : (
+          <main className="w-full grid lg:grid-cols-3 md:grid-cols-2 gap-8 md:gap-6 lg:gap-8 mt-16">
+            {listOfOrganisations.map((organisation, index) => (
+              <div
+                key={index}
+                className="w-full flex flex-col gap-4 rounded-lg shadow-lg p-7 border border-color2/10 relative cursor-pointer hover:border-color1"
+                onClick={() => handleRouting(organisation.address, organisation.moderator)}
+              >
+                <div className="w-[120px] h-[120px] rounded-full bg-gray-200">
+                  <img
+                    src={organisation.imageURI}
+                    alt={organisation.name}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </div>
+                <h3 className="text-xl text-color1 font-medium">
+                  {organisation.name}
+                </h3>
+                <div className="w-[15%] h-1.5 rounded-lg bg-color1"></div>
 
-            <h5 className="text-color3 text-sm capitalize">
-              Pro Technical writing
-            </h5>
-            <p className="text-color3 text-[0.8rem]">
-              Professional technical writing involves the clear, concise, and
-              effective communication of complex information to a specific
-              audience. It is characterized by its focus on accuracy, clarity,
-              and usability.
-            </p>
+                <h5 className="text-color3 text-sm capitalize">
+                  {organisation.cohort}
+                </h5>
 
-            <div className="flex justify-between items-end w-full mt-4">
-              <div className="flex flex-col">
-                <small className="text-color3 text-xs">Role</small>
-                <h4 className="text-color1 font-bold">Student</h4>
+                <div className="flex justify-between items-end w-full mt-4">
+                  <div className="flex flex-col">
+                    <small className="text-color3 text-xs">Role</small>
+                    {
+                      address === organisation.moderator ? <h4 className="text-color1 font-bold">Admin</h4> : <h4 className="text-color1 font-bold">Not Admin</h4>
+                    }
+
+                  </div>
+                </div>
+
+                <div className="absolute top-6 right-6 flex flex-col items-center">
+                  <small className="text-color3 text-xs">Status</small>
+                  <h4 className="text-green-500 bg-green-100 rounded-lg px-2 py-1.5 font-medium text-xs">
+                    Ongoing
+                  </h4>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <small className="text-color3 text-xs">
-                  Supposed Date of Completion
-                </small>
-                <h4 className="text-color1 font-bold">15th March 2024</h4>
-              </div>
-            </div>
+            ))}
+          </main>
+        )
+      }
 
-            <div className="absolute top-6 right-6 flex flex-col items-center">
-              <small className="text-color3 text-xs">Status</small>
-              <h4 className="text-green-500 bg-green-100 rounded-lg px-2 py-1.5 font-medium text-xs">
-                Ongoing
-              </h4>
-            </div>
-          </div>
-        ))}
-      </main>
     </section>
   );
 };
