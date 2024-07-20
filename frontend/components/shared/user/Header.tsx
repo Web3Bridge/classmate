@@ -7,6 +7,8 @@ import { useWalletInfo, useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import { CiWallet } from "react-icons/ci";
 import { WalletConnected } from "../WalletConnected";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 
 const Header = ({
   sidebarOpen,
@@ -19,6 +21,18 @@ const Header = ({
   const { open } = useWeb3Modal()
   const { address, isConnected } = useAccount()
   const { walletInfo } = useWalletInfo()
+
+  const router = useRouter();
+
+  const change = useCallback(async () => {
+    if (isConnected) {
+      router.push("/programme");
+    }
+  }, [isConnected, router]);
+
+  useEffect(() => {
+    change();
+  }, [change, isConnected]);
 
   return (
     <header className="sticky top-0 z-[999] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">

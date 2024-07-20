@@ -8,6 +8,8 @@ import { CiWallet } from "react-icons/ci";
 import { useWalletInfo, useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import { WalletConnected } from "../WalletConnected";
+import { useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 
 const Header = ({
@@ -21,6 +23,18 @@ const Header = ({
     const { open } = useWeb3Modal()
     const { address, isConnected } = useAccount()
     const { walletInfo } = useWalletInfo()
+
+    const router = useRouter();
+
+    const change = useCallback(async () => {
+        if (isConnected) {
+            router.push("/programme");
+        }
+    }, [isConnected, router]);
+
+    useEffect(() => {
+        change();
+    }, [change, isConnected]);
 
     return (
         <header className="sticky top-0 z-[999] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">
@@ -89,6 +103,7 @@ const Header = ({
                                 : <span>Connect <CiWallet className="text-xl" /></span>
                         }
                     </Button>
+
                     {/* <!-- User Area --> */}
                 </div>
             </div>

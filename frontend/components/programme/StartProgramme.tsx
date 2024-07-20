@@ -47,6 +47,14 @@ const StartProgramme = () => {
         setImageURI("")
     }
 
+    const handleRoute = () => {
+        if (isConnected) {
+            router.push("/programme")
+        } else {
+            return toast.error("Please connect wallet", { position: "top-right" });
+        }
+    }
+
     return (
         <section className="w-full flex flex-col gap-10">
             <div className="w-full flex flex-col gap-1">
@@ -112,7 +120,7 @@ const StartProgramme = () => {
                 </Dialog>
 
 
-                <Button type="button" variant={`outline`} onClick={() => router.push('/viewprogramme')} className="text-color3 flex items-center gap-1 border border-color3 hover:text-white hover:bg-color2">Go to your programmes <HiOutlineViewfinderCircle className="text-xl" /></Button>
+                <Button type="button" variant={`outline`} onClick={handleRoute} className="text-color3 flex items-center gap-1 border border-color3 hover:text-white hover:bg-color2">Go to your programmes <HiOutlineViewfinderCircle className="text-xl" /></Button>
             </div>
         </section>
     )
