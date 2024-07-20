@@ -25,7 +25,7 @@ const Header = ({
   const router = useRouter();
 
   const change = useCallback(async () => {
-    if (isConnected) {
+    if (!isConnected) {
       router.push("/viewprogramme");
     }
   }, [isConnected, router]);
