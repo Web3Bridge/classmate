@@ -1,27 +1,14 @@
 "use client";
 import Image from "next/image";
 import listOfNfts from "../../utils/Attendence.json";
-// import { Button } from "../ui/button";
 import { useMemo, useState } from "react";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-//   DialogFooter,
-//   DialogClose,
-// } from "../ui/dialog";
+
 import { IoCalendar } from "react-icons/io5";
 
 const UserAttendenceNFT = () => {
   const data = useMemo(() => listOfNfts, []);
   const [isChecked, setIsChecked] = useState(false);
 
-  // const handleToggle = () => {
-  //   setIsChecked(!isChecked);
-  // };
   return (
     <section className="w-full py-6 flex flex-col">
       <main className="w-full flex flex-col gap-7">
