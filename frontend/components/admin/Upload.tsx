@@ -21,6 +21,7 @@ const Upload = () => {
 
   const handleToggle = () => {
     setIsChecked(!isChecked);
+    console.log({ "isChecked": isChecked });
   };
 
   return (

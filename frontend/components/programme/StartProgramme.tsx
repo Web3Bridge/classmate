@@ -48,10 +48,10 @@ const StartProgramme = () => {
     }
 
     const handleRoute = () => {
-        if (isConnected) {
-            router.push("/viewprogramme")
-        } else {
+        if (!isConnected) {
             return toast.error("Please connect wallet", { position: "top-right" });
+        } else {
+            router.push("/viewprogramme")
         }
     }
 
