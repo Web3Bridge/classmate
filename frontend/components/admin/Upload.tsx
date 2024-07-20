@@ -156,6 +156,7 @@ const styles = {
     border: `2px dashed ${GREY}`,
     color: `${GREY}`,
     borderRadius: 20,
+    cursor: "pointer",
     display: "flex",
     flexDirection: "column",
     height: "100%",
@@ -169,6 +170,7 @@ const styles = {
     display: "flex",
     height: 120,
     width: 120,
+    cursor: "pointer",
     position: "relative",
     zIndex: 10,
     flexDirection: "column",
@@ -178,6 +180,7 @@ const styles = {
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
+    cursor: "pointer",
     paddingLeft: 10,
     paddingRight: 10,
   } as CSSProperties,
@@ -203,6 +206,7 @@ const styles = {
   } as CSSProperties,
   zoneHover: {
     borderColor: GREY_DIM,
+    cursor: "pointer",
   } as CSSProperties,
   default: {
     borderColor: GREY,

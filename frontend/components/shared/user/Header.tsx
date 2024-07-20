@@ -100,7 +100,7 @@ const Header = ({
           >
             {
               isConnected ? <WalletConnected address={address} icon={walletInfo?.icon} />
-                : <span>Connect <CiWallet className="text-xl" /></span>
+                : <span className="text-nowrap">Connect Wallet</span>
             }
           </Button>
           {/* <!-- User Area --> */}
