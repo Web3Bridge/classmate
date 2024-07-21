@@ -7,9 +7,6 @@ import useEditMentorsName from "@/hooks/nameEditingHooks/useEditMentorsName";
 const ProfileSettings = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  };
 
   const fullName = `${firstName} ${lastName}`;
 
@@ -43,7 +40,7 @@ const ProfileSettings = () => {
         <div className="w-full flex flex-col items-center mt-6">
           <form
             className="lg:w-[50%] md:w-[70%] w-full grid gap-4"
-            onSubmit={handleSubmit}
+            onSubmit={handleNameChange}
           >
             <div className="flex flex-col items-center mb-3">
               <input
