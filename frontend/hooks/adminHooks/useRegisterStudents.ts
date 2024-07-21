@@ -68,6 +68,7 @@ const useRegisterStudents = (data: any[]) => {
     registerStudents,
     isWriting,
     isConfirming,
+    isConfirmed,
   };
 };
 

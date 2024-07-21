@@ -31,11 +31,11 @@ const Upload = () => {
 
   const { registerStudents,
     isWriting: isWritingtoStudents,
-    isConfirming: isConfirmingtoStudents } = useRegisterStudents(csvData)
+    isConfirming: isConfirmingtoStudents, isConfirmed: isConfirmedtoStudents } = useRegisterStudents(csvData)
 
   const { registerStaff,
     isWriting: isWritingtoStaff,
-    isConfirming: isConfirmingtoStaff } = useRegisterStaff(csvData)
+    isConfirming: isConfirmingtoStaff, isConfirmed: isConfirmedtoStaff } = useRegisterStaff(csvData)
 
   const handleDataUpload = async (e: any) => {
     e.preventDefault()
@@ -47,6 +47,10 @@ const Upload = () => {
       registerStaff()
     } else {
       registerStudents()
+    }
+
+    if (isConfirmedtoStudents || isConfirmedtoStaff) {
+      setCsvData([])
     }
 
   }

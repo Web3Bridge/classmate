@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import useCreateNewProgramme from "@/hooks/onboardingHooks/useCreateNewProgramme";
 import { useAccount } from "wagmi";
 import useGetUserOrganisations from "@/hooks/onboardingHooks/useGetUserOrganisation";
+import { ethers } from "ethers";
 
 const Programmes = () => {
   const { isConnected, address } = useAccount()
@@ -56,6 +57,18 @@ const Programmes = () => {
     setImageURI("");
   };
 
+  // redirect to programme page if not connected 
+  const change = useCallback(async () => {
+    if (!isConnected) {
+      router.push("/programme");
+    }
+  }, [isConnected, router]);
+
+  useEffect(() => {
+    change();
+  }, [change, isConnected]);
+
+  // getting list of organisations
   const listOfOrganisations: any[] = useGetUserOrganisations(address);
 
   // route handling 
@@ -182,7 +195,7 @@ const Programmes = () => {
           <h1 className='text-center text-3xl text-color1 font-bold'>No programmes created yet</h1>
         </div> : (
           <main className="w-full grid lg:grid-cols-3 md:grid-cols-2 gap-8 md:gap-6 lg:gap-8 mt-16">
-            {listOfOrganisations.map((organisation, index) => (
+            {listOfOrganisations?.map((organisation, index) => (
               <div
                 key={index}
                 className="w-full flex flex-col gap-4 rounded-lg shadow-lg p-7 border border-color2/10 relative cursor-pointer hover:border-color1"

@@ -11,6 +11,8 @@ import { WalletConnected } from "../WalletConnected";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useGetMentorName from "@/hooks/adminHooks/useGetMentorName";
+import useVerifyAdmin from "@/hooks/layoutProtectionHook/useVerifyAdmin";
+import { toast } from "sonner";
 
 
 const Header = ({
@@ -25,17 +27,23 @@ const Header = ({
     const { address, isConnected } = useAccount()
     const { walletInfo } = useWalletInfo()
 
+    const isUserAdmin = useVerifyAdmin(address)
+
     const router = useRouter();
 
     const change = useCallback(async () => {
         if (!isConnected) {
-            router.push("/viewprogramme");
+            router.push("/programme");
+            return toast.error("Please connect wallet", { position: "top-right" });
+        } else if (!isUserAdmin) {
+            router.push("/programme")
+            return toast.error("ACCESS NOT ALLOWED !", { position: "top-right" });
         }
-    }, [isConnected, router]);
+    }, [isConnected, router, isUserAdmin]);
 
     useEffect(() => {
         change();
-    }, [change, isConnected]);
+    }, [change, isConnected, isUserAdmin]);
 
     const adminName = useGetMentorName(address)
 

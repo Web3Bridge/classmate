@@ -5,8 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useBlockNumber, useReadContract } from "wagmi";
 
-const useGetMentorName = (_userAddress: any) => {
-  const [mentorName, setMentorName] = useState("");
+const useGetStudentName = (_userAddress: any) => {
+  const [studentName, setStudentName] = useState("");
 
   const active_organisation = localStorage?.getItem("active_organisation");
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
@@ -15,14 +15,14 @@ const useGetMentorName = (_userAddress: any) => {
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
   const {
-    data: nameOfMentor,
-    error: nameOfMentorError,
-    isPending: nameOfMentorIsPending,
+    data: nameOfStudent,
+    error: nameOfStudentError,
+    isPending: nameOfStudentIsPending,
     queryKey,
   } = useReadContract({
     address: contract_address,
     abi: OrganisationABI,
-    functionName: "getMentorsName",
+    functionName: "getStudentName",
     args: [_userAddress],
   });
 
@@ -30,24 +30,24 @@ const useGetMentorName = (_userAddress: any) => {
     queryClient.invalidateQueries({ queryKey });
   }, [blockNumber, queryClient, queryKey]);
 
-  const fetchMentorName = useCallback(async () => {
-    if (!nameOfMentor) return;
-    setMentorName(nameOfMentor.toString());
-  }, [nameOfMentor]);
+  const fetchStudentName = useCallback(async () => {
+    if (!nameOfStudent) return;
+    setStudentName(nameOfStudent.toString());
+  }, [nameOfStudent]);
 
   useEffect(() => {
-    fetchMentorName();
-  }, [fetchMentorName]);
+    fetchStudentName();
+  }, [fetchStudentName]);
 
   useEffect(() => {
-    if (nameOfMentorError) {
-      toast.error(nameOfMentorError.message, {
+    if (nameOfStudentError) {
+      toast.error(nameOfStudentError.message, {
         position: "top-right",
       });
     }
-  }, [nameOfMentorError]);
+  }, [nameOfStudentError]);
 
-  return mentorName;
+  return studentName;
 };
 
-export default useGetMentorName;
+export default useGetStudentName;

@@ -9,6 +9,9 @@ import { CiWallet } from "react-icons/ci";
 import { WalletConnected } from "../WalletConnected";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
+import useVerifyStudent from "@/hooks/layoutProtectionHook/useVerifyStudent";
+import { toast } from "sonner";
+import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
 
 const Header = ({
   sidebarOpen,
@@ -24,15 +27,24 @@ const Header = ({
 
   const router = useRouter();
 
+  const isUserStudent = useVerifyStudent(address)
+
   const change = useCallback(async () => {
     if (!isConnected) {
-      router.push("/viewprogramme");
+      router.push("/programme");
+      return toast.error("Please connect wallet", { position: "top-right" });
+    } else if (!isUserStudent) {
+      router.push("/programme")
+      return toast.error("ACCESS NOT ALLOWED !", { position: "top-right" });
     }
-  }, [isConnected, router]);
+  }, [isConnected, router, isUserStudent]);
 
   useEffect(() => {
     change();
-  }, [change, isConnected]);
+  }, [change, isConnected, isUserStudent]);
+
+
+  const studentName = useGetStudentName(address)
 
   return (
     <header className="sticky top-0 z-[999] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">
@@ -88,7 +100,7 @@ const Header = ({
         </div>
 
         <div className="hidden sm:block">
-          <Greeting />
+          <Greeting name={studentName} />
         </div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">

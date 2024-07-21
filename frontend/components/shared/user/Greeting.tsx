@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const Greeting = () => {
+const Greeting = ({ name }: { name: string }) => {
   const [timeOfDay, setTimeOfDay] = useState("");
 
   useEffect(() => {
@@ -18,8 +18,8 @@ const Greeting = () => {
   }, []);
 
   return (
-    <h2 className="text-color2 text-xl font-belanosima capitalize">
-      Classmate +
+    <h2 className="text-color3 text-xl font-belanosima capitalize">
+      Good {timeOfDay},{" "} {name}
     </h2>
   );
 };

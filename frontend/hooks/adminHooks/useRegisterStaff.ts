@@ -65,6 +65,7 @@ const useRegisterStaff = (data: any[]) => {
     registerStaff,
     isWriting,
     isConfirming,
+    isConfirmed,
   };
 };
 
