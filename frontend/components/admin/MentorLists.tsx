@@ -80,8 +80,6 @@ const MentorLists = () => {
     pageSize: 10,
   });
 
-  const [editRequest, setEditRequest] = useState(false);
-
   const {
     requestNameCorrection,
     isWriting: isWritingtoStudents,

@@ -2,13 +2,25 @@
 import { User2Icon } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
+import useEditMentorsName from "@/hooks/nameEditingHooks/useEditMentorsName";
 
 const ProfileSettings = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+  };
+
+  const fullName = `${firstName} ${lastName}`;
+
+  const {
+    editMentorsName,
+    isWriting: isWritingtoEditMentorsName,
+    isConfirming: isConfirmingEditMentorsName,
+  } = useEditMentorsName(fullName);
+
+  const handleNameChange = () => {
+    editMentorsName();
   };
 
   const [selectedFile, setSelectedFile] = useState();
@@ -95,7 +107,11 @@ const ProfileSettings = () => {
             </div>
 
             <div className="flex flex-col mt-3">
-              <Button type="submit" className="bg-color1 hover:bg-color2">
+              <Button
+                type="submit"
+                className="bg-color1 hover:bg-color2"
+                onClick={handleNameChange}
+              >
                 Upload Data
               </Button>
             </div>
