@@ -43,7 +43,17 @@ const useGetUserOrganisations = (_userAddress: any) => {
         const cohort = await contract.getCohortName();
         const moderator = await contract.getModerator();
         const imageURI = await contract.getOrganisationImageUri();
-        return { address, name, cohort, moderator, imageURI };
+        const isMentor = await contract.VerifyMentor(_userAddress);
+        const isStudent = await contract.VerifyStudent(_userAddress);
+        return {
+          address,
+          name,
+          cohort,
+          moderator,
+          imageURI,
+          isMentor,
+          isStudent,
+        };
       });
       const results = await Promise.all(data);
 

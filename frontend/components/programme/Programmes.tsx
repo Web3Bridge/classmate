@@ -59,13 +59,15 @@ const Programmes = () => {
   const listOfOrganisations: any[] = useGetUserOrganisations(address);
 
   // route handling 
-  const handleRouting = (contract_address: string, admin: string) => {
+  const handleRouting = (contract_address: string, mentor: boolean, student: boolean) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("active_organisation", JSON.stringify(contract_address));
-      if (admin === address) {
+      if (mentor) {
         router.push(`/admin`);
-      } else {
+      } else if (student) {
         router.push(`/user`);
+      } else {
+        return toast.error("You're not allowed access !", { position: "top-right" });
       }
     }
   }
@@ -184,7 +186,7 @@ const Programmes = () => {
               <div
                 key={index}
                 className="w-full flex flex-col gap-4 rounded-lg shadow-lg p-7 border border-color2/10 relative cursor-pointer hover:border-color1"
-                onClick={() => handleRouting(organisation.address, organisation.moderator)}
+                onClick={() => handleRouting(organisation.address, organisation.isMentor, organisation.isStudent)}
               >
                 <div className="w-[120px] h-[120px] rounded-full bg-gray-200">
                   <img
@@ -206,9 +208,11 @@ const Programmes = () => {
                   <div className="flex flex-col">
                     <small className="text-color3 text-xs">Role</small>
                     {
-                      address === organisation.moderator ? <h4 className="text-color1 font-bold">Admin</h4> : <h4 className="text-color1 font-bold">Not Admin</h4>
+                      organisation.isMentor && <h4 className="text-color1 font-bold">Admin</h4>
                     }
-
+                    {
+                      organisation.isStudent && <h4 className="text-color1 font-bold">Student</h4>
+                    }
                   </div>
                 </div>
 
