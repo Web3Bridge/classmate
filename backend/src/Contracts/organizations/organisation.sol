@@ -216,20 +216,7 @@ contract organisation {
         emit studentsRegistered(_studentList.length);
     }
 
-    // function StudentsRequestNameCorrection() external onlyStudents {
-    //     if (requestNameCorrection[msg.sender] == true)
-    //         revert already_requested();
-    //     requestNameCorrection[msg.sender] = true;
-    //     emit onlyStudentOrStaffed(msg.sender);
-    // }
-
-    // function MentorsRequestNameCorrection() external onlyStaff {
-    //     if (requestNameCorrection[msg.sender] == true)
-    //         revert already_requested();
-    //     requestNameCorrection[msg.sender] = true;
-    //     emit onlyStudentOrStaffed(msg.sender);
-    // }
-
+    // @dev: Function to request name correction
     function RequestNameCorrection() external onlyStudentOrStaff {
         if (requestNameCorrection[msg.sender] == true)
             revert already_requested();
@@ -285,6 +272,7 @@ contract organisation {
         emit attendanceCreated(_lectureId, _uri, _topic, msg.sender);
     }
 
+    // @dev: Function to mint spok
     function mintMentorsSpok(string memory Uri) external onlyModerator {
         require(spokMinted == false, "spok already minted");
         INFT(spokContract).batchMintTokens(mentors, Uri);
