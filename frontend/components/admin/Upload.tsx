@@ -7,9 +7,15 @@ import {
   formatFileSize,
 } from "react-papaparse";
 import { Button } from "../ui/button";
+import useRegisterStudents from "@/hooks/adminHooks/useRegisterStudents";
+import { toast } from "sonner";
+import { useAccount } from "wagmi";
+import useRegisterStaff from "@/hooks/adminHooks/useRegisterStaff";
 
 const Upload = () => {
   const [csvData, setCsvData] = useState([]);
+
+  const { isConnected } = useAccount()
 
   const { CSVReader } = useCSVReader();
   const [zoneHover, setZoneHover] = useState(false);
@@ -21,8 +27,29 @@ const Upload = () => {
 
   const handleToggle = () => {
     setIsChecked(!isChecked);
-    console.log({ "isChecked": isChecked });
   };
+
+  const { registerStudents,
+    isWriting: isWritingtoStudents,
+    isConfirming: isConfirmingtoStudents } = useRegisterStudents(csvData)
+
+  const { registerStaff,
+    isWriting: isWritingtoStaff,
+    isConfirming: isConfirmingtoStaff } = useRegisterStaff(csvData)
+
+  const handleDataUpload = async (e: any) => {
+    e.preventDefault()
+
+    if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
+    if (csvData.length === 0) return toast.error("Please select a file", { position: "top-right" });
+
+    if (!isChecked) {
+      registerStaff()
+    } else {
+      registerStudents()
+    }
+
+  }
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -129,6 +156,8 @@ const Upload = () => {
 
           <Button
             type="button"
+            disabled={(isWritingtoStudents || isConfirmingtoStudents) || (isWritingtoStaff || isConfirmingtoStaff)}
+            onClick={handleDataUpload}
             className="bg-color1 text-gray-100 hover:bg-color2"
           >
             Upload List

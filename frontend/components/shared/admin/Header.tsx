@@ -37,7 +37,7 @@ const Header = ({
     }, [change, isConnected]);
 
     return (
-        <header className="sticky top-0 z-[999] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">
+        <header className="sticky top-0 z-[99] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">
             <div className="flex flex-grow items-center justify-between py-4 px-4 shadow md:px-2 2xl:px-11 relative before:absolute before:bottom-0 before:left-0 before:w-full before:h-px before:bg-gradient-to-l before:from-color1 before:to-color2">
                 <div className="flex items-center gap-3 sm:gap-4 lg:hidden">
                     {/* <!-- Hamburger Toggle BTN --> */}
