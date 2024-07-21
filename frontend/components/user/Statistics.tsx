@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/card";
 import { useAccount } from "wagmi";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
-import useVerifyStudent from "@/hooks/layoutProtectionHook/useVerifyStudent";
-import { toast } from "sonner";
 
 interface Statistic {
   title: string;
