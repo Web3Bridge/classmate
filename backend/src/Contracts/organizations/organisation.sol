@@ -226,7 +226,7 @@ contract organisation {
 
     function editStudentName(
         individual[] memory _studentList
-    ) external onlyModerator {
+    ) external onlyStudentOrStaff {
         uint studentLength = _studentList.length;
         for (uint i; i < studentLength; i++) {
             if (requestNameCorrection[_studentList[i]._address] == true) {
@@ -239,7 +239,7 @@ contract organisation {
 
     function editMentorsName(
         individual[] memory _mentorsList
-    ) external onlyModerator {
+    ) external onlyStudentOrStaff {
         uint MentorsLength = _mentorsList.length;
         for (uint i; i < MentorsLength; i++) {
             if (requestNameCorrection[_mentorsList[i]._address] == true) {
