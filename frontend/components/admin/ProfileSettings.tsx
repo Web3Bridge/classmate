@@ -16,7 +16,8 @@ const ProfileSettings = () => {
     isConfirming: isConfirmingEditMentorsName,
   } = useEditMentorsName(fullName);
 
-  const handleNameChange = () => {
+  const handleNameChange = (e: FormEvent) => {
+    e.preventDefault();
     editMentorsName();
   };
 
