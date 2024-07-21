@@ -16,6 +16,8 @@ import { FiSettings } from "react-icons/fi";
 import { sideLinksAd } from "@/utils/SidebarAD";
 import { PiStudentLight } from "react-icons/pi";
 import { PiStudentFill } from "react-icons/pi";
+import useGetMentorName from "@/hooks/adminHooks/useGetMentorName";
+import { useAccount } from "wagmi";
 
 const SideBar = ({
     sidebarOpen,
@@ -66,6 +68,10 @@ const SideBar = ({
                 return "";
         }
     }, []);
+
+    const { address } = useAccount()
+
+    const adminName = useGetMentorName(address)
 
     return (
         <aside
@@ -138,7 +144,7 @@ const SideBar = ({
                             />
                         </div>
                         <h3 className="text-gray-400 text-base ml-2 font-barlow my-auto text-center">
-                            Larry
+                            {adminName}
                         </h3>
                     </div>
                 </nav>

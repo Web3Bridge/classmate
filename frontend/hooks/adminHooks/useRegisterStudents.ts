@@ -13,7 +13,7 @@ const useRegisterStudents = (data: any[]) => {
 
   const { data: hash, error, writeContract } = useWriteContract();
 
-  const active_organisation = localStorage.getItem("active_organisation");
+  const active_organisation = localStorage?.getItem("active_organisation");
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
   const registerStudents = useCallback(() => {

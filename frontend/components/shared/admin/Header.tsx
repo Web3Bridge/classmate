@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import { WalletConnected } from "../WalletConnected";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import useGetMentorName from "@/hooks/adminHooks/useGetMentorName";
 
 
 const Header = ({
@@ -35,6 +36,8 @@ const Header = ({
     useEffect(() => {
         change();
     }, [change, isConnected]);
+
+    const adminName = useGetMentorName(address)
 
     return (
         <header className="sticky top-0 z-[99] flex w-full bg-white lg:rounded-lg overflow-hidden drop-shadow-1">
@@ -88,7 +91,7 @@ const Header = ({
                 </div>
 
                 <div className="hidden sm:block">
-                    <Greeting />
+                    <Greeting name={adminName} />
                 </div>
 
                 <div className="flex items-center gap-3 2xsm:gap-7">
