@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useAccount } from "wagmi";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
+import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 
 interface Statistic {
   title: string;
@@ -32,6 +33,16 @@ const Statistics = () => {
   const { address, isConnected } = useAccount();
   const studentName = useGetStudentName(address);
 
+  const {
+    requestNameCorrection,
+    isWriting: isWritingtoStudents,
+    isConfirming: isConfirmingtoStudents,
+  } = useRequestNameCorrection();
+
+  const handleRequestNameChange = () => {
+    requestNameCorrection();
+  };
+
   return (
     <>
       <section className="flex justify-between mb-6">
@@ -40,8 +51,11 @@ const Statistics = () => {
           <p className="capitalize text-xs">welcome to classmate+ dashboard</p>
         </div>
         <div className="flex justify-center my-auto align-middle gap-1 cursor-pointer text-color1">
-          <button className="bg-color2 px-3 py-1 rounded-md text-white capitalize hover:bg-color1 transition-all ease-in-out">
-            request name edit
+          <button
+            className="bg-color2 px-3 py-2 rounded-md text-white capitalize hover:bg-color1 transition-all ease-in-out"
+            onClick={handleRequestNameChange}
+          >
+            request name change
           </button>
         </div>
       </section>

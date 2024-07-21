@@ -1,16 +1,33 @@
 "use client";
 import { Camera, Loader2 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useEditStudentsName from "@/hooks/nameEditingHooks/useEditStudentsName";
 
-export default function Form() {
+export default function UserSettings() {
   const [selectedFile, setSelectedFile] = useState();
 
-  const [username, setUsername] = useState<string>("");
+  // const [username, setUsername] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const fullName = `${firstName} ${lastName}`;
+
+  const {
+    editStudentsName,
+    isWriting: isWritingtoEditMentorsName,
+    isConfirming: isConfirmingEditMentorsName,
+  } = useEditStudentsName(fullName);
+
+  const handleNameChange = (e: FormEvent) => {
+    e.preventDefault();
+    editStudentsName();
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelectImage = ({ target }: { target: any }) => {
@@ -47,15 +64,15 @@ export default function Form() {
 
   getImage();
 
-  const handleSubmit = () => {
-    console.log("hello world");
-  };
+  // const handleSubmit = () => {
+  //   console.log("hello world");
+  // };
 
-  const handleClick = async () => {
-    setIsLoading(true);
-    await handleSubmit();
-    setIsLoading(false);
-  };
+  // const handleClick = async () => {
+  //   setIsLoading(true);
+  //   await handleSubmit();
+  //   setIsLoading(false);
+  // };
 
   return (
     <div className="flex items-center flex-1 justify-center w-full">
@@ -85,14 +102,17 @@ export default function Form() {
           )}
         </label>
 
-        <form className="flex flex-col my-4 w-full gap-4">
+        <form
+          className="flex flex-col my-4 w-full gap-4"
+          onSubmit={handleNameChange}
+        >
           <div className="space-y-2">
             <label className="text-sm text-white capitalize">first name</label>
             <Input
               className="border border-stone-100 py-2 placeholder:text-stone-500"
               placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
 
@@ -100,16 +120,15 @@ export default function Form() {
             <label className="text-sm text-white capitalize">last name</label>
             <Input
               className="border border-stone-100 py-2 placeholder:text-stone-500"
-              value={url}
-              readOnly
-              placeholder="Select an image and await IPFS url..."
+              value={lastName}
+              placeholder="Enter lastname"
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
 
           <Button
             type="button"
-            disabled={url === ""}
-            onClick={handleClick}
+            onClick={handleNameChange}
             className="bg-gradient-to-r cursor-pointer disabled:cursor-not-allowed from-color1 via-color1 to-white/20"
           >
             {isLoading ? (

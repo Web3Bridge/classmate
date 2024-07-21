@@ -90,12 +90,7 @@ export const OrganisationABI = [
         type: "bytes",
       },
       { indexed: true, internalType: "string", name: "uri", type: "string" },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "topic",
-        type: "string",
-      },
+      { indexed: false, internalType: "string", name: "topic", type: "string" },
       {
         indexed: true,
         internalType: "address",
@@ -118,6 +113,19 @@ export const OrganisationABI = [
       },
     ],
     name: "attendanceOpened",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "noOfStaffs",
+        type: "uint256",
+      },
+    ],
+    name: "mentorsRemoved",
     type: "event",
   },
   {
@@ -402,11 +410,7 @@ export const OrganisationABI = [
             name: "attendanceStartTime",
             type: "uint256",
           },
-          {
-            internalType: "uint256",
-            name: "studentsPresent",
-            type: "uint256",
-          },
+          { internalType: "uint256", name: "studentsPresent", type: "uint256" },
           { internalType: "bool", name: "status", type: "bool" },
         ],
         internalType: "struct organisation.lectureData",
@@ -598,6 +602,15 @@ export const OrganisationABI = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "address[]", name: "rouge_mentors", type: "address[]" },
+    ],
+    name: "removeMentor",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "bytes", name: "_lectureId", type: "bytes" }],
     name: "signAttendance",
     outputs: [],
@@ -625,5 +638,4 @@ export const OrganisationABI = [
     stateMutability: "view",
     type: "function",
   },
-  ,
 ] as const;

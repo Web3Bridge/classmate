@@ -76,6 +76,8 @@ interface ICHILD {
 
     function EvictStudents(address[] calldata studentsToRevoke) external;
 
+    function removeMentor(address[] calldata rouge_mentors) external;
+
     function MintCertificate(string memory Uri) external;
 
     function mintMentorsSpok(string memory Uri) external;

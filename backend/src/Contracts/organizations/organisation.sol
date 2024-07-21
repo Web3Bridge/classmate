@@ -88,6 +88,7 @@ contract organisation {
     event attendanceOpened(bytes Id, address mentor);
     event attendanceClosed(bytes Id, address mentor);
     event studentsEvicted(uint noOfStudents);
+    event mentorsRemoved(uint noOfStaffs);
     event newResultUpdated(uint256 testId, address mentor);
 
     // MODIFIERS
@@ -319,7 +320,8 @@ contract organisation {
     // @dev Function for mentors to hand over to the next mentor to take the class
 
     function mentorHandover(address newMentor) external {
-        if (msg.sender != mentorOnDuty) revert not_Autorized_Caller();
+        if (msg.sender != mentorOnDuty || msg.sender != moderator)
+            revert not_Autorized_Caller();
         mentorOnDuty = newMentor;
         emit Handover(msg.sender, newMentor);
     }
@@ -381,6 +383,22 @@ contract organisation {
         // UCHE
         IFACTORY(organisationFactory).revoke(studentsToRevoke);
         emit studentsEvicted(studentsToRevoke.length);
+    }
+
+    function removeMentor(
+        address[] calldata rouge_mentors
+    ) external onlyModerator {
+        uint mentorsRouge = rouge_mentors.length;
+        for (uint i; i < mentorsRouge; i++) {
+            delete mentorsData[rouge_mentors[i]];
+            mentors[indexInMentorsArray[rouge_mentors[i]]] = mentors[
+                mentors.length - 1
+            ];
+            mentors.pop();
+            isStaff[rouge_mentors[i]] = false;
+        }
+        IFACTORY(organisationFactory).revoke(rouge_mentors);
+        emit mentorsRemoved(rouge_mentors.length);
     }
 
     function getNameArray(

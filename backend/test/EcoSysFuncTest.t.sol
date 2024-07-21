@@ -21,6 +21,7 @@ contract EcosystemTest is Test {
     individual[] mentors;
     individual[] editMentors;
     address[] studentsToEvict;
+    address[] rogue_mentors;
     address[] nameCheck;
     address mentorAdd = 0xfd182E53C17BD167ABa87592C5ef6414D25bb9B4;
     address studentAdd = 0x13B109506Ab1b120C82D0d342c5E64401a5B6381;
@@ -281,6 +282,22 @@ contract EcosystemTest is Test {
         assertEq(0, studentOrganizations.length);
         assertEq(0, studentsList.length);
         assertEq(false, studentStatus);
+    }
+
+    function testRemoveMentor() public {
+        testMentorRegister();
+        vm.startPrank(director);
+        rogue_mentors.push(mentorAdd);
+        address child = _organisationFactory.getUserOrganisatons(director)[0];
+        ICHILD(child).removeMentor(rogue_mentors);
+
+        address[] memory mentorsList = ICHILD(child).listMentors();
+        address[] memory mentorsOrganizations = _organisationFactory
+            .getUserOrganisatons(mentorAdd);
+        bool status = ICHILD(child).VerifyMentor(mentorAdd);
+        assertEq(0, mentorsOrganizations.length);
+        assertEq(1, mentorsList.length);
+        assertEq(false, status);
     }
 
     function testFail_EvictedStudentSignAttendance() public {

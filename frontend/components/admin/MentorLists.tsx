@@ -82,8 +82,8 @@ const MentorLists = () => {
 
   const {
     requestNameCorrection,
-    isWriting: isWritingtoStudents,
-    isConfirming: isConfirmingtoStudents,
+    isWriting: isWritingtoMentors,
+    isConfirming: isConfirmingtoMentors,
   } = useRequestNameCorrection();
 
   const handleRequestNameChange = () => {

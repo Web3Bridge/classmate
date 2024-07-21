@@ -1,9 +1,9 @@
-import Settings from "@/app/admin/settings/page";
+import UserSettings from "@/components/user/UserSettings";
 
 export default function Form() {
   return (
     <section>
-      <Settings />
+      <UserSettings />
     </section>
   );
 }
