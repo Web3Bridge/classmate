@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 import useCreateNewProgramme from "@/hooks/onboardingHooks/useCreateNewProgramme";
 import { useAccount } from "wagmi";
 import useGetUserOrganisations from "@/hooks/onboardingHooks/useGetUserOrganisation";
-import { ethers } from "ethers";
 
 const Programmes = () => {
   const { isConnected, address } = useAccount()
@@ -69,7 +68,7 @@ const Programmes = () => {
   }, [change, isConnected]);
 
   // getting list of organisations
-  const listOfOrganisations: any[] = useGetUserOrganisations(address);
+  const { list: listOfOrganisations, isLoading } = useGetUserOrganisations(address);
 
   // route handling 
   const handleRouting = (contract_address: string, mentor: boolean, student: boolean) => {
@@ -189,57 +188,60 @@ const Programmes = () => {
           </DialogContent>
         </Dialog>
       </div>
-
       {
-        listOfOrganisations.length === 0 ? <div className="w-full h-[250px] flex justify-center items-center">
-          <h1 className='text-center text-3xl text-color1 font-bold'>No programmes created yet</h1>
-        </div> : (
-          <main className="w-full grid lg:grid-cols-3 md:grid-cols-2 gap-8 md:gap-6 lg:gap-8 mt-16">
-            {listOfOrganisations?.map((organisation, index) => (
-              <div
-                key={index}
-                className="w-full flex flex-col gap-4 rounded-lg shadow-lg p-7 border border-color2/10 relative cursor-pointer hover:border-color1"
-                onClick={() => handleRouting(organisation.address, organisation.isMentor, organisation.isStudent)}
-              >
-                <div className="w-[120px] h-[120px] rounded-full bg-gray-200">
-                  <img
-                    src={organisation.imageURI}
-                    alt={organisation.name}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
-                <h3 className="text-xl text-color1 font-medium">
-                  {organisation.name}
-                </h3>
-                <div className="w-[15%] h-1.5 rounded-lg bg-color1"></div>
-
-                <h5 className="text-color3 text-sm capitalize">
-                  {organisation.cohort}
-                </h5>
-
-                <div className="flex justify-between items-end w-full mt-4">
-                  <div className="flex flex-col">
-                    <small className="text-color3 text-xs">Role</small>
-                    {
-                      organisation.isMentor && <h4 className="text-color1 font-bold">Admin</h4>
-                    }
-                    {
-                      organisation.isStudent && <h4 className="text-color1 font-bold">Student</h4>
-                    }
-                  </div>
-                </div>
-
-                <div className="absolute top-6 right-6 flex flex-col items-center">
-                  <small className="text-color3 text-xs">Status</small>
-                  <h4 className="text-green-500 bg-green-100 rounded-lg px-2 py-1.5 font-medium text-xs">
-                    Ongoing
-                  </h4>
-                </div>
-              </div>
-            ))}
-          </main>
-        )
+        isLoading ? <div className="w-full h-[250px] flex justify-center items-center">
+          <h1 className='text-center md:text-2xl text-lg text-color1 font-bold'>Fetching organisations...</h1>
+        </div>
+          : isLoading === false && listOfOrganisations?.length === 0 ?
+            <div className="w-full h-[250px] flex justify-center items-center">
+              <h1 className='text-center md:text-2xl text-lg text-color1 font-bold'>No programmes created yet</h1>
+            </div>
+            : null
       }
+      <main className="w-full grid lg:grid-cols-3 md:grid-cols-2 gap-8 md:gap-6 lg:gap-8 mt-16">
+        {listOfOrganisations?.map((organisation, index) => (
+          <div
+            key={index}
+            className="w-full flex flex-col gap-4 rounded-lg shadow-lg p-7 border border-color2/10 relative cursor-pointer hover:border-color1"
+            onClick={() => handleRouting(organisation.address, organisation.isMentor, organisation.isStudent)}
+          >
+            <div className="w-[120px] h-[120px] rounded-full bg-gray-200">
+              <img
+                src={organisation.imageURI}
+                alt={organisation.name}
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <h3 className="text-xl text-color1 font-medium">
+              {organisation.name}
+            </h3>
+            <div className="w-[15%] h-1.5 rounded-lg bg-color1"></div>
+
+            <h5 className="text-color3 text-sm capitalize">
+              {organisation.cohort}
+            </h5>
+
+            <div className="flex justify-between items-end w-full mt-4">
+              <div className="flex flex-col">
+                <small className="text-color3 text-xs">Role</small>
+                {
+                  organisation.isMentor && <h4 className="text-color1 font-bold">Admin</h4>
+                }
+                {
+                  organisation.isStudent && <h4 className="text-color1 font-bold">Student</h4>
+                }
+              </div>
+            </div>
+
+            <div className="absolute top-6 right-6 flex flex-col items-center">
+              <small className="text-color3 text-xs">Status</small>
+              <h4 className="text-green-500 bg-green-100 rounded-lg px-2 py-1.5 font-medium text-xs">
+                Ongoing
+              </h4>
+            </div>
+          </div>
+        ))}
+      </main>
 
     </section>
   );

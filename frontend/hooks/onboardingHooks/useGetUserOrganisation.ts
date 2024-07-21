@@ -9,6 +9,7 @@ import { readOnlyProvider } from "@/constants/provider";
 
 const useGetUserOrganisations = (_userAddress: any) => {
   const [list, setList] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const queryClient = useQueryClient();
   const { data: blockNumber } = useBlockNumber({ watch: true });
@@ -60,6 +61,7 @@ const useGetUserOrganisations = (_userAddress: any) => {
       if (typeof window !== "undefined") {
         localStorage.setItem("memberOrganisations", JSON.stringify(results));
       }
+      setIsLoading(false);
       setList(results);
     } catch (error) {
       console.error(error);
@@ -76,7 +78,7 @@ const useGetUserOrganisations = (_userAddress: any) => {
     }
   }, [listOfOrganisationsError]);
 
-  return list;
+  return { list, isLoading };
 };
 
 export default useGetUserOrganisations;

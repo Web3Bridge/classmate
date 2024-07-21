@@ -1,11 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SiStreamrunners } from "react-icons/si";
 import Greeting from "./Greeting";
 import { useWalletInfo, useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
-import { CiWallet } from "react-icons/ci";
 import { WalletConnected } from "../WalletConnected";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -108,7 +106,7 @@ const Header = ({
           <Button
             onClick={() => open()}
             type="button"
-            className={`transitionall duration-200 border border-color1 hover:bg-color2 flex items-center gap-1 ${isConnected ? "bg-white text-color1 hover:bg-color1 hover:text-white" : "bg-color1 text-white"}`}
+            className={`transition-all duration-200 border border-color1 hover:bg-color2 flex items-center gap-1 ${isConnected ? "bg-white text-color1 hover:bg-color1 hover:text-white" : "bg-color1 text-white"}`}
           >
             {
               isConnected ? <WalletConnected address={address} icon={walletInfo?.icon} />
