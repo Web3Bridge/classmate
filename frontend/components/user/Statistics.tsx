@@ -1,7 +1,7 @@
 "use client";
-import { BellIcon, SearchCheckIcon, SearchIcon } from "lucide-react";
+
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,6 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAccount } from "wagmi";
+import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
+import useVerifyStudent from "@/hooks/layoutProtectionHook/useVerifyStudent";
+import { toast } from "sonner";
 
 interface Statistic {
   title: string;
@@ -27,17 +31,20 @@ const statistics: Statistic[] = [
 
 const Statistics = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const { address, isConnected } = useAccount();
+  const studentName = useGetStudentName(address);
 
   return (
     <>
       <section className="flex justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold">Welcome back, Linda</h1>
+          <h1 className="text-xl font-bold">Welcome back, {studentName}</h1>
           <p className="capitalize text-xs">welcome to classmate+ dashboard</p>
         </div>
         <div className="flex justify-center my-auto align-middle gap-1 cursor-pointer text-color1">
-          <SearchIcon className=" hover:text-color2" />
-          <BellIcon className=" hover:text-color2" />
+          <button className="bg-color2 px-3 py-1 rounded-md text-white capitalize hover:bg-color1 transition-all ease-in-out">
+            request name edit
+          </button>
         </div>
       </section>
       <section>
