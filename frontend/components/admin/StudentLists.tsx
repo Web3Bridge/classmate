@@ -20,20 +20,22 @@ import {
 } from "../ui/table";
 import tableData from "../../utils/StudentList.json";
 import { Button } from "../ui/button";
+import useGetListOfStudents from "@/hooks/adminHooks/useGetListOfStudents";
 
 type tableDataType = {
-  id: number;
   name: string;
   address: string;
 };
 
 const StudentLists = () => {
   const defaultData: tableDataType[] = useMemo(() => tableData, []);
+  const [selectedAddresses, setSelectedAddresses] = useState<string[]>([]);
 
   const columns = useMemo<ColumnDef<tableDataType>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorFn: (_, index) => index + 1,
+        id: "index",
         header: () => "S/N",
         cell: (info) => info.getValue(),
       },
@@ -48,31 +50,35 @@ const StudentLists = () => {
         cell: (info) => info.getValue(),
       },
       {
-        accessorFn: (row) => row.id,
-        id: "id",
+        id: "action",
         cell: ({ row }) => (
           <div className="px-1">
             <input
               type="checkbox"
               className="accent-color1"
-              value={row.id}
-              checked={row.getIsSelected()}
-              onChange={row.getToggleSelectedHandler()}
-              disabled={!row.getCanSelect()}
+              value={row.original.address}
+              checked={selectedAddresses.includes(row.original.address)}
+              onChange={() => handleCheckboxChange(row.original.address)}
             />
           </div>
         ),
         header: () => <span>Action</span>,
       },
     ],
-    []
+    [selectedAddresses]
   );
 
-  const [data, _setData] = useState(() => [...defaultData]);
+  const handleCheckboxChange = (address: string) => {
+    setSelectedAddresses((prevSelected) =>
+      prevSelected.includes(address)
+        ? prevSelected.filter((addr) => addr !== address)
+        : [...prevSelected, address]
+    );
+  };
+
+  const [data, _setData] = useState<tableDataType[]>([]);
 
   const [globalFilter, setGlobalFilter] = useState("");
-
-  const [rowSelection, setRowSelection] = React.useState({});
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -90,13 +96,19 @@ const StudentLists = () => {
     onPaginationChange: setPagination,
     state: {
       pagination,
-      rowSelection,
       globalFilter,
     },
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
   });
+
+  const list = useGetListOfStudents();
+
+  useEffect(() => {
+    if (list && list.length > 0) {
+      _setData(list);
+    }
+  }, [list]);
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -107,12 +119,12 @@ const StudentLists = () => {
           </h1>
           <h4 className="text-lg tracking-wider text-color2">
             {" "}
-            List of students in your programme
+            List of {data.length} students in your programme
           </h4>
         </div>
 
         <div className="w-full overflow-x-auto">
-          <div className="w-full mb-2">
+          <div className="w-full mb-2 flex md:flex-row flex-col md:items-center items-start justify-between">
             <DebouncedInput
               value={globalFilter ?? ""}
               onChange={setGlobalFilter}
@@ -120,6 +132,11 @@ const StudentLists = () => {
               className="border py-2.5 px-3 rounded md:w-1/2 w-full caret-color1 outline-none border-color1 text-base bg-color1/5 text-color3"
               placeholder="Search all columns..."
             />
+            {selectedAddresses.length > 0 && (
+              <Button className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
+                {selectedAddresses.length === 1 ? "Evict 1 student" : `Evict ${selectedAddresses.length} students`}
+              </Button>
+            )}
           </div>
           <Table>
             <TableHeader>
@@ -137,9 +154,9 @@ const StudentLists = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     );
                   })}
@@ -150,7 +167,7 @@ const StudentLists = () => {
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="text-nowrap" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
