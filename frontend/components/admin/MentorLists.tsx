@@ -21,6 +21,9 @@ import {
 import { Button } from "../ui/button";
 import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 import useGetListOfMentors from "@/hooks/adminHooks/useGetListOfMentors";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
+import useRemoveMentor from "@/hooks/adminHooks/useRemoveMentor";
 
 type tableDataType = {
   name: string;
@@ -122,6 +125,21 @@ const MentorLists = () => {
     }
   }, [list.length, list, _setData]);
 
+  // For evicting students
+  const { isConnected } = useAccount()
+  const { removeMentors, isConfirming, isConfirmed } = useRemoveMentor(selectedAddresses)
+
+  const handleMentorsRemoval = async () => {
+
+    if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
+    if (selectedAddresses.length === 0) return toast.error("Please select rows to remove", { position: "top-right" });
+
+    removeMentors()
+
+    isConfirmed && setSelectedAddresses([])
+
+  }
+
   return (
     <section className="w-full py-6 flex flex-col">
       <main className="w-full flex flex-col gap-4">
@@ -153,7 +171,7 @@ const MentorLists = () => {
               placeholder="Search all columns..."
             />
             {selectedAddresses.length > 0 && (
-              <Button className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
+              <Button onClick={handleMentorsRemoval} disabled={isConfirming} className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
                 {selectedAddresses.length === 1 ? "Remove 1 mentor" : `Remove ${selectedAddresses.length} mentors`}
               </Button>
             )}
