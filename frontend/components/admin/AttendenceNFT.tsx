@@ -23,10 +23,11 @@ import axios from "axios";
 import { User2Icon } from "lucide-react";
 import { FiEdit } from "react-icons/fi";
 import { SlPicture } from "react-icons/sl";
-
+import useGetLectureIds from "@/hooks/AttendanceCreationHook/useGetLectureID";
 
 const AttendenceNFT = () => {
   const data = useMemo(() => listOfNfts, []);
+  const { lectureIds, isLoading, error } = useGetLectureIds();
 
   const { isConnected, address } = useAccount();
   const [selectedFile, setSelectedFile] = useState();
@@ -52,33 +53,34 @@ const AttendenceNFT = () => {
             headers: {
               "Content-Type": "multipart/form-data",
               pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_secret_api_key:
+                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
             },
           }
         );
 
         const fileUrl = response.data.IpfsHash;
-        const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`
+        const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
         console.log(gateWayAndhash);
 
         return fileUrl;
-
       } catch (error) {
         console.log("Pinata API Error:", error);
       }
     }
   }, [selectedFile]);
 
-  getImage()
+  getImage();
 
+  const {
+    createAttendance,
+    isWriting,
+    isConfirming,
+    createdLectureId,
+    createdUri,
+  } = useCreateAttendance(lectureId, imageUri, topic);
 
-
-  const { createAttendance, isWriting, isConfirming } = useCreateAttendance(
-    lectureId,
-    imageUri,
-    topic
-  );
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -104,7 +106,6 @@ const AttendenceNFT = () => {
     setLectureId("");
     setImageURI("");
     setTopic("");
-
   };
 
   const handleToggle = () => {
@@ -148,7 +149,13 @@ const AttendenceNFT = () => {
                     <h3 className=" uppercase text-color1 font-bold text-sm">
                       NFT ID
                     </h3>
-                    <h5 className="text-color2">{list.nftId}</h5>
+                    <h5 className="text-color2">
+                      <div>
+                        {lectureIds.map((id) => (
+                          <div key={id}>{id}</div>
+                        ))}
+                      </div>
+                    </h5>
                   </div>
 
                   <Dialog>
@@ -268,7 +275,8 @@ const AttendenceNFT = () => {
                     />
                     <label
                       htmlFor="selectFile"
-                      className=" absolute -right-1 p-1 rounded-full -bottom-1 cursor-pointer bg-gray-100 border-[0.5px] border-color3/50 font-Bebas tracking-wider text-color3">
+                      className=" absolute -right-1 p-1 rounded-full -bottom-1 cursor-pointer bg-gray-100 border-[0.5px] border-color3/50 font-Bebas tracking-wider text-color3"
+                    >
                       <FiEdit />
                     </label>
                   </div>

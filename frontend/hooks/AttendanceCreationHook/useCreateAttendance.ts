@@ -1,7 +1,6 @@
 "use client";
 import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
 import { ethers } from "ethers";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -16,6 +15,8 @@ const useCreateAttendance = (
   _topic: string
 ) => {
   const [isWriting, setIsWriting] = useState(false);
+  const [createdLectureId, setCreatedLectureId] = useState<string | null>(null);
+  const [createdUri, setCreatedUri] = useState<string | null>(null);
 
   const { data: hash, error, writeContract } = useWriteContract();
   const active_organisation = localStorage?.getItem("active_organisation");
@@ -23,7 +24,7 @@ const useCreateAttendance = (
 
   const createAttendance = useCallback(() => {
     setIsWriting(true);
-    const lectureIdBytes = ethers.encodeBytes32String(_lectureId);
+    const lectureIdBytes: any = ethers.encodeBytes32String(_lectureId);
     writeContract({
       address: contract_address,
       abi: OrganisationABI,
@@ -52,6 +53,9 @@ const useCreateAttendance = (
         id: toastId,
         position: "top-right",
       });
+      setCreatedLectureId(_lectureId);
+      setCreatedUri(_uri);
+      setIsWriting(false);
     }
 
     if (error) {
@@ -62,10 +66,14 @@ const useCreateAttendance = (
       setIsWriting(false);
     }
   }, [isConfirming, isConfirmed, error]);
+
   return {
     createAttendance,
     isWriting,
     isConfirming,
+    createdLectureId,
+    createdUri,
   };
 };
+
 export default useCreateAttendance;
