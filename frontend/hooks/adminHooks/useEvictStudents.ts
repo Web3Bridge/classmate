@@ -1,46 +1,37 @@
 import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import {
-  useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
   type BaseError,
 } from "wagmi";
 
-const useEditMentorsName = (name: string) => {
-  const [isWriting, setIsWriting] = useState(false);
-  const { address } = useAccount();
+const useEvictStudents = (data: any[]) => {
   const { data: hash, error, writeContract } = useWriteContract();
 
-  const active_organisation = window.localStorage.getItem(
+  const active_organisation = window.localStorage?.getItem(
     "active_organisation"
   );
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
-  const editMentorsName = useCallback(() => {
-    if (!address) {
-      toast.error("No connected address found");
-      return;
-    }
-
-    setIsWriting(true);
-    const formattedData = [{ _address: address, _name: name }];
+  const evictStudents = useCallback(() => {
+    const formattedData = data.map((address) => address as `0x${string}`);
 
     writeContract({
       address: contract_address,
       abi: OrganisationABI,
-      functionName: "editMentorsName",
+      functionName: "EvictStudents",
       args: [formattedData],
     });
-  }, [address, name]);
+  }, [data]);
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
     });
 
-  const toastId = "editMentorsName";
+  const toastId = "evictStudents";
 
   useEffect(() => {
     if (isConfirming) {
@@ -51,11 +42,10 @@ const useEditMentorsName = (name: string) => {
     }
 
     if (isConfirmed) {
-      toast.success("Staffs name edited successfully!", {
+      toast.success("Students evicted successfully !", {
         id: toastId,
         position: "top-right",
       });
-      setIsWriting(false);
     }
 
     if (error) {
@@ -63,15 +53,14 @@ const useEditMentorsName = (name: string) => {
         id: toastId,
         position: "top-right",
       });
-      setIsWriting(false);
     }
   }, [isConfirmed, error, isConfirming]);
 
   return {
-    editMentorsName,
-    isWriting,
+    evictStudents,
     isConfirming,
+    isConfirmed,
   };
 };
 
-export default useEditMentorsName;
+export default useEvictStudents;

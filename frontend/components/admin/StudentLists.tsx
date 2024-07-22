@@ -18,9 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import tableData from "../../utils/StudentList.json";
 import { Button } from "../ui/button";
 import useGetListOfStudents from "@/hooks/adminHooks/useGetListOfStudents";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
+import useEvictStudents from "@/hooks/adminHooks/useEvictStudents";
 
 type tableDataType = {
   name: string;
@@ -28,7 +30,6 @@ type tableDataType = {
 };
 
 const StudentLists = () => {
-  const defaultData: tableDataType[] = useMemo(() => tableData, []);
   const [selectedAddresses, setSelectedAddresses] = useState<string[]>([]);
 
   const columns = useMemo<ColumnDef<tableDataType>[]>(
@@ -102,13 +103,29 @@ const StudentLists = () => {
     onGlobalFilterChange: setGlobalFilter,
   });
 
+  // Getting the list of students from the contract
   const list = useGetListOfStudents();
 
   useEffect(() => {
     if (list && list.length > 0) {
       _setData(list);
     }
-  }, [list]);
+  }, [list.length, list, _setData]);
+
+  // For evicting students
+  const { isConnected } = useAccount()
+  const { evictStudents, isConfirming, isConfirmed } = useEvictStudents(selectedAddresses)
+
+  const handleStudentsRemoval = async () => {
+
+    if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
+    if (selectedAddresses.length === 0) return toast.error("Please select rows to remove", { position: "top-right" });
+
+    evictStudents()
+
+    isConfirmed && setSelectedAddresses([])
+
+  }
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -124,7 +141,7 @@ const StudentLists = () => {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <div className="w-full mb-2 flex md:flex-row flex-col md:items-center items-start justify-between">
+          <div className="w-full mb-2 flex md:flex-row flex-col gap-2 md:gap-0 md:items-center items-start justify-between">
             <DebouncedInput
               value={globalFilter ?? ""}
               onChange={setGlobalFilter}
@@ -133,7 +150,7 @@ const StudentLists = () => {
               placeholder="Search all columns..."
             />
             {selectedAddresses.length > 0 && (
-              <Button className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
+              <Button onClick={handleStudentsRemoval} disabled={isConfirming} className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
                 {selectedAddresses.length === 1 ? "Evict 1 student" : `Evict ${selectedAddresses.length} students`}
               </Button>
             )}

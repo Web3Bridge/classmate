@@ -49,7 +49,11 @@ const Upload = () => {
       registerStudents()
     }
 
-    if (isConfirmedtoStudents || isConfirmedtoStaff) {
+    if (isConfirmedtoStudents) {
+      setCsvData([])
+    }
+
+    if (isConfirmedtoStaff) {
       setCsvData([])
     }
 

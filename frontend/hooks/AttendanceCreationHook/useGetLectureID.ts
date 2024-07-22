@@ -10,7 +10,9 @@ const useGetLectureIds = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const active_organisation = localStorage?.getItem("active_organisation");
+  const active_organisation = window.localStorage?.getItem(
+    "active_organisation"
+  );
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
   const {
