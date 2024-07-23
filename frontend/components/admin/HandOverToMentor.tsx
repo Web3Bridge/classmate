@@ -23,6 +23,7 @@ import useGetListOfMentors from "@/hooks/adminHooks/useGetListOfMentors";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import useMentorHandOver from "@/hooks/adminHooks/useMentorHandOver";
+import useGetMentorOnDuty from "@/hooks/adminHooks/useGetMentorOnDuty";
 
 
 type tableDataType = {
@@ -128,6 +129,8 @@ const HandOverToMentor = () => {
         if (isConfirmed) setSelectedAddress("");
     }, [isConfirmed]);
 
+    const mentorOnDuty = useGetMentorOnDuty();
+
     return (
         <section className="w-full py-6 flex flex-col">
             <main className="w-full flex flex-col gap-4">
@@ -158,6 +161,7 @@ const HandOverToMentor = () => {
                             </Button>
                         )}
                     </div>
+                    <h3 className=" text-sm tracking-wide text-color2 pb-1.5 md:pl-2 pl-1">Current Mentor On Duty:- {mentorOnDuty}</h3>
                     <Table>
                         <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
