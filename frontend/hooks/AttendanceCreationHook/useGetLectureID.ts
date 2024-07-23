@@ -30,9 +30,7 @@ const useGetLectureIds = () => {
     setIsLoading(isReading);
     if (readError) {
       setError(readError.message);
-      toast.error(readError.message, {
-        position: "top-right",
-      });
+      toast.error(readError.message, { position: "top-right" });
     } else {
       setError(null);
       if (data) {
