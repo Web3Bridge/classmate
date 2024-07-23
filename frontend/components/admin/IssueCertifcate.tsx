@@ -12,16 +12,72 @@ import {
 } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { LiaCertificateSolid } from "react-icons/lia"
-import { FormEvent, useState } from "react"
+import { FormEvent, useCallback, useState } from "react"
+import { SlPicture } from "react-icons/sl"
+import { FiEdit } from "react-icons/fi"
+import axios from "axios"
+import { toast } from "sonner"
+import { useAccount } from "wagmi"
+import useIssueCertificate from "@/hooks/adminHooks/useIssueCertificate"
 
 const IssueCertifcate = () => {
+    const [selectedFile, setSelectedFile] = useState<File>();
+    const [imageUri, setImageURI] = useState("");
 
-    const [image, setImage] = useState('')
-    const [program, setProgram] = useState('')
-    const [year, setYear] = useState('')
+    const { isConnected } = useAccount()
+
+    const handleSelectImage = ({ target }: { target: any }) => {
+        setSelectedFile(target.files[0]);
+    };
+
+    const getImage = useCallback(async () => {
+        if (selectedFile) {
+            try {
+                const formData = new FormData();
+                formData.append("file", selectedFile!);
+
+                const response = await axios.post(
+                    "https://api.pinata.cloud/pinning/pinFileToIPFS",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
+                            pinata_secret_api_key:
+                                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+                        },
+                    }
+                );
+
+                const fileUrl = response.data.IpfsHash;
+                const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
+                setImageURI(gateWayAndhash);
+                console.log(gateWayAndhash);
+
+                return fileUrl;
+            } catch (error) {
+                console.log("Pinata API Error:", error);
+            }
+        }
+    }, [selectedFile]);
+
+    getImage();
+
+    const { issueCertificateToStudents, isConfirming, isConfirmed } = useIssueCertificate(imageUri);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
+
+        if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
+
+        if (imageUri === "") return toast.error("Please select an image", { position: "top-right" });
+
+        issueCertificateToStudents()
+
+        setSelectedFile(undefined)
+        setImageURI("")
+
+
     }
 
     return (
@@ -44,27 +100,55 @@ const IssueCertifcate = () => {
                             <DialogHeader>
                                 <DialogTitle>Classmate+</DialogTitle>
                                 <DialogDescription>
-                                    Create new programme on classmate+
+                                    Insert certificate image
                                 </DialogDescription>
                             </DialogHeader>
                             <form className="w-full grid gap-4" onSubmit={handleSubmit}>
-                                <div className="flex flex-col">
-                                    <label htmlFor="certImage" className="text-color3 font-medium ml-1">Certification Image</label>
-                                    <input type="file" name="certImage" id="certImage" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={image} onChange={e => setImage(e.target.value)} />
+                                <div className="w-full flex flex-col items-center">
+                                    <div className="w-[80px] h-[80px] border-[0.5px] border-color3/50 rounded relative ">
+                                        {selectedFile ? (
+                                            <Image
+                                                src={URL.createObjectURL(selectedFile)}
+                                                alt="profile"
+                                                className="w-full h-full object-cover"
+                                                width={440}
+                                                height={440}
+                                                priority
+                                                quality={100}
+                                            />
+                                        ) : (
+                                            <span className="relative flex justify-center items-center w-full h-full">
+                                                <SlPicture className="relative text-6xl inline-flex rounded text-gray-300" />
+                                            </span>
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            hidden
+                                            className="hidden"
+                                            id="selectFile"
+                                            onChange={handleSelectImage}
+                                        />
+                                        <label
+                                            htmlFor="selectFile"
+                                            className=" absolute -right-1 p-1 rounded-full -bottom-1 cursor-pointer bg-gray-100 border-[0.5px] border-color3/50 font-Bebas tracking-wider text-color3"
+                                        >
+                                            <FiEdit />
+                                        </label>
+                                    </div>
                                 </div>
+
                                 <div className="flex flex-col">
-                                    <label htmlFor="program" className="text-color3 font-medium ml-1">Program</label>
-                                    <input type="text" name="program" id="program" placeholder="Enter name of programm" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={program} onChange={e => setProgram(e.target.value)} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <label htmlFor="year" className="text-color3 font-medium ml-1">Year</label>
-                                    <input type="text" name="year" id="year" placeholder="Enter year" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={year} onChange={e => setYear(e.target.value)} />
+                                    <label htmlFor="imageUri" className="text-color3 font-medium ml-1">Certificate Image URI</label>
+                                    <input type="text" name="imageUri" id="imageUri" placeholder="Select image first..." className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageUri} readOnly />
                                 </div>
                                 <DialogFooter>
                                     <DialogClose asChild>
                                         <Button type="button">Cancel</Button>
                                     </DialogClose>
-                                    <Button type="button" className="bg-color1 mb-3 md:mb-0">Upload Data</Button>
+                                    <DialogClose asChild>
+                                        <Button type="submit" disabled={isConfirming} className="bg-color1 mb-3 md:mb-0">Issue Certificate</Button>
+                                    </DialogClose>
                                 </DialogFooter>
                             </form>
                         </DialogContent>

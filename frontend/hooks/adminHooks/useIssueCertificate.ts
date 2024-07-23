@@ -1,6 +1,5 @@
-"use client";
 import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import {
   useWaitForTransactionReceipt,
@@ -8,9 +7,7 @@ import {
   type BaseError,
 } from "wagmi";
 
-const useRegisterStudents = (data: any[]) => {
-  const [isWriting, setIsWriting] = useState(false);
-
+const useIssueCertificate = (URI: string) => {
   const { data: hash, error, writeContract } = useWriteContract();
 
   const active_organisation = window.localStorage?.getItem(
@@ -18,28 +15,21 @@ const useRegisterStudents = (data: any[]) => {
   );
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
-  const registerStudents = useCallback(() => {
-    setIsWriting(true);
-
-    const formattedData = data.map(({ address, name }) => ({
-      _address: address as `0x${string}`,
-      _name: name,
-    }));
-
+  const issueCertificateToStudents = useCallback(() => {
     writeContract({
       address: contract_address,
       abi: OrganisationABI,
-      functionName: "registerStudents",
-      args: [formattedData],
+      functionName: "MintCertificate",
+      args: [URI],
     });
-  }, [data]);
+  }, [URI]);
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
     });
 
-  const toastId = "registerStudents";
+  const toastId = "issueCertificateToStudents";
 
   useEffect(() => {
     if (isConfirming) {
@@ -50,11 +40,10 @@ const useRegisterStudents = (data: any[]) => {
     }
 
     if (isConfirmed) {
-      toast.success("Students registered successfully !", {
+      toast.success("Certificate issued successfully !", {
         id: toastId,
         position: "top-right",
       });
-      setIsWriting(false);
     }
 
     if (error) {
@@ -62,16 +51,14 @@ const useRegisterStudents = (data: any[]) => {
         id: toastId,
         position: "top-right",
       });
-      setIsWriting(false);
     }
   }, [isConfirmed, error, isConfirming]);
 
   return {
-    registerStudents,
-    isWriting,
+    issueCertificateToStudents,
     isConfirming,
     isConfirmed,
   };
 };
 
-export default useRegisterStudents;
+export default useIssueCertificate;
