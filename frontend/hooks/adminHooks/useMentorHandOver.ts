@@ -7,7 +7,7 @@ import {
   type BaseError,
 } from "wagmi";
 
-const useMentorHandOver = (address: string) => {
+const useMentorHandOver = (address: string | null) => {
   const { data: hash, error, writeContract } = useWriteContract();
 
   const active_organisation = window.localStorage?.getItem(

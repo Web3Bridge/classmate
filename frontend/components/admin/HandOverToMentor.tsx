@@ -73,6 +73,9 @@ const HandOverToMentor = () => {
 
     const handleCheckboxChange = (address: string) => {
         setSelectedAddress((prevSelected) => (prevSelected === address ? "" : address));
+        if (typeof window !== "undefined") {
+            localStorage.setItem("selectedAddress", address);
+        }
     };
 
     const [data, _setData] = useState<tableDataType[]>([]);
@@ -112,7 +115,10 @@ const HandOverToMentor = () => {
 
     // For evicting students
     const { isConnected } = useAccount()
-    const { handOverToMentor, isConfirming, isConfirmed } = useMentorHandOver(selectedAddress)
+
+    const selected_address: string | null = window.localStorage?.getItem("selectedAddress");
+
+    const { handOverToMentor, isConfirming, isConfirmed } = useMentorHandOver(selected_address)
 
     const handleMentorHandOver = async () => {
 
