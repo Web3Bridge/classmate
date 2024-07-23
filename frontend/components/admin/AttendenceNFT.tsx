@@ -17,19 +17,19 @@ import { IoCalendar } from "react-icons/io5";
 import { useAccount } from "wagmi";
 import { HiOutlineViewfinderCircle } from "react-icons/hi2";
 import { toast } from "sonner";
-import useCreateAttendance from "@/hooks/AttendanceCreationHook/useCreateAttendance";
+import useCreateAttendance from "@/hooks/adminHooks/useCreateAttendance";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import axios from "axios";
 import { User2Icon } from "lucide-react";
 import { FiEdit } from "react-icons/fi";
 import { SlPicture } from "react-icons/sl";
-import useGetLectureIds from "@/hooks/AttendanceCreationHook/useGetLectureID";
+import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
 
 const AttendenceNFT = () => {
   const data = useMemo(() => listOfNfts, []);
-  const { lectureIds, isLoading, error } = useGetLectureIds();
+  useGetLectureData();
 
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const [selectedFile, setSelectedFile] = useState();
   const [isChecked, setIsChecked] = useState(false);
   const [lectureId, setLectureId] = useState("");
@@ -38,6 +38,12 @@ const AttendenceNFT = () => {
 
   const handleSelectImage = ({ target }: { target: any }) => {
     setSelectedFile(target.files[0]);
+
+    getImage();
+  };
+
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
   };
 
   const getImage = useCallback(async () => {
@@ -71,15 +77,7 @@ const AttendenceNFT = () => {
     }
   }, [selectedFile]);
 
-  getImage();
-
-  const {
-    createAttendance,
-    isWriting,
-    isConfirming,
-    createdLectureId,
-    createdUri,
-  } = useCreateAttendance(lectureId, imageUri, topic);
+  const { createAttendance, isConfirming, isConfirmed } = useCreateAttendance(lectureId, imageUri, topic);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -108,9 +106,7 @@ const AttendenceNFT = () => {
     setTopic("");
   };
 
-  const handleToggle = () => {
-    setIsChecked(!isChecked);
-  };
+
   return (
     <section className="w-full py-6 flex flex-col">
       <main className="w-full flex flex-col gap-7">
@@ -150,11 +146,7 @@ const AttendenceNFT = () => {
                       NFT ID
                     </h3>
                     <h5 className="text-color2">
-                      <div>
-                        {lectureIds.map((id) => (
-                          <div key={id}>{id}</div>
-                        ))}
-                      </div>
+
                     </h5>
                   </div>
 
@@ -336,7 +328,7 @@ const AttendenceNFT = () => {
 
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button type="submit" disabled={isWriting || isConfirming}>
+                    <Button type="submit" disabled={isConfirming}>
                       Submit
                     </Button>
                   </DialogClose>

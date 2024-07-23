@@ -14,16 +14,14 @@ const useCreateAttendance = (
   _uri: string,
   _topic: string
 ) => {
-  const [isWriting, setIsWriting] = useState(false);
-  const [createdLectureId, setCreatedLectureId] = useState<string | null>(null);
-  const [createdUri, setCreatedUri] = useState<string | null>(null);
-
   const { data: hash, error, writeContract } = useWriteContract();
+
+
   const active_organisation = window.localStorage?.getItem("active_organisation");
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
   const createAttendance = useCallback(() => {
-    setIsWriting(true);
+
     const lectureIdBytes: any = ethers.encodeBytes32String(_lectureId);
     writeContract({
       address: contract_address,
@@ -53,9 +51,6 @@ const useCreateAttendance = (
         id: toastId,
         position: "top-right",
       });
-      setCreatedLectureId(_lectureId);
-      setCreatedUri(_uri);
-      setIsWriting(false);
     }
 
     if (error) {
@@ -63,16 +58,13 @@ const useCreateAttendance = (
         id: toastId,
         position: "top-right",
       });
-      setIsWriting(false);
     }
   }, [isConfirming, isConfirmed, error]);
 
   return {
     createAttendance,
-    isWriting,
     isConfirming,
-    createdLectureId,
-    createdUri,
+    isConfirmed,
   };
 };
 
