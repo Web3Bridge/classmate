@@ -18,9 +18,9 @@ import { FiEdit } from "react-icons/fi"
 import axios from "axios"
 import { toast } from "sonner"
 import { useAccount } from "wagmi"
-import useIssueCertificate from "@/hooks/adminHooks/useIssueCertificate"
+import useIssueSPOK from "@/hooks/adminHooks/useIssueSPOK"
 
-const IssueCertifcate = () => {
+const IssueSpok = () => {
     const [selectedFile, setSelectedFile] = useState<File>();
     const [imageUri, setImageURI] = useState("");
 
@@ -63,7 +63,11 @@ const IssueCertifcate = () => {
 
     getImage();
 
-    const { issueCertificateToStudents, isConfirming, isConfirmed } = useIssueCertificate(imageUri);
+    const {
+        issueSPOKToMentors,
+        isConfirming,
+        isConfirmed
+    } = useIssueSPOK(imageUri);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
@@ -72,19 +76,26 @@ const IssueCertifcate = () => {
 
         if (imageUri === "") return toast.error("Please select an image", { position: "top-right" });
 
-        issueCertificateToStudents()
+        issueSPOKToMentors()
 
         setSelectedFile(undefined)
         setImageURI("")
 
     }
 
+    useCallback(() => {
+        if (isConfirmed) {
+            setSelectedFile(undefined)
+            setImageURI("")
+        }
+    }, [isConfirmed])
+
     return (
         <section className='w-full py-6 flex flex-col'>
             <main className='w-full flex flex-col gap-7'>
                 <div className='flex flex-col'>
-                    <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>Certificate</h1>
-                    <h4 className='text-lg tracking-wider text-color2'>Insert necessary Info for Issuing Certificate</h4>
+                    <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>SPOK</h1>
+                    <h4 className='text-lg tracking-wider text-color2'>Insert necessary Info for Issuing Mentors SPOK</h4>
                 </div>
 
                 <div className="w-full flex flex-col items-center gap-7">
@@ -93,13 +104,13 @@ const IssueCertifcate = () => {
 
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button type="button" className="text-white bg-color1 hover:bg-color2 flex items-center gap-1">Issue Certificate <LiaCertificateSolid className="text-xl" /></Button>
+                            <Button type="button" className="text-white bg-color1 hover:bg-color2 flex items-center gap-1">Issue SPOK <LiaCertificateSolid className="text-xl" /></Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
                                 <DialogTitle>Classmate+</DialogTitle>
                                 <DialogDescription>
-                                    Insert certificate image
+                                    Insert SPOK image
                                 </DialogDescription>
                             </DialogHeader>
                             <form className="w-full grid gap-4" onSubmit={handleSubmit}>
@@ -138,7 +149,7 @@ const IssueCertifcate = () => {
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <label htmlFor="imageUri" className="text-color3 font-medium ml-1">Certificate Image URI</label>
+                                    <label htmlFor="imageUri" className="text-color3 font-medium ml-1">SPOK Image URI</label>
                                     <input type="text" name="imageUri" id="imageUri" placeholder="Select image first..." className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageUri} readOnly />
                                 </div>
                                 <DialogFooter>
@@ -146,7 +157,7 @@ const IssueCertifcate = () => {
                                         <Button type="button">Cancel</Button>
                                     </DialogClose>
                                     <DialogClose asChild>
-                                        <Button type="submit" disabled={isConfirming} className="bg-color1 mb-3 md:mb-0">Issue Certificate</Button>
+                                        <Button type="submit" disabled={isConfirming} className="bg-color1 mb-3 md:mb-0">Issue Spok</Button>
                                     </DialogClose>
                                 </DialogFooter>
                             </form>
@@ -159,4 +170,4 @@ const IssueCertifcate = () => {
     )
 }
 
-export default IssueCertifcate
+export default IssueSpok

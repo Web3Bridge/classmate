@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ColumnDef,
   PaginationState,
@@ -139,6 +139,10 @@ const MentorLists = () => {
     isConfirmed && setSelectedAddresses([])
 
   }
+
+  useCallback(() => {
+    if (isConfirmed) setSelectedAddresses([])
+  }, [isConfirmed])
 
   return (
     <section className="w-full py-6 flex flex-col">

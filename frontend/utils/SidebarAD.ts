@@ -25,8 +25,12 @@ export const sideLinksAd = [
   },
 
   {
-    name: "certificate",
+    name: "student certificate",
     href: "/admin/certificate",
+  },
+  {
+    name: "Mentors SPOK",
+    href: "/admin/spok",
   },
   {
     name: "Settings",
