@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { LiaCertificateSolid } from "react-icons/lia"
-import { FormEvent, useCallback, useState } from "react"
+import { FormEvent, useCallback, useEffect, useState } from "react"
 import { SlPicture } from "react-icons/sl"
 import { FiEdit } from "react-icons/fi"
 import axios from "axios"
@@ -83,7 +83,7 @@ const IssueSpok = () => {
 
     }
 
-    useCallback(() => {
+    useEffect(() => {
         if (isConfirmed) {
             setSelectedFile(undefined)
             setImageURI("")

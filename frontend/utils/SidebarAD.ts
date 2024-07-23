@@ -12,6 +12,10 @@ export const sideLinksAd = [
     href: "/admin/mentors",
   },
   {
+    name: "Mentor Handover",
+    href: "/admin/handover",
+  },
+  {
     name: "Attendance",
     href: "/admin/attendence",
   },

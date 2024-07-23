@@ -123,11 +123,11 @@ const StudentLists = () => {
 
     evictStudents()
 
-    isConfirmed && setSelectedAddresses([])
+    if (isConfirmed) setSelectedAddresses([])
 
   }
 
-  useCallback(() => {
+  useEffect(() => {
     if (isConfirmed) setSelectedAddresses([])
   }, [isConfirmed])
 

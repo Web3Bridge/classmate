@@ -20,6 +20,7 @@ import useGetMentorName from "@/hooks/adminHooks/useGetMentorName";
 import { useAccount } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { GiGiftOfKnowledge } from "react-icons/gi";
+import { FaHandshake } from "react-icons/fa6";
 
 const SideBar = ({
   sidebarOpen,
@@ -59,16 +60,18 @@ const SideBar = ({
       case 2:
         return <MdRecentActors />;
       case 3:
-        return <MdAssignment />;
+        return <FaHandshake />;
       case 4:
-        return <MdEventSeat />;
+        return <MdAssignment />;
       case 5:
-        return <MdUploadFile />;
+        return <MdEventSeat />;
       case 6:
-        return <GrCertificate />;
+        return <MdUploadFile />;
       case 7:
-        return <GiGiftOfKnowledge />
+        return <GrCertificate />;
       case 8:
+        return <GiGiftOfKnowledge />
+      case 9:
         return <FiSettings />;
       default:
         return "";

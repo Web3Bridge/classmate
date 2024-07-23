@@ -136,11 +136,11 @@ const MentorLists = () => {
 
     removeMentors()
 
-    isConfirmed && setSelectedAddresses([])
+    if (isConfirmed) setSelectedAddresses([])
 
   }
 
-  useCallback(() => {
+  useEffect(() => {
     if (isConfirmed) setSelectedAddresses([])
   }, [isConfirmed])
 
