@@ -1,16 +1,11 @@
 "use client";
-import { Camera, Loader2, User2Icon } from "lucide-react";
-import { FormEvent, useCallback, useState } from "react";
-import axios from "axios";
-import { Input } from "@/components/ui/input";
+import { User2Icon } from "lucide-react";
+import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useEditStudentsName from "@/hooks/nameEditingHooks/useEditStudentsName";
 
 export default function UserSettings() {
   const [selectedFile, setSelectedFile] = useState();
-
-  const [url, setUrl] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -31,36 +26,6 @@ export default function UserSettings() {
   const handleSelectImage = ({ target }: { target: any }) => {
     setSelectedFile(target.files[0]);
   };
-
-  const getImage = useCallback(async () => {
-    if (selectedFile) {
-      try {
-        const formData = new FormData();
-        formData.append("file", selectedFile!);
-
-        const response = await axios.post(
-          "https://api.pinata.cloud/pinning/pinFileToIPFS",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.VITE_PINATA_API_KEY,
-              pinata_secret_api_key: process.env.VITE_PINATA_SECRET_API_KEY,
-            },
-          }
-        );
-
-        const fileUrl = response.data.IpfsHash;
-        setUrl(fileUrl);
-        console.log(fileUrl);
-        return fileUrl;
-      } catch (error) {
-        console.log("Pinata API Error:", error);
-      }
-    }
-  }, [selectedFile]);
-
-  getImage();
 
   return (
     <section className="w-full py-6 flex flex-col">
