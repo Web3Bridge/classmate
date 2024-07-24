@@ -7,6 +7,7 @@ import { SiCodementor, SiGoogleclassroom } from 'react-icons/si'
 import { LiaCertificateSolid } from "react-icons/lia";
 import { Calendar } from "@/components/ui/calendar";
 import dynamic from "next/dynamic";
+import useGetNumericStatistics from '@/hooks/adminHooks/useGetNumericStatistics'
 const Barchart = dynamic(() => import('./chart/Barchart'), { ssr: false });
 const Piechart = dynamic(() => import('./chart/Piechart'), { ssr: false });
 
@@ -14,6 +15,8 @@ const Piechart = dynamic(() => import('./chart/Piechart'), { ssr: false });
 const Dashboard = () => {
 
     const [date, setDate] = React.useState<Date | undefined>(new Date())
+
+    const { statsData, isLoading } = useGetNumericStatistics()
 
     return (
         <section className='w-full py-6 flex flex-col'>
@@ -31,7 +34,7 @@ const Dashboard = () => {
                                 <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
                                     <SiGoogleclassroom />
                                 </div>
-                                <h3 className="text-2xl font-semibold text-gray-800">124</h3>
+                                <h3 className="text-2xl font-semibold text-gray-800">{isLoading ? 0 : statsData?.totalClass}</h3>
                             </div>
                         </div>
                         {/* two */}
@@ -41,7 +44,9 @@ const Dashboard = () => {
                                 <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
                                     <PiStudentFill />
                                 </div>
-                                <h3 className="text-2xl font-semibold text-gray-800">133</h3>
+                                <h3 className="text-2xl font-semibold text-gray-800">
+                                    {isLoading ? 0 : statsData.totalStudent}
+                                </h3>
                             </div>
                         </div>
                         {/* three */}
@@ -51,7 +56,9 @@ const Dashboard = () => {
                                 <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
                                     <SiCodementor />
                                 </div>
-                                <h3 className="text-2xl font-semibold text-gray-800">43</h3>
+                                <h3 className="text-2xl font-semibold text-gray-800">
+                                    {isLoading ? 0 : statsData.totalMentors}
+                                </h3>
                             </div>
                         </div>
                         {/* four */}
@@ -61,17 +68,21 @@ const Dashboard = () => {
                                 <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
                                     <FaFileSignature />
                                 </div>
-                                <h3 className="text-2xl font-semibold text-gray-800">93</h3>
+                                <h3 className="text-2xl font-semibold text-gray-800">
+                                    {isLoading ? 0 : statsData.totalSignedAttendance}
+                                </h3>
                             </div>
                         </div>
                         {/* five */}
                         <div className='w-full p-3 rounded-md flex flex-col gap-4 bg-white'>
-                            <h1 className='text-gray-700 font-medium text-sm'>Average Daily Attendence</h1>
+                            <h1 className='text-gray-700 font-medium text-sm'>Attendence (%)</h1>
                             <div className='w-full flex md:flex-row-reverse flex-wrap justify-between items-center'>
                                 <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
                                     <GiPieChart />
                                 </div>
-                                <h3 className="text-2xl font-semibold text-gray-800">35</h3>
+                                <h3 className="text-2xl font-semibold text-gray-800">
+                                    {isLoading ? 0 : `${(statsData.totalSignedAttendance / statsData.totalClass) * 100}%`}
+                                </h3>
                             </div>
                         </div>
                         {/* six */}
@@ -81,7 +92,9 @@ const Dashboard = () => {
                                 <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
                                     <LiaCertificateSolid />
                                 </div>
-                                <h3 className="text-2xl font-semibold text-gray-800">115</h3>
+                                <h3 className="text-2xl font-semibold text-gray-800">
+                                    {isLoading ? 0 : statsData.totalCertification}
+                                </h3>
                             </div>
                         </div>
                     </article>

@@ -88,7 +88,7 @@ const Header = ({
                     {/* <!-- Hamburger Toggle BTN --> */}
 
                     <Link
-                        href="/user"
+                        href="/admin"
                         className="flex flex-shrink-0 lg:hidden items-center gap-1"
                     >
                         <PiStudentFill className="text-color1 md:text-4xl text-3xl" />
