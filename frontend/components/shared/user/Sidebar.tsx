@@ -63,15 +63,16 @@ const SideBar = ({
     }
   }, []);
 
-  const { address } = useAccount()
+  const { address } = useAccount();
 
-  const studentName = useGetStudentName(address)
+  const studentName = useGetStudentName(address);
 
   return (
     <aside
       ref={sidebar}
-      className={`absolute font-barlow left-0 top-0 z-[9999] flex h-screen w-72 flex-col overflow-y-hidden bg-color2 duration-300 ease-linear lg:static lg:translate-x-0 lg:rounded-lg ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      className={`absolute font-barlow left-0 top-0 z-[9999] flex h-screen w-72 flex-col overflow-y-hidden bg-color2 duration-300 ease-linear lg:static lg:translate-x-0 lg:rounded-lg ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex flex-col gap-2 font-barlow px-6 py-8 lg:py-6.5">
@@ -119,8 +120,9 @@ const SideBar = ({
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-color1 hover:before:h-full ${pathname === link.href ? "before:h-full" : "before:h-0"
-                      }`}
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-color1 hover:before:h-full hover:text-white/95 ${
+                      pathname === link.href ? "before:h-full" : "before:h-0"
+                    }`}
                     onClick={handleCloseSideBar}
                   >
                     {renderIcons(index)}
@@ -131,7 +133,7 @@ const SideBar = ({
             </ul>
           </div>
           {/* <!-- Sidebar Footer --> */}
-          <div className="w-full  text-white cursor-pointer hover:text-color1 flex justify-center gap-1.5 mt-8">
+          <div className="w-full  text-gray-300 cursor-pointer hover:text-white flex justify-center gap-1.5 mt-8">
             <div className="flex items-center space-x-2">
               <LuLogOut />
               <h1 className="">Log out</h1>

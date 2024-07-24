@@ -17,10 +17,16 @@ import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
 import useGetSignedAttendanceImages from "@/hooks/studentHooks/useGetSignedAttendanceImages";
 import { useAccount } from "wagmi";
 import Link from "next/link";
+import { FaChartLine, FaFileSignature } from "react-icons/fa6";
+import { SiGoogleclassroom } from "react-icons/si";
+import { GiPieChart } from "react-icons/gi";
+import { TbAlarmAverage, TbArrowRotaryLastLeft } from "react-icons/tb";
+import { RiChatSettingsFill } from "react-icons/ri";
 
 interface Statistic {
   title: any;
   value: any;
+  icon?: any;
 }
 
 const Statistics = () => {
@@ -38,10 +44,12 @@ const Statistics = () => {
     {
       title: "Total Classes",
       value: attendanceRatio.attendanceRatio.totalClasses,
+      icon: <SiGoogleclassroom />,
     },
     {
       title: "Class attended",
       value: attendanceRatio.attendanceRatio.attendance,
+      icon: <FaFileSignature />,
     },
     {
       title: "Class Percentage",
@@ -50,10 +58,11 @@ const Statistics = () => {
           attendanceRatio.attendanceRatio.totalClasses) *
         100
       }%`,
+      icon: <GiPieChart />,
     },
-    { title: "Average Score", value: "NaN" },
-    { title: "Total Score", value: "NaN" },
-    { title: "Students rating", value: "NaN" },
+    { title: "Average Score", value: "NaN", icon: <TbAlarmAverage /> },
+    { title: "Total Score", value: "NaN", icon: <TbArrowRotaryLastLeft /> },
+    { title: "Students rating", value: "NaN", icon: <FaChartLine /> },
   ];
 
   const {
@@ -91,10 +100,18 @@ const Statistics = () => {
             {statistics.map((stat, index) => (
               <div
                 key={index}
-                className="w-full h-20 bg-color2 rounded-md text-white text-center p-2"
+                className="w-full h-20 hover:border hover:border-color2 transition-all ease-in-out shadow-md bg-white/95 rounded-md  px-3 p-2"
               >
-                {stat.title}
-                <h1>{stat.value}</h1>
+                <h1 className="">{stat.title}</h1>
+
+                <div className="flex justify-between pt-2 font-semibold text-xl">
+                  <div>
+                    <h1>{stat.value}</h1>
+                  </div>
+                  <div className="border border-color2 rounded-full w-8 h-8 flex justify-center items-center align-middle">
+                    {stat.icon}{" "}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -112,26 +129,25 @@ const Statistics = () => {
                 </h1>
               </div>
             ) : (
-              <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-8 mt-3 gap-6">
+              <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-4 mt-3 gap-6">
                 {signedAttendanceImages?.slice(0, 3).map((list, index) => (
                   <>
                     <Link href="/user/attendance" key={index}>
                       <Card
                         key={index}
-                        className="bg-color2 text-gray-100 border-none"
+                        className="bg-white/95 hover:border hover:border-color2 transition-all ease-in-out shadow-md rounded-md"
                       >
                         <CardHeader>
-                          <CardTitle> Mentor: {list.mentorName}</CardTitle>
-                          <h1>Topic: {list.topic}</h1>
-                          <CardDescription></CardDescription>
+                          <h1>{list.topic}</h1>
+                          <h3>{list.mentorName}</h3>
                         </CardHeader>
                         <CardContent>
                           <img
                             src={list.imageURI}
                             alt="NFT Image"
-                            className="w-full h-[200px] object-cover"
+                            className="w-full h-40 object-cover rounded-md"
                           />
-                          Lecture ID: {list.lectureId}
+                          <h1 className="mt-2">Lecture ID: {list.lectureId}</h1>
                         </CardContent>
                       </Card>
                     </Link>
@@ -141,12 +157,12 @@ const Statistics = () => {
             )}
           </section>
         </main>
-        <aside className="w-full p-6 bg-white rounded-md">
+        <aside className="w-full p-6 bg-white rounded-md  h-[350px] shadow-lg">
           <Calendar
             mode="single"
             selected={date}
             onSelect={setDate}
-            className="rounded-md border "
+            className="rounded-md border h-full"
           />
         </aside>
       </section>
