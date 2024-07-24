@@ -57,13 +57,13 @@ const Statistics = ({ student_address }: { student_address: any }) => {
     error: classesError,
   } = useListClassesAttended(student_address);
 
-  if (attendanceIsPending || classesIsPending) {
-    return <div>Loading...</div>;
-  }
+  // if (attendanceIsPending || classesIsPending) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (attendanceError || classesError) {
-    return <div>Error loading data</div>;
-  }
+  // if (attendanceError || classesError) {
+  //   return <div>Error loading data</div>;
+  // }
 
   const totalClasses = attendanceRatio.totalClasses;
   const attendedClasses = classesAttended.length;
