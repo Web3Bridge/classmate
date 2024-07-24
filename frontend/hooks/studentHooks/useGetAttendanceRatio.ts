@@ -9,6 +9,7 @@ const useGetAttendanceRatio = (student_address: any) => {
     attendance: 0,
     totalClasses: 0,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const active_organisation = window.localStorage?.getItem(
     "active_organisation"
@@ -42,6 +43,9 @@ const useGetAttendanceRatio = (student_address: any) => {
         attendance: Number(attendance),
         totalClasses: Number(totalClasses),
       });
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
     }
   }, [attendanceRatioData]);
 
@@ -51,9 +55,9 @@ const useGetAttendanceRatio = (student_address: any) => {
 
   return {
     attendanceRatio,
+    isLoading,
     isPending: attendanceRatioIsPending,
     error: attendanceRatioError,
   };
 };
-
 export default useGetAttendanceRatio;

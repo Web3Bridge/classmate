@@ -17,10 +17,6 @@ const useSignAttendance = (_lectureId: string) => {
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
   const signAttendance = useCallback(() => {
-    // if (!_lectureId) {
-    //   console.error("Lecture ID is required");
-    //   return;
-    // }
     const lectureIdBytes: any = ethers.encodeBytes32String(_lectureId);
     writeContract({
       address: contract_address,
