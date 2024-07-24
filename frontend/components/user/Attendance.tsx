@@ -10,13 +10,10 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import ReactPaginate from "react-paginate";
-import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
 import useGetSignedAttendanceImages from "@/hooks/studentHooks/useGetSignedAttendanceImages";
 import { useAccount } from "wagmi";
 
 const UserAttendenceNFT = () => {
-  // const { lectureInfo } = useGetLectureData();
-
   const { address } = useAccount();
   const { signedAttendanceImages, isLoading } =
     useGetSignedAttendanceImages(address);
