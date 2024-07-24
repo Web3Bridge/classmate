@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,19 +12,85 @@ import {
   DialogFooter,
   DialogClose,
 } from "../ui/dialog";
-import { useAccount } from "wagmi";
+import { useAccount, useBlockNumber, useReadContract } from "wagmi";
 import { toast } from "sonner";
 import useCreateAttendance from "@/hooks/adminHooks/useCreateAttendance";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import axios from "axios";
 import { FiEdit } from "react-icons/fi";
 import { SlPicture } from "react-icons/sl";
-import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
+import ReactPaginate from "react-paginate";
 import useOpenAttendance from "@/hooks/adminHooks/useOpenAttendance";
 import useCloseAttendance from "@/hooks/adminHooks/useCloseAttendance";
 import useEditLectureTopic from "@/hooks/adminHooks/useEditLectureTopic";
+import { useQueryClient } from "@tanstack/react-query";
+import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
+import { getOrgContract } from "@/constants/contracts";
+import { readOnlyProvider } from "@/constants/provider";
+import { ethers } from "ethers";
 
 const AttendenceNFT = () => {
+
+  // Getting lecture data
+  const [lectureInfo, setLectureInfo] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const queryClient = useQueryClient();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+
+  const active_organisation = window.localStorage?.getItem(
+    "active_organisation"
+  );
+  const contract_address = JSON.parse(active_organisation as `0x${string}`);
+
+  const {
+    data: listOfLectureIds,
+    error: listOfLectureIdsError,
+    isPending: listOfLectureIdsIsPending,
+    queryKey,
+    refetch: refetchLectureIds,
+  } = useReadContract({
+    address: contract_address,
+    abi: OrganisationABI,
+    functionName: "getLectureIds",
+  });
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey });
+  }, [blockNumber, queryClient, queryKey]);
+
+  const fetchLectureData = useCallback(async () => {
+
+    if (!listOfLectureIds) return;
+
+    try {
+      const formattedRes = listOfLectureIds.map((id: any) => id.toString());
+
+      const data = formattedRes.map(async (id: any) => {
+        const contract = getOrgContract(readOnlyProvider, contract_address);
+        const lectureData = await contract.getLectureData(id);
+        return {
+          lectureId: ethers.decodeBytes32String(id),
+          mentorOnDuty: lectureData[0],
+          topic: lectureData[1],
+          imageURI: lectureData[2],
+          attendenceStartTime: lectureData[3].toString(),
+          studentsPresent: lectureData[4].toString(),
+          isActive: lectureData[5],
+        };
+      });
+      const results = await Promise.all(data);
+
+      setIsLoading(false);
+      setLectureInfo(results);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [contract_address, blockNumber, queryClient]);
+
+  useEffect(() => {
+    fetchLectureData();
+  }, [fetchLectureData]);
 
   const { isConnected } = useAccount();
 
@@ -39,7 +105,7 @@ const AttendenceNFT = () => {
   };
 
   // getting the list of attendence
-  const { lectureInfo, isLoading, fetchLectureData } = useGetLectureData();
+  // const { lectureInfo, isLoading, fetchLectureData } = useGetLectureData();
 
   //For toggling the status of attendance
   const { openAttendance, isConfirming: openAttendanceIsConfirming, isConfirmed: openAttendanceIsConfirmed } = useOpenAttendance()
@@ -53,6 +119,7 @@ const AttendenceNFT = () => {
       } else if (status === true) {
         await closeAttendance(id);
       }
+      refetchLectureIds();
       await fetchLectureData();
     } catch (error) {
       console.error("Failed to toggle attendance status:", error);
@@ -74,6 +141,8 @@ const AttendenceNFT = () => {
       });
 
     await editLectureTopic(id, editedTopic)
+    refetchLectureIds()
+    await fetchLectureData()
 
     if (editTopicIsConfirmed) setEditedTopic("")
 
@@ -142,16 +211,151 @@ const AttendenceNFT = () => {
   };
 
 
+  // Pagination 
+  const [currentItems, setCurrentItems] = useState<any[]>([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 9;
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(lectureInfo.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(lectureInfo.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, lectureInfo, lectureInfo.length]);
+
+  const handlePageClick = (event: any) => {
+    const newOffset = (event.selected * itemsPerPage) % lectureInfo.length;
+    setItemOffset(newOffset);
+  };
+
+
   return (
     <section className="w-full py-6 flex flex-col">
       <main className="w-full flex flex-col gap-7">
-        <div className="flex flex-col ">
-          <h1 className="uppercase text-color2 md:text-2xl font-bold text-xl">
-            Attendence
-          </h1>
-          <h4 className="text-lg tracking-wider text-color2">
-            All Attendence NFTs
-          </h4>
+        <div className="flex w-full flex-col gap-2 md:gap-0 md:flex-row justify-between md:items-center items-start">
+          <div className="flex flex-col ">
+            <h1 className="uppercase text-color2 md:text-2xl font-bold text-xl">
+              Attendence
+            </h1>
+            <h4 className="text-lg tracking-wider text-color2">
+              All Attendence NFTs
+            </h4>
+          </div>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                type="button"
+                className="text-white bg-color1 hover:bg-color2 flex items-center gap-1"
+              >
+                Create new attendance
+                <IoIosAddCircleOutline className="text-xl" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Classmate+</DialogTitle>
+                <DialogDescription>
+                  Create new atttendance on classmate+
+                </DialogDescription>
+              </DialogHeader>
+              <form className="w-full grid gap-4" onSubmit={handleSubmit}>
+                <div className="w-full flex flex-col items-center">
+                  <div className="w-[80px] h-[80px] border-[0.5px] border-color3/50 rounded relative ">
+                    {selectedFile ? (
+                      <Image
+                        src={URL.createObjectURL(selectedFile)}
+                        alt="profile"
+                        className="w-full h-full object-cover"
+                        width={440}
+                        height={440}
+                        priority
+                        quality={100}
+                      />
+                    ) : (
+                      <span className="relative flex justify-center items-center w-full h-full">
+                        <SlPicture className="relative text-6xl inline-flex rounded text-gray-300" />
+                      </span>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      className="hidden"
+                      id="selectFile"
+                      onChange={handleSelectImage}
+                    />
+                    <label
+                      htmlFor="selectFile"
+                      className=" absolute -right-1 p-1 rounded-full -bottom-1 cursor-pointer bg-gray-100 border-[0.5px] border-color3/50 font-Bebas tracking-wider text-color3"
+                    >
+                      <FiEdit />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="lectureId"
+                    className="text-color3 font-medium ml-1"
+                  >
+                    Lecture ID
+                  </label>
+                  <input
+                    type="text"
+                    name="lectureId"
+                    id="lectureId"
+                    placeholder="Enter lecture id"
+                    className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
+                    value={lectureId}
+                    onChange={(e) => setLectureId(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="topic"
+                    className="text-color3 font-medium ml-1"
+                  >
+                    Topic
+                  </label>
+                  <input
+                    type="text"
+                    name="topic"
+                    id="topic"
+                    placeholder="Enter topic"
+                    className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="imageUri"
+                    className="text-color3 font-medium ml-1"
+                  >
+                    Image URI
+                  </label>
+                  <input
+                    type="text"
+                    name="imageUri"
+                    id="imageUri"
+                    placeholder="Select an image and await IPFS url..."
+                    className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
+                    value={imageUri}
+                    readOnly
+                  />
+                </div>
+
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="submit" disabled={isConfirming}>
+                      Submit
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
         {isLoading ? (
           <div className="w-full h-[250px] flex justify-center items-center">
@@ -167,7 +371,7 @@ const AttendenceNFT = () => {
           </div>
         ) : null}
         <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-8 gap-6">
-          {lectureInfo?.map((list, index) => (
+          {currentItems?.map((list, index) => (
             <div className="w-full p-3 rounded bg-color2" key={index}>
               <div className="w-full flex flex-col gap-3 justify-between bg-transparent">
                 <div className="w-full h-[250px] relative overflow-hidden rounded">
@@ -286,120 +490,20 @@ const AttendenceNFT = () => {
 
         {/* create new attendance */}
         <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                type="button"
-                className="text-white bg-color1 hover:bg-color2 flex items-center gap-1"
-              >
-                Create new attendance
-                <IoIosAddCircleOutline className="text-xl" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Classmate+</DialogTitle>
-                <DialogDescription>
-                  Create new atttendance on classmate+
-                </DialogDescription>
-              </DialogHeader>
-              <form className="w-full grid gap-4" onSubmit={handleSubmit}>
-                <div className="w-full flex flex-col items-center">
-                  <div className="w-[80px] h-[80px] border-[0.5px] border-color3/50 rounded relative ">
-                    {selectedFile ? (
-                      <Image
-                        src={URL.createObjectURL(selectedFile)}
-                        alt="profile"
-                        className="w-full h-full object-cover"
-                        width={440}
-                        height={440}
-                        priority
-                        quality={100}
-                      />
-                    ) : (
-                      <span className="relative flex justify-center items-center w-full h-full">
-                        <SlPicture className="relative text-6xl inline-flex rounded text-gray-300" />
-                      </span>
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      hidden
-                      className="hidden"
-                      id="selectFile"
-                      onChange={handleSelectImage}
-                    />
-                    <label
-                      htmlFor="selectFile"
-                      className=" absolute -right-1 p-1 rounded-full -bottom-1 cursor-pointer bg-gray-100 border-[0.5px] border-color3/50 font-Bebas tracking-wider text-color3"
-                    >
-                      <FiEdit />
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="lectureId"
-                    className="text-color3 font-medium ml-1"
-                  >
-                    Lecture ID
-                  </label>
-                  <input
-                    type="text"
-                    name="lectureId"
-                    id="lectureId"
-                    placeholder="Enter lecture id"
-                    className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
-                    value={lectureId}
-                    onChange={(e) => setLectureId(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="topic"
-                    className="text-color3 font-medium ml-1"
-                  >
-                    Topic
-                  </label>
-                  <input
-                    type="text"
-                    name="topic"
-                    id="topic"
-                    placeholder="Enter topic"
-                    className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="imageUri"
-                    className="text-color3 font-medium ml-1"
-                  >
-                    Image URI
-                  </label>
-                  <input
-                    type="text"
-                    name="imageUri"
-                    id="imageUri"
-                    placeholder="Select an image and await IPFS url..."
-                    className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
-                    value={imageUri}
-                    readOnly
-                  />
-                </div>
-
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="submit" disabled={isConfirming}>
-                      Submit
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            containerClassName="flex justify-center items-center mt-8 gap-1 pb-4"
+            pageLinkClassName="py-2 md:px-4 px-3 md:text-base text-sm font-medium text-gray-800 bg-white hover:bg-gray-800 hover:text-white border border-gray-800 transition-all duration-300"
+            previousLinkClassName="py-2 md:px-4 px-3 md:text-base text-sm font-medium text-gray-800 bg-white hover:bg-gray-800 hover:text-white border border-gray-800 transition-all duration-300"
+            nextLinkClassName="py-2 md:px-4 px-3 md:text-base text-sm font-medium text-gray-800 bg-white hover:bg-gray-800 hover:text-white border border-gray-800 transition-all duration-300"
+            activeLinkClassName=" font-bold bg-gray-800 text-white"
+          />
         </div>
       </main>
     </section>

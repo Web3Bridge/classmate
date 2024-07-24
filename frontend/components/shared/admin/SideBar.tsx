@@ -4,7 +4,6 @@ import { IoIosArrowRoundBack, IoIosLogOut } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
 import { GrCertificate } from "react-icons/gr";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   MdAssignment,
@@ -16,8 +15,6 @@ import { FiSettings } from "react-icons/fi";
 import { sideLinksAd } from "@/utils/SidebarAD";
 import { PiStudentLight } from "react-icons/pi";
 import { PiStudentFill } from "react-icons/pi";
-import useGetMentorName from "@/hooks/adminHooks/useGetMentorName";
-import { useAccount } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { GiGiftOfKnowledge } from "react-icons/gi";
 import { FaHandshake } from "react-icons/fa6";
@@ -77,10 +74,6 @@ const SideBar = ({
         return "";
     }
   }, []);
-
-  const { address } = useAccount();
-
-  const adminName = useGetMentorName(address);
 
   return (
     <aside
@@ -145,21 +138,6 @@ const SideBar = ({
                 </button>
               </li>
             </ul>
-          </div>
-          {/* <!-- Sidebar Footer --> */}
-          <div className="w-full text-white cursor-pointer hover:text-color1 flex flex-col items-start justify-center gap-1.5 mt-8 pl-8">
-            <div className="w-[30%] overflow-hidden rounded-lg">
-              <Image
-                src={`https://github.com/shadcn.png`}
-                alt="avatar"
-                className="w-full h-full object-cover "
-                width={400}
-                height={400}
-              />
-            </div>
-            <h3 className="text-gray-400 text-base ml-2 font-barlow my-auto text-center">
-              {adminName}
-            </h3>
           </div>
         </nav>
         {/* <!-- Sidebar Menu --> */}
