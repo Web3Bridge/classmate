@@ -1,5 +1,5 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -9,17 +9,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-
+import ReactPaginate from "react-paginate";
 import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
 import useGetSignedAttendanceImages from "@/hooks/studentHooks/useGetSignedAttendanceImages";
 import { useAccount } from "wagmi";
 
 const UserAttendenceNFT = () => {
-  const { lectureInfo } = useGetLectureData();
+  // const { lectureInfo } = useGetLectureData();
 
   const { address } = useAccount();
   const { signedAttendanceImages, isLoading } =
     useGetSignedAttendanceImages(address);
+
+  // Pagination
+  const [currentItems, setCurrentItems] = useState<any[]>([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 9;
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(signedAttendanceImages.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(signedAttendanceImages.length / itemsPerPage));
+  }, [
+    itemOffset,
+    itemsPerPage,
+    signedAttendanceImages.length,
+    signedAttendanceImages.length,
+  ]);
+
+  const handlePageClick = (event: any) => {
+    const newOffset =
+      (event.selected * itemsPerPage) % signedAttendanceImages.length;
+    setItemOffset(newOffset);
+  };
   return (
     <section className="w-full py-6 flex flex-col">
       <main className="w-full flex flex-col gap-7">
@@ -34,18 +57,18 @@ const UserAttendenceNFT = () => {
         {isLoading ? (
           <div className="w-full h-[250px] flex justify-center items-center">
             <h1 className="text-center md:text-2xl text-lg text-color1 font-bold">
-              Fetching created attendance...
+              Fetching signed attendance...
             </h1>
           </div>
-        ) : isLoading === false && lectureInfo?.length === 0 ? (
+        ) : isLoading === false && signedAttendanceImages?.length === 0 ? (
           <div className="w-full h-[250px] flex justify-center items-center">
             <h1 className="text-center md:text-2xl text-lg text-color1 font-bold">
-              No attendance created yet
+              No attendance signed yet
             </h1>
           </div>
         ) : null}
         <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-8 gap-6">
-          {signedAttendanceImages?.map((list, index) => (
+          {currentItems?.map((list, index) => (
             <div className="w-full p-3 rounded bg-color2" key={index}>
               <div className="w-full flex flex-col gap-3 justify-between bg-transparent">
                 <div className="w-full h-[250px] relative overflow-hidden rounded">
@@ -60,10 +83,8 @@ const UserAttendenceNFT = () => {
                 </h2>
                 <div className="bg-gray-100 p-3 rounded flex justify-between items-center">
                   <div className="flex flex-col">
-                    <h3 className=" text-color1 text-nowrap">
-                      <span className="uppercase font-bold">NFT ID:</span>
-                      {list.lectureId}
-                    </h3>
+                    <h3 className=" text-color1 uppercase font-bold">NFT ID</h3>
+                    <h5 className="text-color2">{list.lectureId}</h5>
                   </div>
 
                   <Dialog>
@@ -99,6 +120,22 @@ const UserAttendenceNFT = () => {
             </div>
           ))}
         </section>
+        <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            containerClassName="flex justify-center items-center mt-8 gap-1 pb-4"
+            pageLinkClassName="py-2 md:px-4 px-3 md:text-base text-sm font-medium text-gray-800 bg-white hover:bg-gray-800 hover:text-white border border-gray-800 transition-all duration-300"
+            previousLinkClassName="py-2 md:px-4 px-3 md:text-base text-sm font-medium text-gray-800 bg-white hover:bg-gray-800 hover:text-white border border-gray-800 transition-all duration-300"
+            nextLinkClassName="py-2 md:px-4 px-3 md:text-base text-sm font-medium text-gray-800 bg-white hover:bg-gray-800 hover:text-white border border-gray-800 transition-all duration-300"
+            activeLinkClassName=" font-bold bg-gray-800 text-white"
+          />
+        </div>
       </main>
     </section>
   );

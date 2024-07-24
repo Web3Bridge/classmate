@@ -119,13 +119,13 @@ const Statistics = () => {
             {isLoading ? (
               <div className="w-full h-[250px] flex justify-center items-center">
                 <h1 className="text-center md:text-2xl text-lg text-color1 font-bold">
-                  Fetching created attendance...
+                  Fetching signed attendance...
                 </h1>
               </div>
             ) : isLoading === false && signedAttendanceImages?.length === 0 ? (
               <div className="w-full h-[250px] flex justify-center items-center">
                 <h1 className="text-center md:text-2xl text-lg text-color1 font-bold">
-                  No attendance created yet
+                  No attendance signed yet
                 </h1>
               </div>
             ) : (

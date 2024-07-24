@@ -14,7 +14,7 @@ export default function UserCertificate() {
         <p className="uppercase font-bold">View Certificate</p>
       </div>
       <div className="mx-auto mt-12 w-[90%] md:w-[70%]">
-        <Card className="bg-color2 text-gray-100 border-none text-center">
+        <Card className="text-color2 shadow-lg bg-gray-200/50 border border:color1 text-center">
           <CardHeader>
             <CardTitle className="text-3xl">Coming Soon...</CardTitle>
           </CardHeader>
@@ -24,9 +24,8 @@ export default function UserCertificate() {
               learning experience.
             </p>
             <div className="flex items-center justify-center mt-4">
-              {/* Container for Input and Button */}
-              <Input className="w-[80%] bg-white/30" />
-              <button className="ml-2 bg-color1 hover:bg-color1/50 text-white font-bold py-2 px-4 rounded">
+              <Input className="w-[80%] bg-white active:border-none focus:border-none" />
+              <button className="ml-2 bg-color1 hover:bg-color1/90 text-white font-bold py-2 px-4 rounded">
                 Submit
               </button>
             </div>

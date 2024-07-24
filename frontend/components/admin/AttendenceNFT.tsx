@@ -30,7 +30,6 @@ import { readOnlyProvider } from "@/constants/provider";
 import { ethers } from "ethers";
 
 const AttendenceNFT = () => {
-
   // Getting lecture data
   const [lectureInfo, setLectureInfo] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -60,7 +59,6 @@ const AttendenceNFT = () => {
   }, [blockNumber, queryClient, queryKey]);
 
   const fetchLectureData = useCallback(async () => {
-
     if (!listOfLectureIds) return;
 
     try {
@@ -108,9 +106,17 @@ const AttendenceNFT = () => {
   // const { lectureInfo, isLoading, fetchLectureData } = useGetLectureData();
 
   //For toggling the status of attendance
-  const { openAttendance, isConfirming: openAttendanceIsConfirming, isConfirmed: openAttendanceIsConfirmed } = useOpenAttendance()
+  const {
+    openAttendance,
+    isConfirming: openAttendanceIsConfirming,
+    isConfirmed: openAttendanceIsConfirmed,
+  } = useOpenAttendance();
 
-  const { closeAttendance, isConfirming: closeAttendanceIsConfirming, isConfirmed: closeAttendanceIsConfirmed } = useCloseAttendance()
+  const {
+    closeAttendance,
+    isConfirming: closeAttendanceIsConfirming,
+    isConfirmed: closeAttendanceIsConfirmed,
+  } = useCloseAttendance();
 
   const handleToggle = async (id: string, status: boolean) => {
     try {
@@ -124,12 +130,15 @@ const AttendenceNFT = () => {
     } catch (error) {
       console.error("Failed to toggle attendance status:", error);
     }
-
-  }
+  };
 
   // edict topic
-  const { editLectureTopic, isConfirming: editTopicIsConfirming, isConfirmed: editTopicIsConfirmed } = useEditLectureTopic()
-  const [editedTopic, setEditedTopic] = useState("")
+  const {
+    editLectureTopic,
+    isConfirming: editTopicIsConfirming,
+    isConfirmed: editTopicIsConfirmed,
+  } = useEditLectureTopic();
+  const [editedTopic, setEditedTopic] = useState("");
   const handleTopicEdit = async (id: string) => {
     if (!isConnected)
       return toast.error("Please connect wallet", {
@@ -140,13 +149,12 @@ const AttendenceNFT = () => {
         position: "top-right",
       });
 
-    await editLectureTopic(id, editedTopic)
-    refetchLectureIds()
-    await fetchLectureData()
+    await editLectureTopic(id, editedTopic);
+    refetchLectureIds();
+    await fetchLectureData();
 
-    if (editTopicIsConfirmed) setEditedTopic("")
-
-  }
+    if (editTopicIsConfirmed) setEditedTopic("");
+  };
 
   const getImage = useCallback(async () => {
     if (selectedFile) {
@@ -181,7 +189,11 @@ const AttendenceNFT = () => {
 
   getImage();
 
-  const { createAttendance, isConfirming, isConfirmed } = useCreateAttendance(lectureId, imageUri, topic);
+  const { createAttendance, isConfirming, isConfirmed } = useCreateAttendance(
+    lectureId,
+    imageUri,
+    topic
+  );
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -210,8 +222,7 @@ const AttendenceNFT = () => {
     setTopic("");
   };
 
-
-  // Pagination 
+  // Pagination
   const [currentItems, setCurrentItems] = useState<any[]>([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -227,7 +238,6 @@ const AttendenceNFT = () => {
     const newOffset = (event.selected * itemsPerPage) % lectureInfo.length;
     setItemOffset(newOffset);
   };
-
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -386,9 +396,7 @@ const AttendenceNFT = () => {
                 </h2>
                 <div className="bg-gray-100 p-3 rounded flex justify-between items-center">
                   <div className="flex flex-col">
-                    <h3 className=" text-color1 uppercase font-bold">
-                      NFT ID
-                    </h3>
+                    <h3 className=" text-color1 uppercase font-bold">NFT ID</h3>
                     <h5 className="text-color2">{list.lectureId}</h5>
                   </div>
 
@@ -402,7 +410,9 @@ const AttendenceNFT = () => {
                       <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
                           <DialogTitle>Classmate+ Attendence</DialogTitle>
-                          <DialogDescription>Attendence Detail</DialogDescription>
+                          <DialogDescription>
+                            Attendence Detail
+                          </DialogDescription>
                         </DialogHeader>
                         <main className="w-full flex md:flex-row flex-col gap-4 mb-3 overflow-y-auto">
                           <div className="flex-1">
@@ -428,11 +438,22 @@ const AttendenceNFT = () => {
                               Status: {list.isActive ? "On" : "Off"}
                             </h2>
                             <DialogClose asChild>
-                              <Button type="button" onClick={() => handleToggle(list.lectureId, list.isActive)} disabled={openAttendanceIsConfirming || closeAttendanceIsConfirming} className="bg-color1 text-sm text-white hover:bg-color2">Turn {list.isActive ? "Off" : "On"}</Button>
+                              <Button
+                                type="button"
+                                onClick={() =>
+                                  handleToggle(list.lectureId, list.isActive)
+                                }
+                                disabled={
+                                  openAttendanceIsConfirming ||
+                                  closeAttendanceIsConfirming
+                                }
+                                className="bg-color1 text-sm text-white hover:bg-color2"
+                              >
+                                Turn {list.isActive ? "Off" : "On"}
+                              </Button>
                             </DialogClose>
                           </div>
                         </main>
-
                       </DialogContent>
                     </Dialog>
 
@@ -448,9 +469,7 @@ const AttendenceNFT = () => {
                       <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
                           <DialogTitle>Classmate+</DialogTitle>
-                          <DialogDescription>
-                            Update Topic
-                          </DialogDescription>
+                          <DialogDescription>Update Topic</DialogDescription>
                         </DialogHeader>
                         <div className="w-full grid gap-4">
                           <div className="flex flex-col">
@@ -473,7 +492,11 @@ const AttendenceNFT = () => {
 
                           <DialogFooter>
                             <DialogClose asChild>
-                              <Button type="button" onClick={() => handleTopicEdit(list.lectureId)} disabled={editTopicIsConfirming}>
+                              <Button
+                                type="button"
+                                onClick={() => handleTopicEdit(list.lectureId)}
+                                disabled={editTopicIsConfirming}
+                              >
                                 Edit topic
                               </Button>
                             </DialogClose>
