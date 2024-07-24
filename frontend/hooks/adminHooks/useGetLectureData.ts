@@ -1,6 +1,10 @@
 import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
+import { getOrgContract } from "@/constants/contracts";
+import { readOnlyProvider } from "@/constants/provider";
 import { useQueryClient } from "@tanstack/react-query";
+import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useBlockNumber, useReadContract } from "wagmi";
 
 const useGetLectureData = () => {
@@ -30,45 +34,47 @@ const useGetLectureData = () => {
     queryClient.invalidateQueries({ queryKey });
   }, [blockNumber, queryClient, queryKey]);
 
-  console.log(listOfLectureIds);
+  const fetchLectureData = useCallback(async () => {
+    if (!listOfLectureIds) return;
 
-  // const fetchLectureData = useCallback(async () => {
-  //   if (!listOfLectureIds) return;
+    try {
+      const formattedRes = listOfLectureIds.map((id: any) => id.toString());
 
-  //   try {
-  //     const formattedRes = listOfLectureIds.map((address: any) =>
-  //       address.toString()
-  //     );
+      const data = formattedRes.map(async (id: any) => {
+        const contract = getOrgContract(readOnlyProvider, contract_address);
+        const lectureData = await contract.getLectureData(id);
+        return {
+          lectureId: ethers.decodeBytes32String(id),
+          mentorOnDuty: lectureData[0],
+          topic: lectureData[1],
+          imageURI: lectureData[2],
+          attendenceStartTime: lectureData[3].toString(),
+          studentsPresent: lectureData[4].toString(),
+          isActive: lectureData[5],
+        };
+      });
+      const results = await Promise.all(data);
 
-  //     const data = formattedRes.map(async (address: any) => {
-  //       const contract = getOrgContract(readOnlyProvider, address);
-  //       const name = await contract.getOrganizationName();
-  //       const cohort = await contract.getCohortName();
-  //       const moderator = await contract.getModerator();
-  //       const imageURI = await contract.getOrganisationImageUri();
-  //       const isMentor = await contract.VerifyMentor(_userAddress);
-  //       const isStudent = await contract.VerifyStudent(_userAddress);
-  //       return {
-  //         address,
-  //         name,
-  //         cohort,
-  //         moderator,
-  //         imageURI,
-  //         isMentor,
-  //         isStudent,
-  //       };
-  //     });
-  //     const results = await Promise.all(data);
+      setIsLoading(false);
+      setLectureInfo(results);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [listOfLectureIds?.length, listOfLectureIds, contract_address]);
 
-  //     if (typeof window !== "undefined") {
-  //       localStorage.setItem("memberOrganisations", JSON.stringify(results));
-  //     }
-  //     setIsLoading(false);
-  //     setList(results);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }, [listOfOrganisations?.length]);
+  useEffect(() => {
+    fetchLectureData();
+  }, [fetchLectureData]);
+
+  useEffect(() => {
+    if (listOfLectureIdsError) {
+      toast.error(listOfLectureIdsError.message, {
+        position: "top-right",
+      });
+    }
+  }, [listOfLectureIdsError]);
+
+  return { lectureInfo, isLoading, fetchLectureData };
 };
 
 export default useGetLectureData;
