@@ -40,7 +40,7 @@ const Statistics = () => {
       value: attendanceRatio.attendanceRatio.totalClasses,
     },
     {
-      title: "classes attended",
+      title: "Class attended",
       value: attendanceRatio.attendanceRatio.attendance,
     },
     {
