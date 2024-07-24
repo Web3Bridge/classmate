@@ -112,7 +112,7 @@ const Statistics = () => {
                 </h1>
               </div>
             ) : (
-              <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-8 mt-6 gap-6">
+              <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-8 mt-3 gap-6">
                 {signedAttendanceImages?.slice(0, 3).map((list, index) => (
                   <>
                     <Link href="/user/attendance" key={index}>
