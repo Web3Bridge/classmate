@@ -18,10 +18,18 @@ const Dashboard = () => {
 
     const { statsData, isLoading } = useGetNumericStatistics()
 
+    const calculateAttendancePercentage = (data: any) => {
+        const attendancePercentage = data.totalStudent > 0 && data.totalClass > 0
+            ? (data.totalSignedAttendance / (data.totalStudent * data.totalClass)) * 100
+            : 0;
+
+        return `${attendancePercentage.toFixed(2)}%`;
+    }
+
     return (
         <section className='w-full py-6 flex flex-col'>
             <div className="w-full grid lg:grid-cols-6 md:grid-cols-5 gap-4">
-                <main className='lg:col-span-4 md:col-span-3 flex flex-col gap-4'>
+                <main className='lg:col-span-6 md:col-span-5 flex flex-col gap-4'>
                     <div className='flex flex-col'>
                         <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>Admin Dashboard</h1>
                         <h4 className='text-lg tracking-wider text-color2'>Statistics</h4>
@@ -81,7 +89,7 @@ const Dashboard = () => {
                                     <GiPieChart />
                                 </div>
                                 <h3 className="text-2xl font-semibold text-gray-800">
-                                    {isLoading ? 0 : `${(statsData.totalSignedAttendance / statsData.totalClass) * 100}%`}
+                                    {isLoading ? 0 : calculateAttendancePercentage(statsData)}
                                 </h3>
                             </div>
                         </div>
@@ -99,33 +107,26 @@ const Dashboard = () => {
                         </div>
                     </article>
                 </main>
-                <aside className='md:col-span-2 flex flex-col gap-4 rounded-md bg-white p-4 md:p-2 lg:p-4'>
+
+            </div>
+
+            {/* Charts */}
+            <div className="w-full grid lg:grid-cols-6 md:grid-cols-5 md:gap-3 gap-5 lg:gap-5 mt-8">
+                <main className='w-full lg:col-span-4 md:col-span-3 flex flex-col p-3'>
+                    <div className='flex flex-col items-center mb-4'>
+                        <h1 className='uppercase text-color2 md:text-lg font-bold text-xl'>Programme Analysis</h1>
+                        <h4 className='text-base tracking-wider text-color2'>Class, Students and Mentors Statistics</h4>
+                    </div>
+                    {/* pie */}
+                    <Piechart />
+                </main>
+                <aside className='lg:col-span-2 md:col-span-2 flex flex-col gap-4 rounded-md md:mt-8 p-4 md:p-2 lg:p-4'>
                     <Calendar
                         mode="single"
                         selected={date}
                         onSelect={setDate}
                         className="rounded-md border border-gray-500 w-full"
                     />
-                </aside>
-            </div>
-
-            {/* Charts */}
-            <div className="w-full grid lg:grid-cols-5 md:grid-cols-2 md:gap-3 gap-5 lg:gap-5 mt-8">
-                <main className='w-full lg:col-span-3 flex flex-col p-3'>
-                    <div className='flex flex-col mb-4'>
-                        <h1 className='uppercase text-color2 md:text-lg font-bold text-xl'>Programme Analysis</h1>
-                        <h4 className='text-base tracking-wider text-color2'>Class Statistics</h4>
-                    </div>
-                    {/* Bar */}
-                    <Barchart />
-                </main>
-                <aside className='w-full lg:col-span-2 flex flex-col p-3'>
-                    <div className='flex flex-col mb-4'>
-                        <h1 className='uppercase text-center text-color2 md:text-lg font-bold text-xl'>Attendence Analysis</h1>
-                        <h4 className='text-base text-center tracking-wider text-color2'>Signed Attendence Statistics</h4>
-                    </div>
-                    {/* pie */}
-                    <Piechart />
                 </aside>
             </div>
         </section>
