@@ -9,8 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import useSignAttendance from "@/hooks/studentHooks/useSignAttendance";
 
-export default function SubmitAttendanceID() {
+export default function SubmitAttendanceID({ lectureId }: { lectureId: any }) {
+  const { signAttendance, isWriting } = useSignAttendance(lectureId);
+
+  const handleOnSubmit = (e: any) => {
+    e.preventDefault();
+    signAttendance();
+  };
+
   return (
     <div>
       <Card className="w-[90%] md:w-[50%]  mt-20 mx-auto bg-color2 text-white">
@@ -19,7 +27,7 @@ export default function SubmitAttendanceID() {
         </CardHeader>
         <CardContent>
           <CardDescription className="text-white">Enter ID</CardDescription>
-          <form action="">
+          <form action="" onSubmit={handleOnSubmit}>
             <Input className="text-color2 bg-white/80" />
           </form>
         </CardContent>
@@ -28,7 +36,11 @@ export default function SubmitAttendanceID() {
             <Button className="bg-color1 hover:bg-color1/50 transition-all ease-in-out">
               Cancel
             </Button>
-            <Button className="bg-color1 hover:bg-color1/50 transition-all ease-in-out">
+            <Button
+              className="bg-color1 hover:bg-color1/50 transition-all ease-in-out"
+              onClick={signAttendance}
+              disabled={isWriting}
+            >
               Submit
             </Button>
           </CardFooter>

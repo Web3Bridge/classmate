@@ -320,7 +320,7 @@ contract organisation {
     // @dev Function for mentors to hand over to the next mentor to take the class
 
     function mentorHandover(address newMentor) external {
-        if (msg.sender != mentorOnDuty || msg.sender != moderator)
+        if (msg.sender != mentorOnDuty && msg.sender != moderator)
             revert not_Autorized_Caller();
         mentorOnDuty = newMentor;
         emit Handover(msg.sender, newMentor);

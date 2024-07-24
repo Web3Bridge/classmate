@@ -13,6 +13,8 @@ import {
 import { useAccount } from "wagmi";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
 import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
+import useGetAttendanceRatio from "@/hooks/studentHooks/useGetAttendanceRatio";
+import useListClassesAttended from "@/hooks/studentHooks/useListClassesAttended";
 
 interface Statistic {
   title: string;
@@ -28,7 +30,7 @@ const statistics: Statistic[] = [
   { title: "Students rating", value: "NaN" },
 ];
 
-const Statistics = () => {
+const Statistics = ({ student_address }: { student_address: any }) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const { address, isConnected } = useAccount();
   const studentName = useGetStudentName(address);
@@ -42,6 +44,45 @@ const Statistics = () => {
   const handleRequestNameChange = () => {
     requestNameCorrection();
   };
+
+  //
+  const {
+    attendanceRatio,
+    isPending: attendanceIsPending,
+    error: attendanceError,
+  } = useGetAttendanceRatio(student_address);
+  const {
+    classesAttended,
+    isPending: classesIsPending,
+    error: classesError,
+  } = useListClassesAttended(student_address);
+
+  if (attendanceIsPending || classesIsPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (attendanceError || classesError) {
+    return <div>Error loading data</div>;
+  }
+
+  const totalClasses = attendanceRatio.totalClasses;
+  const attendedClasses = classesAttended.length;
+  const attendancePercentage =
+    totalClasses > 0
+      ? ((attendedClasses / totalClasses) * 100).toFixed(2)
+      : "0.00";
+
+  const statistics = [
+    { title: "Total classes", value: `${totalClasses}` },
+    {
+      title: "Overall classes attended",
+      value: `${attendedClasses}/${totalClasses}`,
+    },
+    { title: "Class Percentage", value: `${attendancePercentage}%` },
+    { title: "Average Score", value: "NaN" },
+    { title: "Total Score", value: "NaN" },
+    { title: "Students rating", value: "NaN" },
+  ];
 
   return (
     <>
