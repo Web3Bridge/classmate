@@ -10,10 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAccount } from "wagmi";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
 import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 import useGetAttendanceRatio from "@/hooks/studentHooks/useGetAttendanceRatio";
+import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
+import useGetSignedAttendanceImages from "@/hooks/studentHooks/useGetSignedAttendanceImages";
+import { useAccount } from "wagmi";
+import Link from "next/link";
 
 interface Statistic {
   title: any;
@@ -25,6 +28,11 @@ const Statistics = () => {
   const { address, isConnected } = useAccount();
   const studentName = useGetStudentName(address);
   const attendanceRatio = useGetAttendanceRatio(address);
+
+  const { lectureInfo } = useGetLectureData();
+
+  const { signedAttendanceImages, isLoading } =
+    useGetSignedAttendanceImages(address);
 
   const statistics: Statistic[] = [
     {
@@ -89,40 +97,48 @@ const Statistics = () => {
                 <h1>{stat.value}</h1>
               </div>
             ))}
-            {/* <div className="w-full h-20 bg-color2 rounded-md text-white text-center p-2">
-              Attendance Ratio
-              <h1>
-                {attendanceRatio.attendanceRatio.attendance} /{" "}
-                {attendanceRatio.attendanceRatio.totalClasses}
-              </h1>
-            </div> */}
           </div>
-
-          <section className="mt-3 grid md:grid-cols-2 gap-2">
-            <Card className=" bg-color2 text-gray-100 border-none">
-              <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Card Content</p>
-              </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
-            </Card>
-            <Card className=" bg-color2 text-gray-100 border-none">
-              <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Card Content</p>
-              </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
-            </Card>
+          <section className="">
+            {isLoading ? (
+              <div className="w-full h-[250px] flex justify-center items-center">
+                <h1 className="text-center md:text-2xl text-lg text-color1 font-bold">
+                  Fetching created attendance...
+                </h1>
+              </div>
+            ) : isLoading === false && signedAttendanceImages?.length === 0 ? (
+              <div className="w-full h-[250px] flex justify-center items-center">
+                <h1 className="text-center md:text-2xl text-lg text-color1 font-bold">
+                  No attendance created yet
+                </h1>
+              </div>
+            ) : (
+              <section className="w-full grid lg:grid-cols-3 md:grid-cols-2 lg:gap-6 md:gap-8 mt-6 gap-6">
+                {signedAttendanceImages?.slice(0, 3).map((list, index) => (
+                  <>
+                    <Link href="/user/attendance" key={index}>
+                      <Card
+                        key={index}
+                        className="bg-color2 text-gray-100 border-none"
+                      >
+                        <CardHeader>
+                          <CardTitle> Mentor: {list.mentorName}</CardTitle>
+                          <h1>Topic: {list.topic}</h1>
+                          <CardDescription></CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <img
+                            src={list.imageURI}
+                            alt="NFT Image"
+                            className="w-full h-[200px] object-cover"
+                          />
+                          Lecture ID: {list.lectureId}
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </>
+                ))}
+              </section>
+            )}
           </section>
         </main>
         <aside className="w-full p-6 bg-white rounded-md">
