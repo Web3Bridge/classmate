@@ -22,6 +22,7 @@ import { SlPicture } from "react-icons/sl";
 import useGetLectureData from "@/hooks/adminHooks/useGetLectureData";
 import useOpenAttendance from "@/hooks/adminHooks/useOpenAttendance";
 import useCloseAttendance from "@/hooks/adminHooks/useCloseAttendance";
+import useEditLectureTopic from "@/hooks/adminHooks/useEditLectureTopic";
 
 const AttendenceNFT = () => {
 
@@ -56,6 +57,25 @@ const AttendenceNFT = () => {
     } catch (error) {
       console.error("Failed to toggle attendance status:", error);
     }
+
+  }
+
+  // edict topic
+  const { editLectureTopic, isConfirming: editTopicIsConfirming, isConfirmed: editTopicIsConfirmed } = useEditLectureTopic()
+  const [editedTopic, setEditedTopic] = useState("")
+  const handleTopicEdit = async (id: string) => {
+    if (!isConnected)
+      return toast.error("Please connect wallet", {
+        position: "top-right",
+      });
+    if (!editedTopic)
+      return toast.error("Please enter new topic", {
+        position: "top-right",
+      });
+
+    await editLectureTopic(id, editedTopic)
+
+    if (editTopicIsConfirmed) setEditedTopic("")
 
   }
 
@@ -162,53 +182,102 @@ const AttendenceNFT = () => {
                 </h2>
                 <div className="bg-gray-100 p-3 rounded flex justify-between items-center">
                   <div className="flex flex-col">
-                    <h3 className=" text-color1 text-nowrap">
-                      <span className="uppercase font-bold">NFT ID:</span> {list.lectureId}
+                    <h3 className=" text-color1 uppercase font-bold">
+                      NFT ID
                     </h3>
+                    <h5 className="text-color2">{list.lectureId}</h5>
                   </div>
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="bg-color1 text-sm text-white hover:bg-color2">
-                        View
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Classmate+ Attendence</DialogTitle>
-                        <DialogDescription>Attendence Detail</DialogDescription>
-                      </DialogHeader>
-                      <main className="w-full flex md:flex-row flex-col gap-4 mb-3 overflow-y-auto">
-                        <div className="flex-1">
-                          <div className="w-full h-[200px] overflow-hidden rounded">
-                            <img
-                              src={list.imageURI}
-                              alt="NFtImage"
-                              className="object-cover w-full h-full object-top"
+                  <div className="flex justify-center items-center gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="bg-color1 text-sm text-white hover:bg-color2">
+                          View
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Classmate+ Attendence</DialogTitle>
+                          <DialogDescription>Attendence Detail</DialogDescription>
+                        </DialogHeader>
+                        <main className="w-full flex md:flex-row flex-col gap-4 mb-3 overflow-y-auto">
+                          <div className="flex-1">
+                            <div className="w-full h-[200px] overflow-hidden rounded">
+                              <img
+                                src={list.imageURI}
+                                alt="NFtImage"
+                                className="object-cover w-full h-full object-top"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex-1 flex flex-col gap-2">
+                            <h2 className="text-color2 text-sm font-medium">
+                              Topic: {list.topic}
+                            </h2>
+                            <h2 className="text-color2 text-sm font-medium">
+                              Attendance: {list.studentsPresent}
+                            </h2>
+                            <h2 className="text-color2 text-sm font-medium">
+                              NFT ID: {list.lectureId}
+                            </h2>
+                            <h2 className="text-color2 text-sm font-medium">
+                              Status: {list.isActive ? "On" : "Off"}
+                            </h2>
+                            <DialogClose asChild>
+                              <Button type="button" onClick={() => handleToggle(list.lectureId, list.isActive)} disabled={openAttendanceIsConfirming || closeAttendanceIsConfirming} className="bg-color1 text-sm text-white hover:bg-color2">Turn {list.isActive ? "Off" : "On"}</Button>
+                            </DialogClose>
+                          </div>
+                        </main>
+
+                      </DialogContent>
+                    </Dialog>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          type="button"
+                          className="text-white bg-color1 hover:bg-color2 flex items-center gap-1"
+                        >
+                          Edit Topic
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Classmate+</DialogTitle>
+                          <DialogDescription>
+                            Update Topic
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="w-full grid gap-4">
+                          <div className="flex flex-col">
+                            <label
+                              htmlFor="editTopic"
+                              className="text-color3 font-medium ml-1"
+                            >
+                              Update Topic
+                            </label>
+                            <input
+                              type="text"
+                              name="editTopic"
+                              id="editTopic"
+                              placeholder="Enter new topic"
+                              className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
+                              value={editedTopic}
+                              onChange={(e) => setEditedTopic(e.target.value)}
                             />
                           </div>
-                        </div>
-                        <div className="flex-1 flex flex-col gap-2">
-                          <h2 className="text-color2 text-sm font-medium">
-                            Topic: {list.topic}
-                          </h2>
-                          <h2 className="text-color2 text-sm font-medium">
-                            Attendance: {list.studentsPresent}
-                          </h2>
-                          <h2 className="text-color2 text-sm font-medium">
-                            NFT ID: {list.lectureId}
-                          </h2>
-                          <h2 className="text-color2 text-sm font-medium">
-                            Status: {list.isActive ? "On" : "Off"}
-                          </h2>
-                          <DialogClose asChild>
-                            <Button type="button" onClick={() => handleToggle(list.lectureId, list.isActive)} disabled={openAttendanceIsConfirming || closeAttendanceIsConfirming} className="bg-color1 text-sm text-white hover:bg-color2">Turn {list.isActive ? "Off" : "On"}</Button>
-                          </DialogClose>
-                        </div>
-                      </main>
 
-                    </DialogContent>
-                  </Dialog>
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button type="button" onClick={() => handleTopicEdit(list.lectureId)} disabled={editTopicIsConfirming}>
+                                Edit topic
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </div>
               </div>
             </div>
