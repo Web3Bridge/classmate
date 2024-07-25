@@ -1,7 +1,7 @@
 'use client'
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from "apexcharts";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useGetAllStats from '@/hooks/guestHook/useGetAllStats';
 
 const options: ApexOptions = {
