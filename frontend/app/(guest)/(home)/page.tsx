@@ -3,6 +3,7 @@ import Features from "@/components/home/Features";
 import HeroSection from "@/components/home/HeroSection";
 import NewsLetter from "@/components/home/NewsLetter";
 import Partnership from "@/components/home/Partnership";
+import Stats from "@/components/home/Stats";
 
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
       <Partnership />
       <Approach />
       <Features />
+      <Stats />
       <NewsLetter />
     </main>
   );
