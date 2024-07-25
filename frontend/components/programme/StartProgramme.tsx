@@ -1,5 +1,5 @@
 'use client'
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { HiOutlineViewfinderCircle } from 'react-icons/hi2'
@@ -17,6 +17,10 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAccount } from 'wagmi'
 import useCreateNewProgramme from '@/hooks/onboardingHooks/useCreateNewProgramme'
+import axios from 'axios'
+import Image from 'next/image'
+import { SlPicture } from 'react-icons/sl'
+import { FiEdit } from 'react-icons/fi'
 
 
 const StartProgramme = () => {
@@ -37,7 +41,7 @@ const StartProgramme = () => {
         if (!instName) return toast.error("Please enter institution name", { position: "top-right" });
         if (!adminName) return toast.error("Please enter admin name", { position: "top-right" });
         if (!programmeName) return toast.error("Please enter programme name", { position: "top-right" });
-        if (!imageURI) return toast.error("Please enter image URI", { position: "top-right" });
+        if (!imageURI) return toast.error("Please select image", { position: "top-right" });
 
         createProgramme()
 
@@ -46,6 +50,44 @@ const StartProgramme = () => {
         setProgrammeName("")
         setImageURI("")
     }
+
+    const [selectedFile, setSelectedFile] = useState<any>();
+
+    const handleSelectImage = ({ target }: { target: any }) => {
+        setSelectedFile(target.files[0]);
+    };
+
+    const getImage = useCallback(async () => {
+        if (selectedFile) {
+            try {
+                const formData = new FormData();
+                formData.append("file", selectedFile!);
+
+                const response = await axios.post(
+                    "https://api.pinata.cloud/pinning/pinFileToIPFS",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
+                            pinata_secret_api_key:
+                                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+                        },
+                    }
+                );
+
+                const fileUrl = response.data.IpfsHash;
+                const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
+                setImageURI(gateWayAndhash);
+
+                return fileUrl;
+            } catch (error) {
+                console.log("Pinata API Error:", error);
+            }
+        }
+    }, [selectedFile]);
+
+    getImage();
 
     const handleRoute = () => {
         if (!isConnected) {
@@ -94,6 +136,39 @@ const StartProgramme = () => {
                             </DialogDescription>
                         </DialogHeader>
                         <form className="w-full grid gap-4" onSubmit={handleSubmit}>
+                            <div className="w-full flex flex-col items-center">
+                                <div className="w-[80px] h-[80px] border-[0.5px] border-color3/50 rounded relative ">
+                                    {selectedFile ? (
+                                        <Image
+                                            src={URL.createObjectURL(selectedFile)}
+                                            alt="profile"
+                                            className="w-full h-full object-cover"
+                                            width={440}
+                                            height={440}
+                                            priority
+                                            quality={100}
+                                        />
+                                    ) : (
+                                        <span className="relative flex justify-center items-center w-full h-full">
+                                            <SlPicture className="relative text-6xl inline-flex rounded text-gray-300" />
+                                        </span>
+                                    )}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        className="hidden"
+                                        id="selectFile"
+                                        onChange={handleSelectImage}
+                                    />
+                                    <label
+                                        htmlFor="selectFile"
+                                        className=" absolute -right-1 p-1 rounded-full -bottom-1 cursor-pointer bg-gray-100 border-[0.5px] border-color3/50 font-Bebas tracking-wider text-color3"
+                                    >
+                                        <FiEdit />
+                                    </label>
+                                </div>
+                            </div>
                             <div className="flex flex-col">
                                 <label htmlFor="institutionName" className="text-color3 font-medium ml-1">Institution Name</label>
                                 <input type="text" name="institutionName" id="institutionName" placeholder="Enter institution name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={instName} onChange={e => setInstName(e.target.value)} />
@@ -108,7 +183,7 @@ const StartProgramme = () => {
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="imageURI" className="text-color3 font-medium ml-1">Image URI</label>
-                                <input type="text" name="imageURI" id="imageURI" placeholder="Enter image URI" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageURI} onChange={e => setImageURI(e.target.value)} />
+                                <input type="text" name="imageURI" id="imageURI" placeholder="Choose an image for URI to show" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageURI} readOnly />
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
