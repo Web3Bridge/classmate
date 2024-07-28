@@ -69,7 +69,7 @@ const ScoreList = () => {
           </div>
         ) : null}
 
-        <div className="w-full grid md:grid-cols-5 md:gap-6 gap-4">
+        <div className="w-full grid md:grid-cols-4 md:gap-6 gap-4">
           {currentItems?.map((lis, index) => (
             <div
               className="w-full bg-gray-200 rounded flex flex-col gap-2 py-4 items-start px-5"
