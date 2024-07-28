@@ -46,7 +46,10 @@ const useGetStudentScore = (address: any) => {
               (record: any) =>
                 record.student.toLowerCase() === address.toLowerCase()
             )
-            .map((record: any) => ({ ...record, week: `Week ${index + 1}` }));
+            .map((record: any) => ({
+              ...record,
+              scorelist: `Score ${index + 1}`,
+            }));
           return studentScores;
         } catch (error) {
           console.error(`Error fetching data for hash ${hash}:`, error);
