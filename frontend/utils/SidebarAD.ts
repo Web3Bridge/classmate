@@ -20,8 +20,12 @@ export const sideLinksAd = [
     href: "/admin/attendence",
   },
   {
-    name: "Scores",
-    href: "/admin/scores",
+    name: "Upload Score",
+    href: "/admin/uploadscore",
+  },
+  {
+    name: "View Scores",
+    href: "/admin/viewscores",
   },
   {
     name: "Upload file",

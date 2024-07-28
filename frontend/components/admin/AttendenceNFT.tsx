@@ -511,7 +511,7 @@ const AttendenceNFT = () => {
           ))}
         </section>
 
-        {/* create new attendance */}
+        {/* pagination */}
         <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
           <ReactPaginate
             breakLabel="..."

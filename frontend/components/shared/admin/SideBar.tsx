@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { IoIosArrowRoundBack, IoIosLogOut } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
-import { GrCertificate } from "react-icons/gr";
+import { GrCertificate, GrScorecard } from "react-icons/gr";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -63,12 +63,14 @@ const SideBar = ({
       case 5:
         return <MdEventSeat />;
       case 6:
-        return <MdUploadFile />;
+        return <GrScorecard />;
       case 7:
-        return <GrCertificate />;
+        return <MdUploadFile />;
       case 8:
-        return <GiGiftOfKnowledge />
+        return <GrCertificate />;
       case 9:
+        return <GiGiftOfKnowledge />
+      case 10:
         return <FiSettings />;
       default:
         return "";
