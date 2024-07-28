@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
 import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
@@ -13,6 +13,7 @@ import { FaFileSignature } from "react-icons/fa6";
 import { SiGoogleclassroom } from "react-icons/si";
 import { GiPieChart } from "react-icons/gi";
 import { TbAlarmAverage, TbArrowRotaryLastLeft } from "react-icons/tb";
+import useGetStudentScore from "@/hooks/studentHooks/useGetStudentScore";
 
 interface Statistic {
   title: any;
@@ -25,6 +26,17 @@ const Statistics = () => {
   const { address, isConnected } = useAccount();
   const studentName = useGetStudentName(address);
   const attendanceRatio = useGetAttendanceRatio(address);
+  const { list, listOfScoreURIError, listOfScoreURIIsPending } =
+    useGetStudentScore(address);
+
+  const totalScore = useMemo(
+    () => list.reduce((sum, lis) => sum + parseFloat(lis.score), 0),
+    [list]
+  );
+  const averageScore = useMemo(
+    () => (list.length > 0 ? totalScore / list.length : 0),
+    [list, totalScore]
+  );
 
   const { signedAttendanceImages, isLoading } =
     useGetSignedAttendanceImages(address);
@@ -57,8 +69,12 @@ const Statistics = () => {
       }%`,
       icon: <GiPieChart />,
     },
-    { title: "Average Score", value: "0", icon: <TbAlarmAverage /> },
-    { title: "Total Score", value: "0", icon: <TbArrowRotaryLastLeft /> },
+    { title: "Average Score", value: averageScore, icon: <TbAlarmAverage /> },
+    {
+      title: "Total Score",
+      value: totalScore,
+      icon: <TbArrowRotaryLastLeft />,
+    },
   ];
 
   const {
