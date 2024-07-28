@@ -16,6 +16,9 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
   title: "Classmate",
   description: "Classmate - LMS system onchain",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
