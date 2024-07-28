@@ -18,7 +18,7 @@ const Greeting = ({ name }: { name: string }) => {
   }, []);
 
   return (
-    <h2 className="text-color3 text-xl font-belanosima capitalize">
+    <h2 className="text-color3 text-base ml-2 font-medium capitalize">
       Good {timeOfDay},{" "} {name}
     </h2>
   );

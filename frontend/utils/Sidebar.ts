@@ -20,8 +20,8 @@ export const sideLinks = [
     href: "/user/attendance",
   },
   {
-    name: "Assessments",
-    href: "/user/assessments",
+    name: "Scores",
+    href: "/user/scores",
   },
   {
     name: "Settings",

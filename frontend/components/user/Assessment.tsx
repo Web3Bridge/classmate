@@ -1,45 +1,68 @@
-import { assignmentData } from "@/utils/Assignments";
+'use client'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useGetStudentScore from "@/hooks/studentHooks/useGetStudentScore";
+import { useAccount } from "wagmi";
 
 const UserAssignment = () => {
+  const { address } = useAccount()
+  const { list, listOfScoreURIError, listOfScoreURIIsPending } = useGetStudentScore(address)
+
   return (
-    <section className="mx-auto flex flex-wrap justify-center items-center bg-gray-100 p-8">
-      <div className="md:w-[80%]">
-        <h1 className="font-bold">Assessments</h1>
-        <div className="bg-gray-200 border-b border-black shadow-lg rounded-lg my-4 flex justify-between p-8">
+    <section className='w-full py-6 flex flex-col'>
+      <main className='w-full flex flex-col gap-7'>
+        <div className="w-full flex md:flex-row flex-col gap-3 md:gap-0 justify-between md:items-end items-start">
+          <div className='flex flex-col'>
+            <h1 className='uppercase text-color2 md:text-2xl font-bold text-xl'>Score List</h1>
+            <h4 className='text-lg tracking-wider text-color2'> Your score list </h4>
+          </div>
+        </div>
+
+        {
+          listOfScoreURIIsPending ? <div className="w-full h-[250px] flex justify-center items-center">
+            <h1 className='text-center md:text-2xl text-lg text-color1 font-bold'>Fetching scores...</h1>
+          </div>
+            : listOfScoreURIIsPending === false && list?.length === 0 ?
+              <div className="w-full h-[250px] flex justify-center items-center">
+                <h1 className='text-center md:text-2xl text-lg text-color1 font-bold'>No scores uploaded yet</h1>
+              </div>
+              : null
+        }
+
+        <div className='w-full '>
           <Table>
-            <TableCaption>A list of assignments.</TableCaption>
             <TableHeader>
-              <TableRow>
-                <TableHead>Weekly assessments</TableHead>
-                <TableHead>No. of attempts</TableHead>
-                <TableHead>Results</TableHead>
-                <TableHead>Score</TableHead>
+              <TableRow className="bg-color2 hover:bg-color2 text-gray-300">
+                <TableHead className="font-semibold text-gray-300">S/N</TableHead>
+                <TableHead className="font-semibold text-gray-300">Week</TableHead>
+                <TableHead className="font-semibold text-gray-300">Student</TableHead>
+                <TableHead className="font-semibold text-gray-300">Score</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {assignmentData.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
-                    {item.header?.mentor}
-                  </TableCell>
-                  <TableCell>{item.header?.subtitle}</TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell>{item.status}</TableCell>
-                </TableRow>
-              ))}
+              {
+                list.map((lis, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{lis.week}</TableCell>
+                    <TableCell>{lis.student}</TableCell>
+                    <TableCell>{lis.score}</TableCell>
+                  </TableRow>
+                ))
+              }
             </TableBody>
           </Table>
+
         </div>
-      </div>
+
+
+      </main>
     </section>
   );
 };

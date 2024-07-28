@@ -4,7 +4,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useBlockNumber, useReadContract } from "wagmi";
 
-const useGetStudentScore = (address: string) => {
+const useGetStudentScore = (address: any) => {
   const [list, setList] = useState<any[]>([]);
 
   const queryClient = useQueryClient();
@@ -41,24 +41,32 @@ const useGetStudentScore = (address: string) => {
         try {
           const response = await axios.get(url);
           const formattedData = Object.values(JSON.parse(response.data));
-          const studentScores = formattedData.filter(
-            (record: any) =>
-              record.student.toLowerCase() === address.toLowerCase()
-          );
-          return { week: `Week ${index + 1}`, data: studentScores };
+          const studentScores = formattedData
+            .filter(
+              (record: any) =>
+                record.student.toLowerCase() === address.toLowerCase()
+            )
+            .map((record: any) => ({ ...record, week: `Week ${index + 1}` }));
+          return studentScores;
         } catch (error) {
           console.error(`Error fetching data for hash ${hash}:`, error);
-          return { week: `Week ${index + 1}`, data: null };
+          return [];
         }
       });
 
       const scores = await Promise.all(scorePromises);
-      const filteredScores = scores.filter(
-        (week) => week.data && week.data.length > 0
-      );
+      const filteredScores = scores.flat();
       setList(filteredScores);
     }
   }, [listOfScoreURI, address]);
+
+  useEffect(() => {
+    if (listOfScoreURI) {
+      fetchStudentScores();
+    }
+  }, [listOfScoreURI, fetchStudentScores]);
+
+  return { list, listOfScoreURIError, listOfScoreURIIsPending };
 };
 
 export default useGetStudentScore;

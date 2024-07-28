@@ -10,6 +10,7 @@ import { useCallback, useEffect } from "react";
 import useVerifyStudent from "@/hooks/layoutProtectionHook/useVerifyStudent";
 import { toast } from "sonner";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
+import { PiStudentFill } from "react-icons/pi";
 
 const Header = ({
   sidebarOpen,
@@ -90,10 +91,8 @@ const Header = ({
             href="/user"
             className="flex flex-shrink-0 lg:hidden items-center bg-gradient-to-r from-color1 to-color2 text-transparent bg-clip-text gap-1"
           >
-            {/* <SiStreamrunners className="md:text-4xl text-3xl text-color2" /> */}
-            <span className=" font-belanosima md:text-xl text-lg">
-              Classmate+
-            </span>
+            <PiStudentFill className="text-color1 md:text-4xl text-3xl" />
+            <span className="text-color2 md:text-lg">ClassMate+</span>
           </Link>
         </div>
 
