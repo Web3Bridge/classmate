@@ -40,15 +40,25 @@ interface ICHILD {
         string calldata _topic
     ) external;
 
+    function getStudentsPresent(
+        bytes memory _lectureId
+    ) external view returns (uint);
+
+    function editStudentName(individual[] memory _studentList) external;
+
+    function editMentorsName(individual[] memory _mentorsList) external;
+
     function mentorHandover(address newMentor) external;
 
     function getMentorOnDuty() external view returns (address);
 
     function signAttendance(bytes calldata _lectureId) external;
 
-    function openAttendance(bytes calldata  _lectureId) external;
+    function openAttendance(bytes calldata _lectureId) external;
 
-    function getNameArray(address[] calldata _students) external view returns (string[] memory);
+    function getNameArray(
+        address[] calldata _students
+    ) external view returns (string[] memory);
 
     function getStudentAttendanceRatio(
         address _student
@@ -65,5 +75,12 @@ interface ICHILD {
     ) external view returns (lectureData memory);
 
     function EvictStudents(address[] calldata studentsToRevoke) external;
+
+    function removeMentor(address[] calldata rouge_mentors) external;
+
     function MintCertificate(string memory Uri) external;
+
+    function mintMentorsSpok(string memory Uri) external;
+
+    function RequestNameCorrection() external;
 }

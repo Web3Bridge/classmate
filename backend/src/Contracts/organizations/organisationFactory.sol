@@ -27,19 +27,41 @@ contract organisationFactory {
         string memory _cohort,
         string memory _uri,
         string memory _adminName
-    ) external returns (address Organisation, address Nft, address certificate) {
+    )
+        external
+        returns (
+            address Organisation,
+            address Nft,
+            address mentorsSpok,
+            address certificate
+        )
+    {
         organisationAdmin = msg.sender;
         organisation OrganisationAddress = new organisation(
             _organisation,
             _cohort,
             organisationAdmin,
-            _adminName
+            _adminName,
+            _uri
         );
         Organisations.push(address(OrganisationAddress));
         validOrganisation[address(OrganisationAddress)] = true;
-        (address CertificateAddr, address AttendanceAddr) = ICERTFACTORY(certificateFactory).completePackage(_organisation, _cohort, _uri, address(OrganisationAddress));
+        (
+            address CertificateAddr,
+            address AttendanceAddr,
+            address mentorsSpokAddr
+        ) = ICERTFACTORY(certificateFactory).completePackage(
+                _organisation,
+                _cohort,
+                _uri,
+                address(OrganisationAddress)
+            );
 
-        OrganisationAddress.initialize(address(AttendanceAddr), address(CertificateAddr));
+        OrganisationAddress.initialize(
+            address(AttendanceAddr),
+            address(mentorsSpokAddr),
+            address(CertificateAddr)
+        );
         uint orgLength = memberOrganisations[msg.sender].length;
         studentOrganisationIndex[msg.sender][
             address(OrganisationAddress)
@@ -48,6 +70,7 @@ contract organisationFactory {
 
         Nft = address(AttendanceAddr);
         certificate = address(CertificateAddr);
+        mentorsSpok = address(mentorsSpokAddr);
         Organisation = address(OrganisationAddress);
     }
 

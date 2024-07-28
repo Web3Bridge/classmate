@@ -51,13 +51,32 @@ contract SchoolsNFT is ERC1155 {
         }
     }
 
+    function getTotalAttendnceSignedForDay(
+        bytes memory _daysId
+    ) external view returns (uint256) {
+        uint256 tokenId = daysIdToTokenId[_daysId];
+
+        uint256 totalSupply = 0;
+
+        uint256[] memory balances = new uint256[](1);
+        balances[0] = tokenId;
+
+        uint256[] memory result = balanceOfBatch(new address[](1), balances);
+
+        totalSupply = result[0];
+
+        return totalSupply;
+    }
+
     function setDayUri(bytes memory id, string memory _uri) public onlyOwner {
         daysIdToTokenId[id] = totalTokenId;
         daysIdToUri[id] = _uri;
         totalTokenId++;
     }
 
-    function getDayUri(bytes memory id) public view returns (string memory _dayUri) {
+    function getDayUri(
+        bytes memory id
+    ) public view returns (string memory _dayUri) {
         _dayUri = daysIdToUri[id];
     }
 
@@ -69,49 +88,18 @@ contract SchoolsNFT is ERC1155 {
         bytes memory data
     ) public override {
         revert("TOKEN IS SOUL BUND");
-
     }
 
-    function safeTransferFrom(address from, address to, uint256 id, uint256 value, bytes memory data) public override {
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 value,
+        bytes memory data
+    ) public override {
         revert("TOKEN IS SOUL BUND");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // pragma solidity ^0.8.13;
 
 // import "openzeppelin/token/ERC1155/ERC1155.sol";
@@ -141,48 +129,36 @@ contract SchoolsNFT is ERC1155 {
 //     //@notice classIdToTokenId: maps a classId to the tokenId associated with it
 //     mapping(bytes => uint256) classIdToTokenId;
 
-
-
 //     ///////////////////////////////////
 //     //////////// EVENTS ///////////////
 //     ///////////////////////////////////
-
 
 //     //@params _classId the classId of the class (secret Id)
 //     //@params _uri the Uri associated with the classId
 //     event ClassIdUriSet(bytes _classId, string _uri);
 
-
 //     //@params _classId the classId of the class
 //     //@params _totalTokensMinted the total number of tokens minted
 //     event BatchMintComplete(bytes _classId, uint256 _totalTokensMinted);
-
 
 //     //@params _classId the classId of the class
 //     //@params _to the address to mint token to
 //     //@params _amount the amount of token to mint
 //     event TokenMinted(bytes _classId, address _to, uint256 _amount);
 
-
 //     //@params _classId the classId whose Uri was changed
 //     //@params _newUri new Uri associated with the classId
 //     event UriChanged(bytes _classId, string _newUri);
 
-
-
-
-
 //     ////////////////////////////////////
 //     ////////// FUNCTIONS ///////////////
 //     ////////////////////////////////////
-
 
 //     //@dev onlyOwner modifier
 //     modifier onlyOwner {
 //         require(msg.sender == admin, "Not Admin");
 //         _;
 //     }
-
 
 //     //@dev initializes state variables at deployment
 //     //@params _name The name of the institution as well as the NFT
@@ -199,7 +175,6 @@ contract SchoolsNFT is ERC1155 {
 //         symbol = _symbol;
 //         admin = _admin;
 //     }
-
 
 //     //@notice Mints _amount number of _classId Nft to the _to address
 //     //@params _to: address to mint Nft to
@@ -218,7 +193,6 @@ contract SchoolsNFT is ERC1155 {
 
 //         emit TokenMinted(_classId, _to, _amount);
 //     }
-
 
 //     //@notice enables a mentor batch mint the NFT for a particular class
 //     //@params _classId is the Id for the class to batch mint
@@ -242,7 +216,6 @@ contract SchoolsNFT is ERC1155 {
 //         emit BatchMintComplete(_classId, _students.length);
 //     }
 
-
 //     //@notice creates an NFT for a class
 //     //@params classId in bytes
 //     //@params _uri The Uri to associate with the classId
@@ -260,8 +233,6 @@ contract SchoolsNFT is ERC1155 {
 
 //     }
 
-
-
 //     //@notice fetches the URI for the classId given
 //     //@params classId the classId of the class youu want to get the Uri
 //     //@returns _classUri the class Uri of the classId passed to the function
@@ -273,14 +244,12 @@ contract SchoolsNFT is ERC1155 {
 
 //     }
 
-
 //     //@notice fetches the tokenId for a particular class
 //     //@params _classId class to fetch tokenId for
 //     //@returns _tokenId the tokenId associated with the classId
 //     function getTokenIdForClass(bytes calldata _classId) public view returns (uint256 _tokenId) {
 //         _tokenId = classIdToTokenId[_classId];
 //     }
-
 
 //     //@dev changes the class Uri for a classId
 //     //@params _classId classId to change Uri for
@@ -295,6 +264,5 @@ contract SchoolsNFT is ERC1155 {
 
 //         emit UriChanged(_classId, _newUri);
 //     }
-
 
 // }

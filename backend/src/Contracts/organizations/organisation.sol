@@ -17,6 +17,12 @@ contract organisation {
     address public NftContract;
     address public certificateContract;
     bool public certificateIssued;
+    string public organisationImageUri;
+
+    address public spokContract;
+    string public spokURI;
+
+    bool public spokMinted;
     mapping(address => bool) requestNameCorrection;
 
     /**
@@ -82,6 +88,7 @@ contract organisation {
     event attendanceOpened(bytes Id, address mentor);
     event attendanceClosed(bytes Id, address mentor);
     event studentsEvicted(uint noOfStudents);
+    event mentorsRemoved(uint noOfStaffs);
     event newResultUpdated(uint256 testId, address mentor);
 
     // MODIFIERS
@@ -97,7 +104,15 @@ contract organisation {
         require(isStudent[msg.sender] == true, "NOT A VALID STUDENT");
         _;
     }
-
+    modifier onlyStudentOrStaff() {
+        require(
+            isStudent[msg.sender] == true ||
+                msg.sender == moderator ||
+                isStaff[msg.sender] == true,
+            "NOT ALLOWED TO REQUEST A NAME CHANGE"
+        );
+        _;
+    }
     modifier onlyStaff() {
         require(
             msg.sender == moderator || isStaff[msg.sender] == true,
@@ -125,7 +140,8 @@ contract organisation {
         string memory _organization,
         string memory _cohort,
         address _moderator,
-        string memory _adminName
+        string memory _adminName,
+        string memory _uri
     ) {
         moderator = _moderator;
         organization = _organization;
@@ -137,12 +153,18 @@ contract organisation {
         isStaff[_moderator] = true;
         mentorsData[_moderator]._address = _moderator;
         mentorsData[_moderator]._name = _adminName;
+        organisationImageUri = _uri;
     }
 
-    function initialize(address _NftContract, address _certificateContract) external {
+    function initialize(
+        address _NftContract,
+        address _certificateContract,
+        address _spokContract
+    ) external {
         if (msg.sender != organisationFactory) revert not_Autorized_Caller();
         NftContract = _NftContract;
         certificateContract = _certificateContract;
+        spokContract = _spokContract;
     }
 
     // @dev: Function to register staffs to be called only by the moderator
@@ -152,7 +174,10 @@ contract organisation {
     ) external onlyModerator {
         uint staffLength = staffList.length;
         for (uint i; i < staffLength; i++) {
-            if (isStaff[staffList[i]._address] == false && isStudent[staffList[i]._address] == false) {
+            if (
+                isStaff[staffList[i]._address] == false &&
+                isStudent[staffList[i]._address] == false
+            ) {
                 mentorsData[staffList[i]._address] = staffList[i];
                 isStaff[staffList[i]._address] = true;
                 indexInMentorsArray[staffList[i]._address] = mentors.length;
@@ -164,12 +189,10 @@ contract organisation {
         emit staffsRegistered(staffList.length);
     }
 
-    
     function TransferOwnership(address newModerator) external onlyModerator {
         assert(newModerator != address(0));
         moderator = newModerator;
     }
-
 
     // @dev: Function to register students to be called only by the moderator
     // @params: _studentList: An array of structs(individuals) consisting of name and wallet address of students.
@@ -178,29 +201,33 @@ contract organisation {
     ) external onlyModerator {
         uint studentLength = _studentList.length;
         for (uint i; i < studentLength; i++) {
-            if (isStudent[_studentList[i]._address] == false && isStaff[_studentList[i]._address] == false ) {
+            if (
+                isStudent[_studentList[i]._address] == false &&
+                isStaff[_studentList[i]._address] == false
+            ) {
                 studentsData[_studentList[i]._address] = _studentList[i];
-                indexInStudentsArray[_studentList[i]._address] = students.length;
+                indexInStudentsArray[_studentList[i]._address] = students
+                    .length;
                 students.push(_studentList[i]._address);
                 isStudent[_studentList[i]._address] = true;
             }
-
         }
         // UCHE
         IFACTORY(organisationFactory).register(_studentList);
         emit studentsRegistered(_studentList.length);
     }
 
-    function StudentsRequestNameCorrection() external onlyStudents {
+    // @dev: Function to request name correction
+    function RequestNameCorrection() external onlyStudentOrStaff {
         if (requestNameCorrection[msg.sender] == true)
             revert already_requested();
-        requestNameCorrection[msg.sender] == true;
+        requestNameCorrection[msg.sender] = true;
         emit nameChangeRequested(msg.sender);
     }
 
     function editStudentName(
         individual[] memory _studentList
-    ) external onlyModerator {
+    ) external onlyStudentOrStaff {
         uint studentLength = _studentList.length;
         for (uint i; i < studentLength; i++) {
             if (requestNameCorrection[_studentList[i]._address] == true) {
@@ -209,6 +236,19 @@ contract organisation {
             }
         }
         emit studentNamesChanged(_studentList.length);
+    }
+
+    function editMentorsName(
+        individual[] memory _mentorsList
+    ) external onlyStudentOrStaff {
+        uint MentorsLength = _mentorsList.length;
+        for (uint i; i < MentorsLength; i++) {
+            if (requestNameCorrection[_mentorsList[i]._address] == true) {
+                mentorsData[_mentorsList[i]._address] = _mentorsList[i];
+                requestNameCorrection[_mentorsList[i]._address] = false;
+            }
+        }
+        emit StaffNamesChanged(_mentorsList.length);
     }
 
     // @dev: Function to Create Id for a particular Lecture Day, this Id is to serve as Nft Id. Only callable by mentor on duty.
@@ -231,6 +271,14 @@ contract organisation {
         // NONSO GENESIS
         INFT(NftContract).setDayUri(_lectureId, _uri);
         emit attendanceCreated(_lectureId, _uri, _topic, msg.sender);
+    }
+
+    // @dev: Function to mint spok
+    function mintMentorsSpok(string memory Uri) external onlyModerator {
+        require(spokMinted == false, "spok already minted");
+        INFT(spokContract).batchMintTokens(mentors, Uri);
+        spokURI = Uri;
+        spokMinted = true;
     }
 
     function editTopic(
@@ -272,7 +320,8 @@ contract organisation {
     // @dev Function for mentors to hand over to the next mentor to take the class
 
     function mentorHandover(address newMentor) external {
-        if (msg.sender != mentorOnDuty) revert not_Autorized_Caller();
+        if (msg.sender != mentorOnDuty && msg.sender != moderator)
+            revert not_Autorized_Caller();
         mentorOnDuty = newMentor;
         emit Handover(msg.sender, newMentor);
     }
@@ -303,14 +352,17 @@ contract organisation {
         emit attendanceClosed(_lectureId, msg.sender);
     }
 
-    function RecordResults(uint256 testId, string calldata _resultCid) external onlyMentorOnDuty {
+    function RecordResults(
+        uint256 testId,
+        string calldata _resultCid
+    ) external onlyMentorOnDuty {
         require(testIdUsed[testId] == false, "TEST ID ALREADY USED");
         testIdUsed[testId] = true;
         resultCid.push(_resultCid);
         emit newResultUpdated(testId, msg.sender);
     }
 
-    function getResultCid() external view returns(string[] memory){
+    function getResultCid() external view returns (string[] memory) {
         return resultCid;
     }
 
@@ -333,11 +385,32 @@ contract organisation {
         emit studentsEvicted(studentsToRevoke.length);
     }
 
-    function getNameArray(address[] calldata _students) external view returns (string[] memory) {
+    function removeMentor(
+        address[] calldata rouge_mentors
+    ) external onlyModerator {
+        uint mentorsRouge = rouge_mentors.length;
+        for (uint i; i < mentorsRouge; i++) {
+            delete mentorsData[rouge_mentors[i]];
+            mentors[indexInMentorsArray[rouge_mentors[i]]] = mentors[
+                mentors.length - 1
+            ];
+            mentors.pop();
+            isStaff[rouge_mentors[i]] = false;
+        }
+        IFACTORY(organisationFactory).revoke(rouge_mentors);
+        emit mentorsRemoved(rouge_mentors.length);
+    }
+
+    function getNameArray(
+        address[] calldata _students
+    ) external view returns (string[] memory) {
         string[] memory Names = new string[](_students.length);
         string memory emptyName;
         for (uint i = 0; i < _students.length; i++) {
-            if (keccak256(abi.encodePacked(studentsData[_students[i]]._name)) == keccak256(abi.encodePacked(emptyName))) {
+            if (
+                keccak256(abi.encodePacked(studentsData[_students[i]]._name)) ==
+                keccak256(abi.encodePacked(emptyName))
+            ) {
                 Names[i] = "UNREGISTERED";
             } else {
                 Names[i] = studentsData[_students[i]]._name;
@@ -375,6 +448,12 @@ contract organisation {
         if (isStudent[_student] == false) revert not_valid_student();
         attendace = studentsTotalAttendance[_student];
         TotalClasses = LectureIdCollection.length;
+    }
+
+    function getStudentsPresent(
+        bytes memory _lectureId
+    ) external view returns (uint) {
+        return lectureInstance[_lectureId].studentsPresent;
     }
 
     function listClassesAttended(
@@ -431,5 +510,9 @@ contract organisation {
 
     function getCohortName() external view returns (string memory) {
         return cohort;
+    }
+
+    function getOrganisationImageUri() external view returns (string memory) {
+        return organisationImageUri;
     }
 }

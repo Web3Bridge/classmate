@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "forge-std/Script.sol";
+import "../lib/forge-std/src/Script.sol";
 import "../src/Contracts/organizations/organisationFactory.sol";
 import "../src/Contracts/certificates/certificateFactory.sol";
 import "../src/Interfaces/Ichild.sol";
@@ -23,7 +23,7 @@ contract addStudent is Script {
         student1._name = "SAMUEL";
         students.push(student1);
         ICHILD(child).registerStudents(students);
-       
+
         vm.stopBroadcast();
     }
 
