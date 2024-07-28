@@ -41,10 +41,10 @@ const useGetScores = () => {
         try {
           const response = await axios.get(url);
           const formattedData = Object.values(JSON.parse(response.data));
-          return { week: `Week ${index + 1}`, data: formattedData };
+          return { score: `Score ${index + 1}`, data: formattedData };
         } catch (error) {
           console.error(`Error fetching data for hash ${hash}:`, error);
-          return { week: `Week ${index + 1}`, data: null };
+          return { score: `Score ${index + 1}`, data: null };
         }
       });
       const scores = await Promise.all(scorePromises);

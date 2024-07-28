@@ -40,7 +40,7 @@ const UserAssignment = () => {
             <TableHeader>
               <TableRow className="bg-color2 hover:bg-color2 text-gray-300">
                 <TableHead className="font-semibold text-gray-300">S/N</TableHead>
-                <TableHead className="font-semibold text-gray-300">Week</TableHead>
+                <TableHead className="font-semibold text-gray-300">Score List</TableHead>
                 <TableHead className="font-semibold text-gray-300">Student</TableHead>
                 <TableHead className="font-semibold text-gray-300">Score</TableHead>
               </TableRow>
@@ -50,7 +50,7 @@ const UserAssignment = () => {
                 list.map((lis, index) => (
                   <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{lis.week}</TableCell>
+                    <TableCell>{lis.scorelist}</TableCell>
                     <TableCell>{lis.student}</TableCell>
                     <TableCell>{lis.score}</TableCell>
                   </TableRow>
