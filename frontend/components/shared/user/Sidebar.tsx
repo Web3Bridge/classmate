@@ -53,10 +53,8 @@ const SideBar = ({
       case 2:
         return <BiMoneyWithdraw />;
       case 3:
-        return <MdAssignment />;
-      case 4:
         return <MdEventSeat />;
-      case 5:
+      case 4:
         return <FiSettings />;
       default:
         return "";
@@ -125,7 +123,7 @@ const SideBar = ({
           {/* <!-- Sidebar Footer --> */}
 
           <button
-            className="flex items-center gap-2.5 rounded-sm py-2 px-4  text-gray-300 duration-300 ease-in-out"
+            className="flex items-center gap-2.5 rounded-sm py-2 px-4  text-gray-300 duration-300 ease-in-out mt-3"
             onClick={() => open()}
           >
             <IoIosLogOut className="text-xl" />
