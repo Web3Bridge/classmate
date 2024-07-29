@@ -101,7 +101,12 @@ const Dashboard = () => {
                                     <LiaCertificateSolid />
                                 </div>
                                 <h3 className="text-2xl font-semibold text-gray-800">
-                                    {isLoading ? 0 : statsData.totalCertification}
+
+                                    {
+                                        isLoading ? 0 : <span>
+                                            {statsData.totalCertification ? statsData.totalStudent : statsData.totalCertification === undefined ? 0 : 0}
+                                        </span>
+                                    }
                                 </h3>
                             </div>
                         </div>

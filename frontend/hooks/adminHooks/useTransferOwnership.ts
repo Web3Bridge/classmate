@@ -1,19 +1,15 @@
 "use client";
 import { OrganisationABI } from "@/constants/ABIs/OrganisationABI";
-import { ethers } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import {
-  useWriteContract,
   useWaitForTransactionReceipt,
+  useWriteContract,
   type BaseError,
 } from "wagmi";
 
-const useCreateAttendance = (
-  _lectureId: string,
-  _uri: string,
-  _topic: string
-) => {
+const useTransferOwnership = (newModerator: any) => {
   const { data: hash, error, writeContract } = useWriteContract();
 
   const active_organisation = window.localStorage?.getItem(
@@ -21,22 +17,24 @@ const useCreateAttendance = (
   );
   const contract_address = JSON.parse(active_organisation as `0x${string}`);
 
-  const createAttendance = useCallback(() => {
-    const lectureIdBytes: any = ethers.encodeBytes32String(_lectureId);
+  const router = useRouter();
+
+  const transferOwner = useCallback(() => {
+    const formatAddress = newModerator as `0x${string}`;
     writeContract({
       address: contract_address,
       abi: OrganisationABI,
-      functionName: "createAttendance",
-      args: [lectureIdBytes, _uri, _topic],
+      functionName: "TransferOwnership",
+      args: [formatAddress],
     });
-  }, [_lectureId, _uri, _topic]);
+  }, [newModerator]);
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
     });
 
-  const toastId = "createAttendance";
+  const toastId = "transferOwnership";
 
   useEffect(() => {
     if (isConfirming) {
@@ -47,10 +45,11 @@ const useCreateAttendance = (
     }
 
     if (isConfirmed) {
-      toast.success("Attendance created", {
+      toast.success("Ownership transferred successfully!", {
         id: toastId,
         position: "top-right",
       });
+      router.push("/programme");
     }
 
     if (error) {
@@ -62,10 +61,10 @@ const useCreateAttendance = (
   }, [isConfirming, isConfirmed, error]);
 
   return {
-    createAttendance,
+    transferOwner,
     isConfirming,
     isConfirmed,
   };
 };
 
-export default useCreateAttendance;
+export default useTransferOwnership;
