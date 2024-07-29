@@ -8,10 +8,6 @@ export const sideLinks = [
     href: "/user/submit_id",
   },
   {
-    name: "View Certificate",
-    href: "/user/certificate",
-  },
-  {
     name: "Assignments",
     href: "/user/assignments",
   },
