@@ -10,7 +10,7 @@ interface StatsData {
   totalStudent: number;
   totalMentors: number;
   totalSignedAttendance: number;
-  totalCertification: number;
+  totalCertification: boolean | undefined;
 }
 
 const useGetNumericStatistics = () => {
@@ -19,7 +19,7 @@ const useGetNumericStatistics = () => {
     totalStudent: 0,
     totalMentors: 0,
     totalSignedAttendance: 0,
-    totalCertification: 0,
+    totalCertification: false,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -99,9 +99,7 @@ const useGetNumericStatistics = () => {
         totalStudent: formattedlistOfStudents?.length || 0,
         totalMentors: formattedlistOfMentors?.length || 0,
         totalSignedAttendance: totalAttendance || 0,
-        totalCertification: certificateIssued
-          ? formattedlistOfStudents?.length || 0
-          : 0,
+        totalCertification: certificateIssued.result,
       };
 
       setStatsData(stats);

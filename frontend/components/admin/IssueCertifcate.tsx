@@ -89,7 +89,7 @@ const IssueCertifcate = () => {
 
                 <div className="w-full flex flex-col items-center gap-7">
 
-                    <Image src={certImg} className=" object-contain" alt="Certificate Image" width={500} height={500} quality={100} />
+                    <Image src={certImg} className=" object-contain" alt="Certificate Image" width={300} height={300} quality={100} />
 
                     <Dialog>
                         <DialogTrigger asChild>

@@ -27,7 +27,7 @@ const useUploadScore = (testId: any, data: any[]) => {
 
   //Converting the array to json, sending it to IPFS and getting the score URI/CID
   const getJson = useCallback(async () => {
-    if (data) {
+    if (data && data.length > 0) {
       setIsConverting(true);
       try {
         const jsonData = JSON.stringify(data);
@@ -54,6 +54,12 @@ const useUploadScore = (testId: any, data: any[]) => {
         console.log("Pinata API Error:", error);
         setIsConverting(false);
       }
+    } else {
+      setIsConverting(false);
+      toast.error("No data found", {
+        id: toastId,
+        position: "top-right",
+      });
     }
   }, [data]);
 

@@ -4,7 +4,7 @@ import { IoIosArrowRoundBack, IoIosLogOut } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
 import { GrCertificate, GrScorecard } from "react-icons/gr";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   MdAssignment,
   MdEventSeat,
@@ -18,6 +18,7 @@ import { PiStudentFill } from "react-icons/pi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { GiGiftOfKnowledge } from "react-icons/gi";
 import { FaHandshake } from "react-icons/fa6";
+import { BiTransfer } from "react-icons/bi";
 
 const SideBar = ({
   sidebarOpen,
@@ -32,6 +33,7 @@ const SideBar = ({
   const { open } = useWeb3Modal();
 
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleCloseSideBar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -130,6 +132,15 @@ const SideBar = ({
                   </Link>
                 </li>
               ))}
+              <li>
+                <button
+                  className="flex items-center gap-2.5 rounded-sm py-2 px-4  text-red-600 duration-300 ease-in-out"
+                  onClick={() => router.push("/admin/transferownership")}
+                >
+                  <BiTransfer className="text-xl" />
+                  Transfer Ownership
+                </button>
+              </li>
               <li>
                 <button
                   className="flex items-center gap-2.5 rounded-sm py-2 px-4  text-gray-300 duration-300 ease-in-out"
