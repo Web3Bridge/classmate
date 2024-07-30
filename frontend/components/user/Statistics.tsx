@@ -1,5 +1,4 @@
 "use client";
-
 import { Calendar } from "@/components/ui/calendar";
 import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -41,32 +40,32 @@ const Statistics = () => {
   const { signedAttendanceImages, isLoading } =
     useGetSignedAttendanceImages(address);
 
-  const dummyStatistics: Statistic[] = [
-    { title: "Total classes", value: "25/100", icon: <SiGoogleclassroom /> },
-    { title: "Classes Attended", value: "15/100", icon: <FaFileSignature /> },
-    { title: "Class Percentage", value: "0.00%", icon: <GiPieChart /> },
-    { title: "Average Score", value: "0", icon: <TbAlarmAverage /> },
-    { title: "Total Score", value: "0", icon: <TbArrowRotaryLastLeft /> },
-  ];
-
   const statistics: Statistic[] = [
     {
       title: "Total Classes",
-      value: attendanceRatio.attendanceRatio.totalClasses,
+      value: attendanceRatio.attendanceRatio.totalClasses
+        ? attendanceRatio.attendanceRatio.totalClasses
+        : 0,
       icon: <SiGoogleclassroom />,
     },
     {
       title: "Class attended",
-      value: attendanceRatio.attendanceRatio.attendance,
+      value: attendanceRatio.attendanceRatio.attendance
+        ? attendanceRatio.attendanceRatio.attendance
+        : 0,
       icon: <FaFileSignature />,
     },
     {
       title: "Class Percentage",
-      value: `${
-        (attendanceRatio.attendanceRatio.attendance /
-          attendanceRatio.attendanceRatio.totalClasses) *
-        100
-      }%`,
+      value:
+        attendanceRatio.attendanceRatio.attendance &&
+        attendanceRatio.attendanceRatio.totalClasses
+          ? `${
+              (attendanceRatio.attendanceRatio.attendance /
+                attendanceRatio.attendanceRatio.totalClasses) *
+              100
+            }%`
+          : 0,
       icon: <GiPieChart />,
     },
     { title: "Average Score", value: averageScore, icon: <TbAlarmAverage /> },
@@ -109,42 +108,24 @@ const Statistics = () => {
       <section className="w-full grid md:grid-cols-3 gap-8 ">
         <main className="w-full md:col-span-2">
           <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-3 ">
-            {statistics.length === 0
-              ? dummyStatistics.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="w-full h-24 flex flex-col justify-between hover:border hover:border-color2 transition-all ease-in-out shadow-md bg-white/95 rounded-md px-3 p-2"
-                  >
-                    <h1 className="">{stat.title}</h1>
-
-                    <div className="flex justify-between pt-2 font-semibold text-xl">
-                      <div>
-                        <h1>{stat.value}</h1>
-                      </div>
-                      <div className="border border-color2 rounded-full w-8 h-8 flex justify-center items-center align-middle">
-                        {stat.icon}
-                      </div>
-                    </div>
+            {statistics?.map((stat, index) => (
+              <div
+                key={index}
+                className="w-full h-24 flex flex-col justify-between hover:border hover:border-color2 transition-all ease-in-out shadow-md bg-white/95 rounded-md px-3 p-2"
+              >
+                <h1 className="text-gray-700 font-medium text-sm">
+                  {stat.title}
+                </h1>
+                <div className="w-full flex md:flex-row-reverse flex-wrap justify-between items-center">
+                  <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
+                    {stat.icon}
                   </div>
-                ))
-              : statistics.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="w-full h-24 flex flex-col justify-between hover:border hover:border-color2 transition-all ease-in-out shadow-md bg-white/95 rounded-md px-3 p-2"
-                  >
-                    <h1 className="text-gray-700 font-medium text-sm">
-                      {stat.title}
-                    </h1>
-                    <div className="w-full flex md:flex-row-reverse flex-wrap justify-between items-center">
-                      <div className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center text-gray-700 text-xl">
-                        {stat.icon}
-                      </div>
-                      <h3 className="text-2xl font-semibold text-gray-800">
-                        {stat.value}
-                      </h3>
-                    </div>
-                  </div>
-                ))}
+                  <h3 className="text-2xl font-semibold text-gray-800">
+                    {stat.value}
+                  </h3>
+                </div>
+              </div>
+            ))}
           </div>
           <section className="">
             {isLoading ? (

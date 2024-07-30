@@ -47,7 +47,18 @@ const useGetScores = () => {
           return { score: `Score ${index + 1}`, data: null };
         }
       });
-      const scores = await Promise.all(scorePromises);
+      const results = await Promise.allSettled(scorePromises);
+      const scores = results.map((result, index) => {
+        if (result.status === "fulfilled") {
+          return result.value;
+        } else {
+          console.error(
+            `Error fetching data for hash ${formattedScoreURI[index]}:`,
+            result.reason
+          );
+          return { score: `Score ${index + 1}`, data: null };
+        }
+      });
       setList(scores);
     }
   }, [listOfScoreURI]);

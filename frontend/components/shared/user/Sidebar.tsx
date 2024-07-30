@@ -51,14 +51,10 @@ const SideBar = ({
       case 1:
         return <GrServices />;
       case 2:
-        return <RiFundsLine />;
-      case 3:
         return <BiMoneyWithdraw />;
-      case 4:
-        return <MdAssignment />;
-      case 5:
+      case 3:
         return <MdEventSeat />;
-      case 6:
+      case 4:
         return <FiSettings />;
       default:
         return "";
@@ -72,8 +68,9 @@ const SideBar = ({
   return (
     <aside
       ref={sidebar}
-      className={`absolute font-barlow left-0 top-0 z-[9999] flex h-screen w-72 flex-col overflow-y-hidden bg-color2 duration-300 ease-linear lg:static lg:translate-x-0 lg:rounded-lg ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      className={`absolute font-barlow left-0 top-0 z-[9999] flex h-screen w-72 flex-col overflow-y-hidden bg-color2 duration-300 ease-linear lg:static lg:translate-x-0 lg:rounded-lg ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex flex-col gap-2 font-barlow px-6 py-8 lg:py-6.5">
@@ -95,9 +92,7 @@ const SideBar = ({
             <IoIosArrowRoundBack className="text-2xl" />
           </button>
         </div>
-        <h1 className="text-sm ml-2 text-gray-200 uppercase">
-          Welcome Back
-        </h1>
+        <h1 className="text-sm ml-2 text-gray-200 uppercase">Welcome Back</h1>
       </div>
 
       {/* <!-- SIDEBAR HEADER --> */}
@@ -113,8 +108,9 @@ const SideBar = ({
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-color1 hover:before:h-full hover:text-white/95 ${pathname === link.href ? "before:h-full" : "before:h-0"
-                      }`}
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 text-gray-300 duration-300 ease-in-out before:absolute before:left-0 before:top-0 before:w-0.5 before:transition-all before:duration-200  before:bg-color1 hover:before:h-full hover:text-white/95 ${
+                      pathname === link.href ? "before:h-full" : "before:h-0"
+                    }`}
                     onClick={handleCloseSideBar}
                   >
                     {renderIcons(index)}
@@ -127,7 +123,7 @@ const SideBar = ({
           {/* <!-- Sidebar Footer --> */}
 
           <button
-            className="flex items-center gap-2.5 rounded-sm py-2 px-4  text-gray-300 duration-300 ease-in-out"
+            className="flex items-center gap-2.5 rounded-sm py-2 px-4  text-gray-300 duration-300 ease-in-out mt-3"
             onClick={() => open()}
           >
             <IoIosLogOut className="text-xl" />
