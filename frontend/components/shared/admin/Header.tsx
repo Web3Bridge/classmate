@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Greeting from "./Greeting";
 import { PiStudentFill } from "react-icons/pi";
-import { useWalletInfo, useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount } from "wagmi";
+import { useWalletInfo, useWeb3Modal, useWeb3ModalState } from "@web3modal/wagmi/react";
+import { useAccount, useSwitchChain } from "wagmi";
 import { WalletConnected } from "../WalletConnected";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useGetMentorName from "@/hooks/adminHooks/useGetMentorName";
 import useVerifyAdmin from "@/hooks/layoutProtectionHook/useVerifyAdmin";
 import { toast } from "sonner";
+import { SUPPORTED_CHAIN_ID } from "@/constants/chain";
 
 
 const Header = ({
@@ -24,6 +25,9 @@ const Header = ({
     const { open } = useWeb3Modal()
     const { address, isConnected } = useAccount()
     const { walletInfo } = useWalletInfo()
+    const { switchChain } = useSwitchChain()
+
+    const { selectedNetworkId } = useWeb3ModalState()
 
     const isUserAdmin = useVerifyAdmin(address)
 
@@ -42,6 +46,14 @@ const Header = ({
     useEffect(() => {
         change();
     }, [change, isConnected, isUserAdmin]);
+
+    const walletConnect = () => {
+        if (!isConnected) {
+            open()
+        } else if (isConnected && Number(selectedNetworkId) !== SUPPORTED_CHAIN_ID) {
+            switchChain({ chainId: SUPPORTED_CHAIN_ID })
+        }
+    }
 
     const adminName = useGetMentorName(address)
 
@@ -103,9 +115,9 @@ const Header = ({
                 <div className="flex items-center gap-3 2xsm:gap-7">
                     {/* <!-- User Area --> */}
                     <Button
-                        onClick={() => open()}
+                        onClick={walletConnect}
                         type="button"
-                        className={`transition-all duration-200 border border-color1 hover:bg-color2 flex items-center gap-1 ${isConnected ? "bg-white text-color1 hover:bg-color1 hover:text-white" : "bg-color1 text-white"}`}
+                        className={`transition-all duration-200  flex items-center gap-1 ${isConnected && "bg-white text-color1 hover:bg-color1 hover:text-white border border-color1"} ${!isConnected && "bg-color1 text-white border border-color1 hover:bg-color2"} ${isConnected && Number(selectedNetworkId) !== SUPPORTED_CHAIN_ID && "bg-red-600 text-white border border-red-600 hover:bg-red-700"}`}
                     >
                         {
                             isConnected ? <WalletConnected address={address} icon={walletInfo?.icon} />

@@ -85,6 +85,7 @@ export default function UserSettings() {
                 className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
+                required
               />
             </div>
             <div className="flex flex-col">
@@ -102,6 +103,7 @@ export default function UserSettings() {
                 className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                required
               />
             </div>
 

@@ -1,6 +1,8 @@
-// import { SUPPORTED_CHAIN_ID } from "@/context/web3Modal";
+export const SUPPORTED_CHAIN_ID = 84532;
 
-// export const isSupportedChain = (
-//   chainId: number | undefined
-// ): chainId is number =>
-//   chainId !== undefined && Number(chainId) === SUPPORTED_CHAIN_ID;
+export const isSupportedChain = (
+  chainId: number | undefined
+): chainId is number =>
+  chainId !== undefined && Number(chainId) === SUPPORTED_CHAIN_ID;
+
+//8453 for base mainnet

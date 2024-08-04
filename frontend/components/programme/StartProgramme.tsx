@@ -38,10 +38,10 @@ const StartProgramme = () => {
         e.preventDefault()
 
         if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
-        if (!instName) return toast.error("Please enter institution name", { position: "top-right" });
-        if (!adminName) return toast.error("Please enter admin name", { position: "top-right" });
-        if (!programmeName) return toast.error("Please enter programme name", { position: "top-right" });
-        if (!imageURI) return toast.error("Please select image", { position: "top-right" });
+        if (instName === "") return toast.error("Please enter institution name", { position: "top-right" });
+        if (adminName === "") return toast.error("Please enter admin name", { position: "top-right" });
+        if (programmeName === "") return toast.error("Please enter programme name", { position: "top-right" });
+        if (imageURI === "") return toast.error("Please select image", { position: "top-right" });
 
         createProgramme()
 
@@ -80,9 +80,12 @@ const StartProgramme = () => {
                 const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
                 setImageURI(gateWayAndhash);
 
+                toast.success("Image URI fetched successfully", { position: "top-right" });
+
                 return fileUrl;
             } catch (error) {
                 console.log("Pinata API Error:", error);
+                toast.error("Error fetching Image URI", { position: "top-right" });
             }
         }
     }, [selectedFile]);
@@ -125,9 +128,13 @@ const StartProgramme = () => {
 
             <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
                 <Dialog>
-                    <DialogTrigger asChild>
-                        <Button type="button" className="text-white bg-color1 hover:bg-color2 flex items-center gap-1">Create new programmes <IoIosAddCircleOutline className="text-xl" /></Button>
-                    </DialogTrigger>
+                    {
+                        isConnected ? <DialogTrigger asChild>
+                            <Button type="button" className="text-white bg-color1 hover:bg-color2 flex items-center gap-1">Create new programmes <IoIosAddCircleOutline className="text-xl" /></Button>
+                        </DialogTrigger>
+                            : <Button onClick={() => toast.error("Please connect wallet", { position: "top-right" })} type="button" className="text-white bg-color1 hover:bg-color2 flex items-center gap-1">Create new programmes <IoIosAddCircleOutline className="text-xl" /></Button>
+                    }
+
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
                             <DialogTitle>Classmate+</DialogTitle>
@@ -171,24 +178,22 @@ const StartProgramme = () => {
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="institutionName" className="text-color3 font-medium ml-1">Institution Name</label>
-                                <input type="text" name="institutionName" id="institutionName" placeholder="Enter institution name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={instName} onChange={e => setInstName(e.target.value)} />
+                                <input type="text" name="institutionName" id="institutionName" placeholder="Enter institution name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={instName} onChange={e => setInstName(e.target.value)} required />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="adminName" className="text-color3 font-medium ml-1">Admin Name</label>
-                                <input type="text" name="adminName" id="adminName" placeholder="Enter admin name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={adminName} onChange={e => setAdminName(e.target.value)} />
+                                <input type="text" name="adminName" id="adminName" placeholder="Enter admin name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={adminName} onChange={e => setAdminName(e.target.value)} required />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="programmeName" className="text-color3 font-medium ml-1">Programme Name</label>
-                                <input type="text" name="programmeName" id="programmeName" placeholder="Enter programme name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={programmeName} onChange={e => setProgrammeName(e.target.value)} />
+                                <input type="text" name="programmeName" id="programmeName" placeholder="Enter programme name" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={programmeName} onChange={e => setProgrammeName(e.target.value)} required />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="imageURI" className="text-color3 font-medium ml-1">Image URI</label>
-                                <input type="text" name="imageURI" id="imageURI" placeholder="Choose an image for URI to show" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageURI} readOnly />
+                                <input type="text" name="imageURI" id="imageURI" placeholder="Choose an image for URI to show" className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageURI} readOnly required />
                             </div>
                             <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button type="submit" disabled={isWriting || isConfirming}>Submit</Button>
-                                </DialogClose>
+                                <Button type="submit" disabled={isWriting || isConfirming}>Submit</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>

@@ -45,17 +45,17 @@ const Programmes = () => {
 
     if (!isConnected)
       return toast.error("Please connect wallet", { position: "top-right" });
-    if (!instName)
+    if (instName === "")
       return toast.error("Please enter institution name", {
         position: "top-right",
       });
-    if (!adminName)
+    if (adminName === "")
       return toast.error("Please enter admin name", { position: "top-right" });
-    if (!programmeName)
+    if (programmeName === "")
       return toast.error("Please enter programme name", {
         position: "top-right",
       });
-    if (!imageURI)
+    if (imageURI === "")
       return toast.error("Please enter image URI", { position: "top-right" });
 
     createProgramme();
@@ -96,9 +96,16 @@ const Programmes = () => {
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
 
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
+
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
+        toast.error("Error fteching image URI", {
+          position: "top-right",
+        })
       }
     }
   }, [selectedFile]);
@@ -241,6 +248,7 @@ const Programmes = () => {
                   className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                   value={instName}
                   onChange={(e) => setInstName(e.target.value)}
+                  required
                 />
               </div>
               <div className="flex flex-col">
@@ -258,6 +266,7 @@ const Programmes = () => {
                   className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                   value={adminName}
                   onChange={(e) => setAdminName(e.target.value)}
+                  required
                 />
               </div>
               <div className="flex flex-col">
@@ -275,6 +284,7 @@ const Programmes = () => {
                   className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                   value={programmeName}
                   onChange={(e) => setProgrammeName(e.target.value)}
+                  required
                 />
               </div>
               <div className="flex flex-col">
@@ -295,11 +305,9 @@ const Programmes = () => {
                 />
               </div>
               <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="submit" disabled={isWriting || isConfirming}>
-                    Submit
-                  </Button>
-                </DialogClose>
+                <Button type="submit" disabled={isWriting || isConfirming}>
+                  Submit
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>
