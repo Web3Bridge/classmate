@@ -25,13 +25,13 @@ const ContactInfo = () => {
                     <h3 className=" text-white text-lg text-left">Feel free to inquire about anything and we would respond !</h3>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <Link href="tel:+2348066482612" className="flex text-white gap-1 items-center">
+                    <Link href="tel:+2348060243641" className="flex text-white gap-1 items-center">
                         <MdCall className="text-lg " />
-                        <span>(+234)8066482612</span>
+                        <span>(+234)8060243641</span>
                     </Link>
-                    <Link href="mailto:support@classmate.com" className="flex gap-1 text-white items-center">
-                        <IoMdMail className="text-lg " />
-                        <span>support@classmate.com</span>
+                    <Link href="mailto:support@web3bridge.com" className="flex gap-1 text-white items-center">
+                        <IoMdMail className="text-lg" />
+                        <span>support@web3bridge.com</span>
                     </Link>
                     <div className="flex text-white text-base gap-1 items-start">
                         <IoLocation className="md:text-2xl text-4xl" />
