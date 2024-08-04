@@ -13,7 +13,7 @@ export const WalletConnected = ({ address, icon }: { address: string | undefined
         <span className="flex items-center gap-1">
             {
                 Number(selectedNetworkId) !== SUPPORTED_CHAIN_ID ? (
-                    <span>Switch to Base</span>
+                    <span className="text-sm">Switch to Base Mainnet</span>
                 ) :
                     (
                         <>
