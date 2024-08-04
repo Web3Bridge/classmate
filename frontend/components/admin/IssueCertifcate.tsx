@@ -52,11 +52,12 @@ const IssueCertifcate = () => {
                 const fileUrl = response.data.IpfsHash;
                 const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
                 setImageURI(gateWayAndhash);
-                console.log(gateWayAndhash);
+                toast.success("Image URI fetched successfully", { position: "top-right" });
 
                 return fileUrl;
             } catch (error) {
                 console.log("Pinata API Error:", error);
+                toast.error("Failed to fetch Image URI", { position: "top-right" });
             }
         }
     }, [selectedFile]);
@@ -139,7 +140,7 @@ const IssueCertifcate = () => {
 
                                 <div className="flex flex-col">
                                     <label htmlFor="imageUri" className="text-color3 font-medium ml-1">Certificate Image URI</label>
-                                    <input type="text" name="imageUri" id="imageUri" placeholder="Select image first..." className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageUri} readOnly />
+                                    <input type="text" name="imageUri" id="imageUri" placeholder="Select image first..." className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3" value={imageUri} readOnly required />
                                 </div>
                                 <DialogFooter>
                                     <DialogClose asChild>

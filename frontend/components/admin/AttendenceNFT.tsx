@@ -102,8 +102,6 @@ const AttendenceNFT = () => {
     setSelectedFile(target.files[0]);
   };
 
-  // getting the list of attendence
-  // const { lectureInfo, isLoading, fetchLectureData } = useGetLectureData();
 
   //For toggling the status of attendance
   const {
@@ -144,7 +142,7 @@ const AttendenceNFT = () => {
       return toast.error("Please connect wallet", {
         position: "top-right",
       });
-    if (!editedTopic)
+    if (editedTopic === "")
       return toast.error("Please enter new topic", {
         position: "top-right",
       });
@@ -178,11 +176,16 @@ const AttendenceNFT = () => {
         const fileUrl = response.data.IpfsHash;
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
-        console.log(gateWayAndhash);
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        })
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
+        toast.error("Failed to fetch image URI", {
+          position: "top-right",
+        })
       }
     }
   }, [selectedFile]);
@@ -202,15 +205,15 @@ const AttendenceNFT = () => {
       return toast.error("Please connect wallet", {
         position: "top-right",
       });
-    if (!lectureId)
+    if (lectureId === "")
       return toast.error("Please enter lecture Id", {
         position: "top-right",
       });
-    if (!imageUri)
+    if (imageUri === "")
       return toast.error("Select image and await image URI", {
         position: "top-right",
       });
-    if (!topic)
+    if (topic === "")
       return toast.error("Please enter topic", {
         position: "top-right",
       });
@@ -319,6 +322,7 @@ const AttendenceNFT = () => {
                     className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                     value={lectureId}
                     onChange={(e) => setLectureId(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="flex flex-col">
@@ -336,6 +340,7 @@ const AttendenceNFT = () => {
                     className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="flex flex-col">
@@ -353,15 +358,14 @@ const AttendenceNFT = () => {
                     className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
                     value={imageUri}
                     readOnly
+                    required
                   />
                 </div>
 
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="submit" disabled={isConfirming}>
-                      Submit
-                    </Button>
-                  </DialogClose>
+                  <Button type="submit" disabled={isConfirming}>
+                    Submit
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>
