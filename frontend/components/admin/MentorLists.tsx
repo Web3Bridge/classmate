@@ -23,6 +23,7 @@ import useGetListOfMentors from "@/hooks/adminHooks/useGetListOfMentors";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import useRemoveMentor from "@/hooks/adminHooks/useRemoveMentor";
+import Link from "next/link";
 
 type tableDataType = {
   name: string;
@@ -146,13 +147,29 @@ const MentorLists = () => {
               {" "}
               List of {data.length} mentors in your programme
             </h4>
+            <p className="text-sm text-color2">To upload mentor&apos;s list, <Link href="/admin/fileupload" className=" text-color1 hover:underline">
+              Click here
+            </Link>
+            </p>
+
+            {/* Guidelines */}
+            <div className="w-full flex flex-col mt-4 text-red-600">
+              <h5 className="text-red-600 text-sm">Guidelines</h5>
+              <ol className="list-decimal list-inside text-xs text-red-600">
+                <li>Upload mentor&apos;s list from here: <Link href="/admin/fileupload" className="underline">
+                  Upload.
+                </Link>
+                </li>
+                <li>The organisation creator is also a mentor</li>
+                <li>Only the organisation creator can add/remove mentor</li>
+                <li>You can search for any mentor using their address/name.</li>
+                <li>Click on the checkboxes to select mentors to be removed.</li>
+                <li>Click on the Remove button to evict the selected mentors.</li>
+                <li>Removed mentors will be removed from the list and organisation.</li>
+                <li className="uppercase font-semibold">Do not remove the organisation creator!</li>
+              </ol>
+            </div>
           </div>
-          {/* <Button
-            className="border-none outline-none px-3 py-1.5 rounded bg-color1 text-gray-200 capitalize hover:bg-color2 text-sm"
-            onClick={handleRequestNameChange}
-          >
-            request name change
-          </Button> */}
         </div>
 
         <div className="w-full overflow-x-auto">
@@ -192,9 +209,9 @@ const MentorLists = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     );
                   })}

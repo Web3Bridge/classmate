@@ -23,6 +23,7 @@ import useGetListOfStudents from "@/hooks/adminHooks/useGetListOfStudents";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import useEvictStudents from "@/hooks/adminHooks/useEvictStudents";
+import Link from "next/link";
 
 type tableDataType = {
   name: string;
@@ -142,6 +143,27 @@ const StudentLists = () => {
             {" "}
             List of {data.length} students in your programme
           </h4>
+          <p className="text-sm text-color2">To upload student&apos;s list, <Link href="/admin/fileupload" className=" text-color1 hover:underline">
+            Click here
+          </Link>
+          </p>
+
+          {/* Guidelines */}
+          <div className="w-full flex flex-col mt-4 text-red-600">
+            <h5 className="text-red-600 text-sm">Guidelines</h5>
+            <ol className="list-decimal list-inside text-xs text-red-600">
+              <li>Upload student&apos;s list from here: <Link href="/admin/fileupload" className="underline">
+                Upload.
+              </Link>
+              </li>
+              <li>Only the organisation creator can add/remove students</li>
+              <li>You can search for any student using their address or name.</li>
+              <li>Click on the checkboxes to select students to be evicted.</li>
+              <li>Click on the Evict button to evict the selected students.</li>
+              <li>Evicted students will be removed from the list.</li>
+              <li>Evicted students will not be able to access the courses.</li>
+            </ol>
+          </div>
         </div>
 
         <div className="w-full overflow-x-auto">

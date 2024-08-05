@@ -24,6 +24,7 @@ import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import useMentorHandOver from "@/hooks/adminHooks/useMentorHandOver";
 import useGetMentorOnDuty from "@/hooks/adminHooks/useGetMentorOnDuty";
+import Link from "next/link";
 
 
 type tableDataType = {
@@ -149,6 +150,29 @@ const HandOverToMentor = () => {
                             {" "}
                             Pick from the list of {data.length} mentors in your programme
                         </h4>
+                        <p className="text-sm text-color2">To upload mentor&apos;s list, <Link href="/admin/fileupload" className=" text-color1 hover:underline">
+                            Click here
+                        </Link>
+                        </p>
+
+                        {/* Guidelines */}
+                        <div className="w-full flex flex-col mt-4 text-red-600">
+                            <h5 className="text-red-600 text-sm">Guidelines</h5>
+                            <ol className="list-decimal list-inside text-xs text-red-600">
+                                <li>Upload mentor&apos;s list from here: <Link href="/admin/fileupload" className="underline">
+                                    Upload.
+                                </Link>
+                                </li>
+                                <li>The organisation creator is also a mentor.</li>
+                                <li>The organisation creator is the first mentor on duty.</li>
+                                <li>Only the current mentor on duty can handover.</li>
+                                <li>Only the current mentor on duty can create attendance.</li>
+                                <li>Only the current mentor on duty can turn 'On'/'Off' attendance.</li>
+                                <li>You can search for any mentor using their address/name.</li>
+                                <li>Click on the checkbox to select mentors you want to handover.</li>
+                                <li>Click on the 'Handover' button to handover the selected mentor.</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
