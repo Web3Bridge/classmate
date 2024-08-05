@@ -9,7 +9,12 @@ import {
   type BaseError,
 } from "wagmi";
 
-const useUploadScore = (testId: any, data: any[]) => {
+const useUploadScore = (
+  testId: any,
+  data: any[],
+  apiKey: any,
+  secretKey: any
+) => {
   const [isWriting, setIsWriting] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
 
@@ -36,9 +41,8 @@ const useUploadScore = (testId: any, data: any[]) => {
           { pinataContent: jsonData },
           {
             headers: {
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );

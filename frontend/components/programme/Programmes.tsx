@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogClose,
   DialogTitle,
   DialogTrigger,
   DialogFooter,
@@ -23,7 +22,7 @@ import { SlPicture } from "react-icons/sl";
 import { FiEdit } from "react-icons/fi";
 import ReactPaginate from "react-paginate";
 
-const Programmes = () => {
+const Programmes = ({ apiKey, secretKey }: any) => {
   const { isConnected, address } = useAccount();
 
   const router = useRouter();
@@ -85,9 +84,8 @@ const Programmes = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );
@@ -96,21 +94,25 @@ const Programmes = () => {
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
 
-        // toast.success("Image URI fetched successfully", {
-        //   position: "top-right",
-        // });
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Error fteching image URI", {
-        //   position: "top-right",
-        // })
+        toast.error("Error feteching image URI", {
+          position: "top-right",
+        });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   // redirect to programme page if not connected
   const change = useCallback(async () => {

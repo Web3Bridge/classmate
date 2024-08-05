@@ -3,7 +3,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import useGetStudentName from "@/hooks/studentHooks/useGetStudentName";
-import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 import useGetAttendanceRatio from "@/hooks/studentHooks/useGetAttendanceRatio";
 import useGetSignedAttendanceImages from "@/hooks/studentHooks/useGetSignedAttendanceImages";
 import { useAccount } from "wagmi";
@@ -33,10 +32,10 @@ const Statistics = () => {
     [list]
   );
   const averageScore = useMemo(
-    () => (list.length > 0 ? totalScore / list.length : 0),
+    () =>
+      list.length > 0 ? parseFloat((totalScore / list.length).toFixed(1)) : 0,
     [list, totalScore]
   );
-
   const { signedAttendanceImages, isLoading } =
     useGetSignedAttendanceImages(address);
 
@@ -76,30 +75,12 @@ const Statistics = () => {
     },
   ];
 
-  const {
-    requestNameCorrection,
-    isWriting: isWritingtoStudents,
-    isConfirming: isConfirmingtoStudents,
-  } = useRequestNameCorrection();
-
-  const handleRequestNameChange = () => {
-    requestNameCorrection();
-  };
-
   return (
     <>
       <section className="flex justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold">Welcome back, {studentName}</h1>
           <p className="capitalize text-xs">welcome to classmate+ dashboard</p>
-        </div>
-        <div className="flex justify-center my-auto align-middle gap-1 cursor-pointer text-color1">
-          <button
-            className="bg-color2 px-3 py-2 rounded-md text-white capitalize hover:bg-color1 transition-all ease-in-out"
-            onClick={handleRequestNameChange}
-          >
-            request name change
-          </button>
         </div>
       </section>
       <section>

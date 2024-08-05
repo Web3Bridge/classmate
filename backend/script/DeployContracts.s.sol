@@ -17,11 +17,8 @@ contract DeployContracts is Script {
 
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        // uint256 deployerPrivateKey2 = vm.envUint("PRIVATE_KEY2");
         vm.startBroadcast(deployerPrivateKey);
-        student1._address = address(0x7379ec8392c7684cecd0550A688D729717EBBB01);
-        student1._name = "SAMUEL";
-        students.push(student1);
+
         _certificateFactory = new certificateFactory();
         _organisationFactory = new organisationFactory(
             address(_certificateFactory)

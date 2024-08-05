@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import useIssueSPOK from "@/hooks/adminHooks/useIssueSPOK";
 
-const IssueSpok = () => {
+const IssueSpok = ({ apiKey, secretKey }: any) => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imageUri, setImageURI] = useState("");
 
@@ -43,9 +43,8 @@ const IssueSpok = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );
@@ -53,17 +52,23 @@ const IssueSpok = () => {
         const fileUrl = response.data.IpfsHash;
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
-        // toast.success("Image URI fetched successfully", { position: "top-right" });
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Failed to fetch image URI", { position: "top-right" });
+        toast.error("Failed to fetch image URI", { position: "top-right" });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   const { issueSPOKToMentors, isConfirming, isConfirmed } =
     useIssueSPOK(imageUri);
@@ -100,6 +105,18 @@ const IssueSpok = () => {
           <h4 className="text-lg tracking-wider text-color2">
             Insert necessary Info for Issuing Mentors SPOK
           </h4>
+
+          {/* Guidelines */}
+          <div className="w-full flex flex-col mt-4 text-red-600">
+            <h5 className="text-red-600 text-sm">Guidelines</h5>
+            <ol className="list-decimal list-inside text-xs text-red-600">
+              <li>Only the organisation creator can issue SPOK</li>
+              <li>Click on the 'Issue SPOK' button to open up the dialog.</li>
+              <li>Select the image you want to upload.</li>
+              <li>Image URI will be generated from IPFS and filled-in.</li>
+              <li>Click on the button to issue the SPOK to mentors.</li>
+            </ol>
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center gap-7">

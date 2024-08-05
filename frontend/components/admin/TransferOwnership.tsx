@@ -38,6 +38,19 @@ const TransferOwnership = () => {
                     <h4 className="text-lg tracking-wider text-color2">
                         Are you sure you want to transfer ownership?
                     </h4>
+
+                    {/* Guidelines */}
+                    <div className="w-full flex flex-col mt-4 text-red-600">
+                        <h5 className="text-red-600 text-sm">Guidelines</h5>
+                        <ol className="list-decimal list-inside text-xs text-red-600">
+                            <li className="uppercase font-semibold">Ownership transfer is irreversible.</li>
+                            <li>Only the organisation creator/moderator can transfer ownership.</li>
+                            <li>Once ownership is transfered, the new owner will be the organisation moderator/creator.</li>
+                            <li> To transfer ownership, first, enter the address of the new owner.</li>
+                            <li>Cross-check the address of the new owner.</li>
+                            <li>Click on the 'Transfer' button to transfer ownership.</li>
+                        </ol>
+                    </div>
                 </div>
 
                 <div className="w-full flex flex-col items-center mt-6">

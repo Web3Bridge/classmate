@@ -6,9 +6,10 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import useUploadScore from "@/hooks/adminHooks/useUploadScore";
+import sample from "../../public/admin/scoresample.png"
+import Image from "next/image";
 
-
-const ScoreUpload = () => {
+const ScoreUpload = ({ apiKey, secretKey }: any) => {
     const [csvData, setCsvData] = useState([]);
     const [testId, setTestId] = useState<number>()
 
@@ -20,7 +21,7 @@ const ScoreUpload = () => {
         DEFAULT_REMOVE_HOVER_COLOR
     );
 
-    const { uploadStudentsScore, isWriting, isConfirming } = useUploadScore(testId, csvData);
+    const { uploadStudentsScore, isWriting, isConfirming } = useUploadScore(testId, csvData, apiKey, secretKey);
 
     const handleDataUpload = async (e: any) => {
         e.preventDefault()
@@ -44,6 +45,26 @@ const ScoreUpload = () => {
                     <h4 className="text-lg tracking-wider text-color2">
                         Kindly upload students score
                     </h4>
+
+                    <div className="w-full flex md:flex-row flex-col md:gap-8 gap-3 my-4">
+                        {/* Guidelines */}
+                        <div className=" flex flex-col text-red-600">
+                            <h5 className="text-red-600 text-sm">Guidelines</h5>
+                            <ol className="list-decimal list-inside text-xs text-red-600">
+                                <li>Only the current mentor on duty can upload score.</li>
+                                <li>TestId can be any number.</li>
+                                <li>The file (score sheet) format must be CSV.</li>
+                                <li>The file content structure must follow the sample</li>
+                                <li>The file must not contain any duplicate entries.</li>
+                                <li>Click on "Upload Score" button to upload the file.</li>
+                            </ol>
+                        </div>
+
+                        <div className="w-full md:w-[300px]">
+                            <Image src={sample} alt="sample" className="w-full h-full" width={896} height={521} quality={100} priority />
+                            <p className="text-xs text-red-600">Figure: Sample</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="w-full px-20 flex flex-col gap-4 items-center">

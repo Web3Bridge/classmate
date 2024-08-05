@@ -23,7 +23,7 @@ import Image from "next/image";
 import { SlPicture } from "react-icons/sl";
 import { FiEdit } from "react-icons/fi";
 
-const StartProgramme = () => {
+const StartProgramme = ({ apiKey, secretKey }: any) => {
   const router = useRouter();
   const { isConnected } = useAccount();
 
@@ -83,9 +83,8 @@ const StartProgramme = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );
@@ -94,17 +93,23 @@ const StartProgramme = () => {
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
 
-        // toast.success("Image URI fetched successfully", { position: "top-right" });
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Error fetching Image URI", { position: "top-right" });
+        toast.error("Error fetching Image URI", { position: "top-right" });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   const handleRoute = () => {
     if (!isConnected) {

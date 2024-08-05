@@ -11,6 +11,8 @@ import useRegisterStudents from "@/hooks/adminHooks/useRegisterStudents";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import useRegisterStaff from "@/hooks/adminHooks/useRegisterStaff";
+import sample from "../../public/admin/listsample.png"
+import Image from "next/image";
 
 const Upload = () => {
   const [csvData, setCsvData] = useState([]);
@@ -69,6 +71,27 @@ const Upload = () => {
           <h4 className="text-lg tracking-wider text-color2">
             Kindly upload students or mentors file
           </h4>
+
+          <div className="w-full flex md:flex-row flex-col md:gap-8 gap-3 my-4">
+            {/* Guidelines */}
+            <div className=" flex flex-col text-red-600">
+              <h5 className="text-red-600 text-sm">Guidelines</h5>
+              <ol className="list-decimal list-inside text-xs text-red-600">
+                <li>Only the organisation creator can upload students/mentors list.</li>
+                <li>The file format must be CSV.</li>
+                <li>The file content structure must follow the sample</li>
+                <li>Switch to "Student" or "Mentor" to upload file accordingly.</li>
+                <li>The file must not contain any duplicate entries.</li>
+                <li>Click on "Upload" button to upload the file.</li>
+              </ol>
+            </div>
+
+            <div className="w-full md:w-[300px]">
+              <Image src={sample} alt="sample" className="w-full h-full" width={940} height={400} quality={100} priority />
+              <p className="text-xs text-red-600">Figure: Sample</p>
+            </div>
+          </div>
+
         </div>
 
         <div className="w-full relative">

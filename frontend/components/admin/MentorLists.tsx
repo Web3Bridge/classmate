@@ -19,11 +19,11 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
-import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 import useGetListOfMentors from "@/hooks/adminHooks/useGetListOfMentors";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import useRemoveMentor from "@/hooks/adminHooks/useRemoveMentor";
+import Link from "next/link";
 
 type tableDataType = {
   name: string;
@@ -87,18 +87,6 @@ const MentorLists = () => {
     pageSize: 10,
   });
 
-  /* started handling the request for the change of name */
-  const {
-    requestNameCorrection,
-    isWriting: isWritingtoMentors,
-    isConfirming: isConfirmingtoMentors,
-  } = useRequestNameCorrection();
-
-  const handleRequestNameChange = () => {
-    requestNameCorrection();
-  };
-  /* Ended handling the request for the change of name */
-
   const table = useReactTable({
     columns,
     data,
@@ -126,23 +114,26 @@ const MentorLists = () => {
   }, [list.length, list, _setData]);
 
   // For evicting students
-  const { isConnected } = useAccount()
-  const { removeMentors, isConfirming, isConfirmed } = useRemoveMentor(selectedAddresses)
+  const { isConnected } = useAccount();
+  const { removeMentors, isConfirming, isConfirmed } =
+    useRemoveMentor(selectedAddresses);
 
   const handleMentorsRemoval = async () => {
+    if (!isConnected)
+      return toast.error("Please connect wallet", { position: "top-right" });
+    if (selectedAddresses.length === 0)
+      return toast.error("Please select rows to remove", {
+        position: "top-right",
+      });
 
-    if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
-    if (selectedAddresses.length === 0) return toast.error("Please select rows to remove", { position: "top-right" });
+    removeMentors();
 
-    removeMentors()
-
-    if (isConfirmed) setSelectedAddresses([])
-
-  }
+    if (isConfirmed) setSelectedAddresses([]);
+  };
 
   useEffect(() => {
-    if (isConfirmed) setSelectedAddresses([])
-  }, [isConfirmed])
+    if (isConfirmed) setSelectedAddresses([]);
+  }, [isConfirmed]);
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -156,13 +147,29 @@ const MentorLists = () => {
               {" "}
               List of {data.length} mentors in your programme
             </h4>
+            <p className="text-sm text-color2">To upload mentor&apos;s list, <Link href="/admin/fileupload" className=" text-color1 hover:underline">
+              Click here
+            </Link>
+            </p>
+
+            {/* Guidelines */}
+            <div className="w-full flex flex-col mt-4 text-red-600">
+              <h5 className="text-red-600 text-sm">Guidelines</h5>
+              <ol className="list-decimal list-inside text-xs text-red-600">
+                <li>Upload mentor&apos;s list from here: <Link href="/admin/fileupload" className="underline">
+                  Upload.
+                </Link>
+                </li>
+                <li>The organisation creator is also a mentor</li>
+                <li>Only the organisation creator can add/remove mentor</li>
+                <li>You can search for any mentor using their address/name.</li>
+                <li>Click on the checkboxes to select mentors to be removed.</li>
+                <li>Click on the Remove button to evict the selected mentors.</li>
+                <li>Removed mentors will be removed from the list and organisation.</li>
+                <li className="uppercase font-semibold">Do not remove the organisation creator!</li>
+              </ol>
+            </div>
           </div>
-          <Button
-            className="border-none outline-none px-3 py-1.5 rounded bg-color1 text-gray-200 capitalize hover:bg-color2 text-sm"
-            onClick={handleRequestNameChange}
-          >
-            request name change
-          </Button>
         </div>
 
         <div className="w-full overflow-x-auto">
@@ -175,8 +182,14 @@ const MentorLists = () => {
               placeholder="Search all columns..."
             />
             {selectedAddresses.length > 0 && (
-              <Button onClick={handleMentorsRemoval} disabled={isConfirming} className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
-                {selectedAddresses.length === 1 ? "Remove 1 mentor" : `Remove ${selectedAddresses.length} mentors`}
+              <Button
+                onClick={handleMentorsRemoval}
+                disabled={isConfirming}
+                className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5"
+              >
+                {selectedAddresses.length === 1
+                  ? "Remove 1 mentor"
+                  : `Remove ${selectedAddresses.length} mentors`}
               </Button>
             )}
           </div>

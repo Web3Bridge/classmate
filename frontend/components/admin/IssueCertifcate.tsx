@@ -13,7 +13,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { LiaCertificateSolid } from "react-icons/lia";
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { SlPicture } from "react-icons/sl";
 import { FiEdit } from "react-icons/fi";
 import axios from "axios";
@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import useIssueCertificate from "@/hooks/adminHooks/useIssueCertificate";
 
-const IssueCertifcate = () => {
+const IssueCertifcate = ({ apiKey, secretKey }: any) => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imageUri, setImageURI] = useState("");
 
@@ -43,9 +43,8 @@ const IssueCertifcate = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );
@@ -53,17 +52,23 @@ const IssueCertifcate = () => {
         const fileUrl = response.data.IpfsHash;
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
-        // toast.success("Image URI fetched successfully", { position: "top-right" });
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Failed to fetch Image URI", { position: "top-right" });
+        toast.error("Failed to fetch Image URI", { position: "top-right" });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   const { issueCertificateToStudents, isConfirming, isConfirmed } =
     useIssueCertificate(imageUri);
@@ -93,6 +98,18 @@ const IssueCertifcate = () => {
           <h4 className="text-lg tracking-wider text-color2">
             Insert necessary Info for Issuing Certificate
           </h4>
+
+          {/* Guidelines */}
+          <div className="w-full flex flex-col mt-4 text-red-600">
+            <h5 className="text-red-600 text-sm">Guidelines</h5>
+            <ol className="list-decimal list-inside text-xs text-red-600">
+              <li>Only the organisation creator can issue certificate</li>
+              <li>Click on the 'Issue Certificate' button to open up the dialog.</li>
+              <li>Select the image you want to upload.</li>
+              <li>Image URI will be generated from IPFS and filled-in.</li>
+              <li>Click on the button to issue the certificate.</li>
+            </ol>
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center gap-7">

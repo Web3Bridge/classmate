@@ -28,7 +28,7 @@ export const sideLinksAd = [
     href: "/admin/viewscores",
   },
   {
-    name: "Upload file",
+    name: "Upload CSV",
     href: "/admin/fileupload",
   },
 
@@ -41,7 +41,7 @@ export const sideLinksAd = [
     href: "/admin/spok",
   },
   {
-    name: "Settings",
+    name: "Update Name",
     href: "/admin/settings",
   },
 ];

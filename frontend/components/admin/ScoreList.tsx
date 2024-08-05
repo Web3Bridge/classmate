@@ -19,6 +19,7 @@ import {
 import useGetScores from "@/hooks/adminHooks/useGetScores";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import Link from "next/link";
 
 const ScoreList = () => {
     const { list, listOfScoreURIError, listOfScoreURIIsPending } = useGetScores();
@@ -52,6 +53,20 @@ const ScoreList = () => {
                             {" "}
                             List of students score{" "}
                         </h4>
+                        <p className="text-sm text-color2">To upload student&apos;s score, <Link href="/admin/uploadscore" className=" text-color1 hover:underline">
+                            Click here
+                        </Link>
+                        </p>
+
+                        {/* Guidelines */}
+                        <div className="w-full flex flex-col mt-4 text-red-600">
+                            <h5 className="text-red-600 text-sm">Guidelines</h5>
+                            <ol className="list-decimal list-inside text-xs text-red-600">
+                                <li>List of students scores will be displayed here.</li>
+                                <li>Score lists are sorted in ascending order. Eg. first - last</li>
+                                <li>Click on the 'View Score' button to view the score in tabular format.</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 

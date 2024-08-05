@@ -29,7 +29,7 @@ import { getOrgContract } from "@/constants/contracts";
 import { readOnlyProvider } from "@/constants/provider";
 import { ethers } from "ethers";
 
-const AttendenceNFT = () => {
+const AttendenceNFT = ({ apiKey, secretKey }: any) => {
   // Getting lecture data
   const [lectureInfo, setLectureInfo] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -165,9 +165,8 @@ const AttendenceNFT = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );
@@ -175,21 +174,25 @@ const AttendenceNFT = () => {
         const fileUrl = response.data.IpfsHash;
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
-        // toast.success("Image URI fetched successfully", {
-        //   position: "top-right",
-        // });
 
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Failed to fetch image URI", {
-        //   position: "top-right",
-        // });
+        toast.error("Failed to fetch image URI", {
+          position: "top-right",
+        });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   const { createAttendance, isConfirming, isConfirmed } = useCreateAttendance(
     lectureId,
@@ -252,6 +255,21 @@ const AttendenceNFT = () => {
             <h4 className="text-lg tracking-wider text-color2">
               All Attendence NFTs
             </h4>
+
+            {/* Guidelines */}
+            <div className="w-full flex flex-col mt-4 text-red-600">
+              <h5 className="text-red-600 text-sm">Guidelines</h5>
+              <ol className="list-decimal list-inside text-xs text-red-600">
+                <li>Click on the 'Create new attendance' button to create a new attendance.</li>
+                <li>Select image, enter the topic and lectureId for the attendance.</li>
+                <li>LectureId can be any group of characters</li>
+                <li>Image URI is fetched from IPFS when you select an image</li>
+                <li>Click on 'Submit' to upload</li>
+                <li>Only the current mentor on duty can create attendance.</li>
+                <li>Only the current mentor on duty can turn 'On'/'Off' attendance.</li>
+                <li>You can edit the topic of the attendance.</li>
+              </ol>
+            </div>
           </div>
 
           <Dialog>
