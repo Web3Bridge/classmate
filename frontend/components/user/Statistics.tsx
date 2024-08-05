@@ -82,14 +82,6 @@ const Statistics = () => {
           <h1 className="text-xl font-bold">Welcome back, {studentName}</h1>
           <p className="capitalize text-xs">welcome to classmate+ dashboard</p>
         </div>
-        <div className="flex justify-center my-auto align-middle gap-1 cursor-pointer text-color1">
-          {/* <button
-            className="bg-color2 px-3 py-2 rounded-md text-white capitalize hover:bg-color1 transition-all ease-in-out"
-            onClick={handleRequestNameChange}
-          >
-            request name change
-          </button> */}
-        </div>
       </section>
       <section>
         <h1 className="mb-2">Overview</h1>

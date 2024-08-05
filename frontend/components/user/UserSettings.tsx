@@ -53,19 +53,18 @@ export default function UserSettings() {
         </div>
 
         <div className="w-full flex flex-col items-center mt-6">
+          <div className="flex flex-col items-center mb-3">
+            <button
+              className="bg-color1 px-3 py-2 rounded-md text-white capitalize hover:bg-color2 transition-all ease-in-out"
+              onClick={handleRequestNameChange}
+            >
+              request name change
+            </button>
+          </div>
           <form
             className="lg:w-[50%] md:w-[70%] w-full grid gap-4"
             onSubmit={handleNameChange}
           >
-            <div className="flex flex-col items-center mb-3">
-              <button
-                className="bg-color1 px-3 py-2 rounded-md text-white capitalize hover:bg-color2 transition-all ease-in-out"
-                onClick={handleRequestNameChange}
-              >
-                request name change
-              </button>
-            </div>
-
             <div className="flex flex-col">
               <label
                 htmlFor="firstname"

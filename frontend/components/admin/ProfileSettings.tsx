@@ -52,19 +52,18 @@ const ProfileSettings = () => {
         </div>
 
         <div className="w-full flex flex-col items-center mt-6">
+          <div className="flex flex-col items-center mb-3">
+            <Button
+              className="border-none outline-none px-3 py-1.5 rounded bg-color1 text-gray-200 capitalize hover:bg-color2 text-sm"
+              onClick={handleRequestNameChange}
+            >
+              request name change
+            </Button>
+          </div>
           <form
             className="lg:w-[50%] md:w-[70%] w-full grid gap-4"
             onSubmit={handleNameChange}
           >
-            <div className="flex flex-col items-center mb-3">
-              <Button
-                className="border-none outline-none px-3 py-1.5 rounded bg-color1 text-gray-200 capitalize hover:bg-color2 text-sm"
-                onClick={handleRequestNameChange}
-              >
-                request name change
-              </Button>
-            </div>
-
             <div className="flex flex-col">
               <label
                 htmlFor="firstname"
