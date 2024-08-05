@@ -12,6 +12,10 @@ interface ICHILD {
         bool status;
     }
 
+    function toggleOrganizationStatus() external;
+
+    function getOrganizationStatus() external view returns (bool);
+
     function registerStudents(individual[] calldata _studentList) external;
 
     function revoke(address[] calldata _individual) external;

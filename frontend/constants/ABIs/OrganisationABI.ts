@@ -474,6 +474,13 @@ export const OrganisationABI = [
   },
   {
     inputs: [],
+    name: "getOrganizationStatus",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getResultCid",
     outputs: [{ internalType: "string[]", name: "", type: "string[]" }],
     stateMutability: "view",
@@ -516,6 +523,13 @@ export const OrganisationABI = [
     name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "isOngoing",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -636,6 +650,13 @@ export const OrganisationABI = [
     name: "spokURI",
     outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "toggleOrganizationStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ] as const;
