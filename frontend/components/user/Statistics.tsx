@@ -33,10 +33,10 @@ const Statistics = () => {
     [list]
   );
   const averageScore = useMemo(
-    () => (list.length > 0 ? totalScore / list.length : 0),
+    () =>
+      list.length > 0 ? parseFloat((totalScore / list.length).toFixed(1)) : 0,
     [list, totalScore]
   );
-
   const { signedAttendanceImages, isLoading } =
     useGetSignedAttendanceImages(address);
 

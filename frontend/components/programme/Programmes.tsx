@@ -96,21 +96,25 @@ const Programmes = () => {
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
 
-        // toast.success("Image URI fetched successfully", {
-        //   position: "top-right",
-        // });
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Error fteching image URI", {
-        //   position: "top-right",
-        // })
+        toast.error("Error feteching image URI", {
+          position: "top-right",
+        });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   // redirect to programme page if not connected
   const change = useCallback(async () => {

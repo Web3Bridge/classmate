@@ -13,7 +13,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { LiaCertificateSolid } from "react-icons/lia";
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { SlPicture } from "react-icons/sl";
 import { FiEdit } from "react-icons/fi";
 import axios from "axios";
@@ -53,17 +53,23 @@ const IssueCertifcate = () => {
         const fileUrl = response.data.IpfsHash;
         const gateWayAndhash = `https://gray-quiet-egret-248.mypinata.cloud/ipfs/${fileUrl}`;
         setImageURI(gateWayAndhash);
-        // toast.success("Image URI fetched successfully", { position: "top-right" });
+        toast.success("Image URI fetched successfully", {
+          position: "top-right",
+        });
 
         return fileUrl;
       } catch (error) {
         console.log("Pinata API Error:", error);
-        // toast.error("Failed to fetch Image URI", { position: "top-right" });
+        toast.error("Failed to fetch Image URI", { position: "top-right" });
       }
     }
   }, [selectedFile]);
 
-  getImage();
+  useEffect(() => {
+    if (selectedFile) {
+      getImage();
+    }
+  }, [selectedFile, getImage]);
 
   const { issueCertificateToStudents, isConfirming, isConfirmed } =
     useIssueCertificate(imageUri);
