@@ -41,7 +41,7 @@ export const sideLinksAd = [
     href: "/admin/spok",
   },
   {
-    name: "Settings",
+    name: "Update Name",
     href: "/admin/settings",
   },
 ];

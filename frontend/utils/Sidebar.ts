@@ -16,7 +16,7 @@ export const sideLinks = [
     href: "/user/scores",
   },
   {
-    name: "Settings",
+    name: "Update Name",
     href: "/user/settings",
   },
 ];

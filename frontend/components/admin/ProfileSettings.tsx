@@ -3,12 +3,25 @@ import { User2Icon } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import useEditMentorsName from "@/hooks/nameEditingHooks/useEditMentorsName";
+import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 
 const ProfileSettings = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
   const fullName = `${firstName} ${lastName}`;
+
+  /* started handling the request for the change of name */
+  const {
+    requestNameCorrection,
+    isWriting: isWritingtoMentors,
+    isConfirming: isConfirmingtoMentors,
+  } = useRequestNameCorrection();
+
+  const handleRequestNameChange = () => {
+    requestNameCorrection();
+  };
+  /* Ended handling the request for the change of name */
 
   const {
     editMentorsName,
@@ -44,29 +57,12 @@ const ProfileSettings = () => {
             onSubmit={handleNameChange}
           >
             <div className="flex flex-col items-center mb-3">
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                className="hidden"
-                id="selectFile"
-                onChange={handleSelectImage}
-              />
-              <label
-                htmlFor="selectFile"
-                className="rounded-full w-32 h-32 bg-color1 hover:bg-color2 flex items-center justify-center cursor-pointer"
+              <Button
+                className="border-none outline-none px-3 py-1.5 rounded bg-color1 text-gray-200 capitalize hover:bg-color2 text-sm"
+                onClick={handleRequestNameChange}
               >
-                {selectedFile ? (
-                  <img
-                    src={URL.createObjectURL(selectedFile)}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <span className="relative flex w-16 h-16">
-                    <User2Icon className="w-16 h-16 relative inline-flex rounded text-gray-300 animate-pulse " />
-                  </span>
-                )}
-              </label>
+                request name change
+              </Button>
             </div>
 
             <div className="flex flex-col">

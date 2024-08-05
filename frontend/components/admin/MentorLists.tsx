@@ -19,7 +19,6 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
-import useRequestNameCorrection from "@/hooks/nameEditingHooks/useRequestNameCorrection";
 import useGetListOfMentors from "@/hooks/adminHooks/useGetListOfMentors";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
@@ -87,18 +86,6 @@ const MentorLists = () => {
     pageSize: 10,
   });
 
-  /* started handling the request for the change of name */
-  const {
-    requestNameCorrection,
-    isWriting: isWritingtoMentors,
-    isConfirming: isConfirmingtoMentors,
-  } = useRequestNameCorrection();
-
-  const handleRequestNameChange = () => {
-    requestNameCorrection();
-  };
-  /* Ended handling the request for the change of name */
-
   const table = useReactTable({
     columns,
     data,
@@ -126,23 +113,26 @@ const MentorLists = () => {
   }, [list.length, list, _setData]);
 
   // For evicting students
-  const { isConnected } = useAccount()
-  const { removeMentors, isConfirming, isConfirmed } = useRemoveMentor(selectedAddresses)
+  const { isConnected } = useAccount();
+  const { removeMentors, isConfirming, isConfirmed } =
+    useRemoveMentor(selectedAddresses);
 
   const handleMentorsRemoval = async () => {
+    if (!isConnected)
+      return toast.error("Please connect wallet", { position: "top-right" });
+    if (selectedAddresses.length === 0)
+      return toast.error("Please select rows to remove", {
+        position: "top-right",
+      });
 
-    if (!isConnected) return toast.error("Please connect wallet", { position: "top-right" });
-    if (selectedAddresses.length === 0) return toast.error("Please select rows to remove", { position: "top-right" });
+    removeMentors();
 
-    removeMentors()
-
-    if (isConfirmed) setSelectedAddresses([])
-
-  }
+    if (isConfirmed) setSelectedAddresses([]);
+  };
 
   useEffect(() => {
-    if (isConfirmed) setSelectedAddresses([])
-  }, [isConfirmed])
+    if (isConfirmed) setSelectedAddresses([]);
+  }, [isConfirmed]);
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -157,12 +147,12 @@ const MentorLists = () => {
               List of {data.length} mentors in your programme
             </h4>
           </div>
-          <Button
+          {/* <Button
             className="border-none outline-none px-3 py-1.5 rounded bg-color1 text-gray-200 capitalize hover:bg-color2 text-sm"
             onClick={handleRequestNameChange}
           >
             request name change
-          </Button>
+          </Button> */}
         </div>
 
         <div className="w-full overflow-x-auto">
@@ -175,8 +165,14 @@ const MentorLists = () => {
               placeholder="Search all columns..."
             />
             {selectedAddresses.length > 0 && (
-              <Button onClick={handleMentorsRemoval} disabled={isConfirming} className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5">
-                {selectedAddresses.length === 1 ? "Remove 1 mentor" : `Remove ${selectedAddresses.length} mentors`}
+              <Button
+                onClick={handleMentorsRemoval}
+                disabled={isConfirming}
+                className="border-none outline-none rounded px-3 bg-color1 hover:bg-color2 text-gray-200 py-1.5"
+              >
+                {selectedAddresses.length === 1
+                  ? "Remove 1 mentor"
+                  : `Remove ${selectedAddresses.length} mentors`}
               </Button>
             )}
           </div>
@@ -196,9 +192,9 @@ const MentorLists = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableHead>
                     );
                   })}
