@@ -34,10 +34,6 @@ const ProfileSettings = () => {
     editMentorsName();
   };
 
-  const [selectedFile, setSelectedFile] = useState();
-  const handleSelectImage = ({ target }: { target: any }) => {
-    setSelectedFile(target.files[0]);
-  };
 
   return (
     <section className="w-full py-6 flex flex-col">
@@ -49,6 +45,17 @@ const ProfileSettings = () => {
           <h4 className="text-lg tracking-wider text-color2">
             Personal Information
           </h4>
+
+          {/* Guidelines */}
+          <div className="w-full flex flex-col mt-4 text-red-600">
+            <h5 className="text-red-600 text-sm">Guidelines</h5>
+            <ol className="list-decimal list-inside text-xs text-red-600">
+              <li>Only signed in user can update his/her name.</li>
+              <li>Click on the 'Request Name Change' button to request for name update first.</li>
+              <li>Then, fill-in the form with your new names.</li>
+              <li>Click on the 'Update data' button to update your name.</li>
+            </ol>
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center mt-6">

@@ -98,6 +98,18 @@ const IssueCertifcate = ({ apiKey, secretKey }: any) => {
           <h4 className="text-lg tracking-wider text-color2">
             Insert necessary Info for Issuing Certificate
           </h4>
+
+          {/* Guidelines */}
+          <div className="w-full flex flex-col mt-4 text-red-600">
+            <h5 className="text-red-600 text-sm">Guidelines</h5>
+            <ol className="list-decimal list-inside text-xs text-red-600">
+              <li>Only the organisation creator can issue certificate</li>
+              <li>Click on the 'Issue Certificate' button to open up the dialog.</li>
+              <li>Select the image you want to upload.</li>
+              <li>Image URI will be generated from IPFS and filled-in.</li>
+              <li>Click on the button to issue the certificate.</li>
+            </ol>
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center gap-7">

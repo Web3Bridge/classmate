@@ -255,6 +255,21 @@ const AttendenceNFT = ({ apiKey, secretKey }: any) => {
             <h4 className="text-lg tracking-wider text-color2">
               All Attendence NFTs
             </h4>
+
+            {/* Guidelines */}
+            <div className="w-full flex flex-col mt-4 text-red-600">
+              <h5 className="text-red-600 text-sm">Guidelines</h5>
+              <ol className="list-decimal list-inside text-xs text-red-600">
+                <li>Click on the 'Create new attendance' button to create a new attendance.</li>
+                <li>Select image, enter the topic and lectureId for the attendance.</li>
+                <li>LectureId can be any group of characters</li>
+                <li>Image URI is fetched from IPFS when you select an image</li>
+                <li>Click on 'Submit' to upload</li>
+                <li>Only the current mentor on duty can create attendance.</li>
+                <li>Only the current mentor on duty can turn 'On'/'Off' attendance.</li>
+                <li>You can edit the topic of the attendance.</li>
+              </ol>
+            </div>
           </div>
 
           <Dialog>
