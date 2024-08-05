@@ -1,5 +1,5 @@
 "use client";
-import { User2Icon } from "lucide-react";
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useEditStudentsName from "@/hooks/nameEditingHooks/useEditStudentsName";
@@ -50,6 +50,25 @@ export default function UserSettings() {
           <h4 className="text-lg tracking-wider text-color2">
             Personal Information
           </h4>
+          {/* Guidelines */}
+          <div className="w-full flex flex-col mt-4 text-red-600">
+            <h5 className="text-red-600 text-sm">Guidelines</h5>
+            <ol className="list-decimal list-inside text-xs text-red-600">
+              <li>
+                If you identify an error in your registered name, you may submit
+                a request for a name change Using the button below.
+              </li>
+              <li>
+                You will then be prompted to sign the transaction to authorize
+                the update.
+              </li>
+              <li>
+                Once the initial transaction has been successfully signed, you
+                will be able to enter your desired new name in the designated
+                input field and submit to complete the name change process.
+              </li>
+            </ol>
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center mt-6">
