@@ -44,6 +44,7 @@ const useGetUserOrganisations = (_userAddress: any) => {
         const cohort = await contract.getCohortName();
         const moderator = await contract.getModerator();
         const imageURI = await contract.getOrganisationImageUri();
+        const status = await contract.getOrganizationStatus();
         const isMentor = await contract.VerifyMentor(_userAddress);
         const isStudent = await contract.VerifyStudent(_userAddress);
         return {
@@ -52,6 +53,7 @@ const useGetUserOrganisations = (_userAddress: any) => {
           cohort,
           moderator,
           imageURI,
+          status,
           isMentor,
           isStudent,
         };

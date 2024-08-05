@@ -371,8 +371,8 @@ const Programmes = ({ apiKey, secretKey }: any) => {
 
             <div className="absolute top-6 right-6 flex flex-col items-center">
               <small className="text-color3 text-xs">Status</small>
-              <h4 className="text-green-500 bg-green-100 rounded-lg px-2 py-1.5 font-medium text-xs">
-                Ongoing
+              <h4 className={`${organisation.status ? "text-green-500 bg-green-100" : "text-red-600 bg-red-100"}  rounded-lg px-2 py-1.5 font-medium text-xs`}>
+                {organisation.status ? "Ongoing" : "Ended"}
               </h4>
             </div>
           </div>
