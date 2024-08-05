@@ -27,18 +27,21 @@ export default function SubmitAttendanceID() {
 
   return (
     <div>
-      <Card className="w-[90%] md:w-[50%] shadow-lg mt-20 mx-auto bg-gray-200/70 hover:border-color1/20">
+      <Card className="w-[90%] md:w-[50%] shadow-lg mt-20 mx-auto bg-gray-200/70 hover:border-color2/20">
         <form action="" onSubmit={handleOnSubmit}>
           <CardHeader>
-            <CardTitle className="capitalize">
+            <CardTitle className="capitalize text-bg-color2/20">
               classmate + student form
             </CardTitle>
           </CardHeader>
           <CardContent>
             <CardDescription className="mb-3">Enter ID</CardDescription>
-            <Input
-              className="text-color2 bg-white/50"
+            <input
+              type="text"
+              name="firstname"
+              id="firstname"
               placeholder="Enter Lecture ID"
+              className="w-full caret-color2 py-3 px-4 outline-none rounded-lg border border-color2/60 text-sm bg-color1/5 text-color3"
               value={attendanceId}
               onChange={handleOnChange}
             />

@@ -55,7 +55,7 @@ export default function UserSettings() {
         <div className="w-full flex flex-col items-center mt-6">
           <div className="flex flex-col items-center mb-3">
             <button
-              className="bg-color1 px-3 py-2 rounded-md text-white capitalize hover:bg-color2 transition-all ease-in-out"
+              className="bg-color2 px-3 py-2 rounded-md text-white capitalize hover:bg-color1 transition-all ease-in-out"
               onClick={handleRequestNameChange}
             >
               request name change
@@ -77,7 +77,7 @@ export default function UserSettings() {
                 name="firstname"
                 id="firstname"
                 placeholder="Enter your first name"
-                className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
+                className="w-full caret-color2 py-3 px-4 outline-none rounded-lg border border-color2/60 text-sm bg-color1/5 text-color3"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
@@ -95,7 +95,7 @@ export default function UserSettings() {
                 name="lastname"
                 id="lastname"
                 placeholder="Enter your last name"
-                className="w-full caret-color1 py-3 px-4 outline-none rounded-lg border border-color1 text-sm bg-color1/5 text-color3"
+                className="w-full caret-color2 py-3 px-4 outline-none rounded-lg border border-color2/60 text-sm bg-color1/5 text-color3"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
@@ -105,7 +105,7 @@ export default function UserSettings() {
             <div className="flex flex-col mt-3">
               <Button
                 type="submit"
-                className="bg-color1 hover:bg-color2"
+                className="bg-color2 hover:bg-color1 transition-all ease-in-out"
                 onClick={handleNameChange}
               >
                 Upload Data
