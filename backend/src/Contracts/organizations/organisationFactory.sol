@@ -105,15 +105,6 @@ contract organisationFactory {
             ];
             uint orgLength = memberOrganisations[uniqueIndividual].length;
 
-            // address[] storage individualOrganisations = memberOrganisations[
-            //     uniqueIndividual
-            // ];
-            // individualOrganisations[
-            //     organisationIndex
-            // ] = individualOrganisations[orgLength - 1];
-            // individualOrganisations.pop();
-            // memberOrganisations[uniqueIndividual] = individualOrganisations;
-
             memberOrganisations[uniqueIndividual][
                 organisationIndex
             ] = memberOrganisations[uniqueIndividual][orgLength - 1];

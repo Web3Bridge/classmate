@@ -56,6 +56,10 @@ contract EcosystemTest is Test {
                 "http://test.org",
                 "Abims"
             );
+        address child = _organisationFactory.getUserOrganisatons(director)[0];
+
+        bool status = ICHILD(child).getOrganizationStatus();
+        assertEq(status, true);
         organisationAddress = Organisation;
         vm.stopPrank();
         assertEq(Organisation, organisationAddress);
@@ -330,5 +334,22 @@ contract EcosystemTest is Test {
         vm.startPrank(director);
         address child = _organisationFactory.getUserOrganisatons(director)[0];
         ICHILD(child).mintMentorsSpok("http://test.org");
+    }
+
+    function testToggleOrganizationStatus() public {
+        testCohortCreation();
+        address child = _organisationFactory.getUserOrganisatons(director)[0];
+
+        ICHILD(child).toggleOrganizationStatus();
+
+        // Now, the status should be false
+        bool toggledStatus = ICHILD(child).getOrganizationStatus();
+        assertEq(toggledStatus, false);
+
+        // Toggle the status to true
+        ICHILD(child).toggleOrganizationStatus();
+
+        bool finalStatus = ICHILD(child).getOrganizationStatus();
+        assertEq(finalStatus, true);
     }
 }

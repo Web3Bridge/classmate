@@ -69,7 +69,7 @@ contract organisation {
     mapping(address => bytes[]) moderatorsTopic;
     mapping(address => bool) isStaff;
     mapping(address => individual) mentorsData;
-
+    bool public isOngoing = true;
     // EVENTS
     event staffsRegistered(uint noOfStaffs);
     event nameChangeRequested(address changer);
@@ -514,5 +514,13 @@ contract organisation {
 
     function getOrganisationImageUri() external view returns (string memory) {
         return organisationImageUri;
+    }
+
+    function toggleOrganizationStatus() external {
+        isOngoing = !isOngoing;
+    }
+
+    function getOrganizationStatus() external view returns (bool) {
+        return isOngoing;
     }
 }
