@@ -88,7 +88,7 @@ const SideBar = ({
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex flex-col gap-2 font-barlow px-6 py-8 lg:py-6.5">
         <div className="flex items-start justify-between gap-2  ">
-          <Link href={`/dashboard`} className="flex items-end">
+          <Link href={`/admin`} className="flex items-end">
             <PiStudentFill className="text-gray-100 md:text-4xl text-3xl" />
             <span className="text-gray-200 md:text-xl font-semibold">
               ClassMate+

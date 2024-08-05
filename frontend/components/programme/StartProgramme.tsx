@@ -23,7 +23,7 @@ import Image from "next/image";
 import { SlPicture } from "react-icons/sl";
 import { FiEdit } from "react-icons/fi";
 
-const StartProgramme = () => {
+const StartProgramme = ({ apiKey, secretKey }: any) => {
   const router = useRouter();
   const { isConnected } = useAccount();
 
@@ -83,9 +83,8 @@ const StartProgramme = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );

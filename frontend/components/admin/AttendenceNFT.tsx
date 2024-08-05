@@ -29,7 +29,7 @@ import { getOrgContract } from "@/constants/contracts";
 import { readOnlyProvider } from "@/constants/provider";
 import { ethers } from "ethers";
 
-const AttendenceNFT = () => {
+const AttendenceNFT = ({ apiKey, secretKey }: any) => {
   // Getting lecture data
   const [lectureInfo, setLectureInfo] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -165,9 +165,8 @@ const AttendenceNFT = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );

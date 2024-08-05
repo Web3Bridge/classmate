@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import useIssueSPOK from "@/hooks/adminHooks/useIssueSPOK";
 
-const IssueSpok = () => {
+const IssueSpok = ({ apiKey, secretKey }: any) => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imageUri, setImageURI] = useState("");
 
@@ -43,9 +43,8 @@ const IssueSpok = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-              pinata_secret_api_key:
-                process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+              pinata_api_key: apiKey,
+              pinata_secret_api_key: secretKey,
             },
           }
         );

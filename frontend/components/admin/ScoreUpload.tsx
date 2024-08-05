@@ -8,7 +8,7 @@ import { useAccount } from "wagmi";
 import useUploadScore from "@/hooks/adminHooks/useUploadScore";
 
 
-const ScoreUpload = () => {
+const ScoreUpload = ({ apiKey, secretKey }: any) => {
     const [csvData, setCsvData] = useState([]);
     const [testId, setTestId] = useState<number>()
 
@@ -20,7 +20,7 @@ const ScoreUpload = () => {
         DEFAULT_REMOVE_HOVER_COLOR
     );
 
-    const { uploadStudentsScore, isWriting, isConfirming } = useUploadScore(testId, csvData);
+    const { uploadStudentsScore, isWriting, isConfirming } = useUploadScore(testId, csvData, apiKey, secretKey);
 
     const handleDataUpload = async (e: any) => {
         e.preventDefault()
