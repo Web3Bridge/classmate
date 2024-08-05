@@ -18,6 +18,7 @@ contract organisation {
     address public certificateContract;
     bool public certificateIssued;
     string public organisationImageUri;
+    bool public isOngoing = true;
 
     address public spokContract;
     string public spokURI;
@@ -69,7 +70,6 @@ contract organisation {
     mapping(address => bytes[]) moderatorsTopic;
     mapping(address => bool) isStaff;
     mapping(address => individual) mentorsData;
-    bool public isOngoing = true;
     // EVENTS
     event staffsRegistered(uint noOfStaffs);
     event nameChangeRequested(address changer);
