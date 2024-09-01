@@ -59,11 +59,11 @@ const Statistics = () => {
       value:
         attendanceRatio.attendanceRatio.attendance &&
         attendanceRatio.attendanceRatio.totalClasses
-          ? `${
+          ? `${Math.floor(
               (attendanceRatio.attendanceRatio.attendance /
                 attendanceRatio.attendanceRatio.totalClasses) *
-              100
-            }%`
+                100
+            )}%`
           : 0,
       icon: <GiPieChart />,
     },
